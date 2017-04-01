@@ -10,7 +10,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import xs.account.common.bean.ResultInfo;
+import xs.spider.base.bean.ResultInfo;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

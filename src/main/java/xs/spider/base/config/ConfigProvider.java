@@ -12,8 +12,8 @@ import java.util.Properties;
 public class ConfigProvider {
     private static Properties prop;
     public static final String DEFAULT_CONFIG_PATH = "classpath:/config/config.properties";
-    public static final String CLASSPATH_PREFIX = "classpath";
-    public static final String FILE_PREFIX = "file";
+    public static final String CLASSPATH_PREFIX = "classpath:";
+    public static final String FILE_PREFIX = "file:";
 
     public static Properties getProp() {
         if (prop == null) {
@@ -65,10 +65,10 @@ public class ConfigProvider {
         InputStream inputStream = null;
         try {
             if (configPath.startsWith(FILE_PREFIX)) {
-                iniWithDir(new File(configPath.substring(FILE_PREFIX.length())));
+                iniWithDir(new File(configPath.replace(FILE_PREFIX,"")));
             } else if (configPath.startsWith(CLASSPATH_PREFIX)) {
                 configPath = configPath
-                        .substring(CLASSPATH_PREFIX.length());
+                        .replace(CLASSPATH_PREFIX, "");
                 inputStream = ConfigProvider.class
                         .getResourceAsStream(configPath);
                 prop.load(inputStream);

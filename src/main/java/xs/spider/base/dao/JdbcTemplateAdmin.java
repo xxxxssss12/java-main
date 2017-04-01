@@ -1,13 +1,11 @@
 package xs.spider.base.dao;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import xs.account.common.bean.BaseEntity;
-import xs.account.common.dao.impl.DaoSupportImpl;
-import xs.account.common.util.LogUtil;
+import xs.spider.base.bean.BaseEntity;
+import xs.spider.base.dao.impl.DaoSupportImpl;
+import xs.spider.base.util.LogUtil;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -148,19 +146,19 @@ public class JdbcTemplateAdmin {
      * 获取数据源用户名
      * @return
      */
-    public String getDataSourceUsername() {
-        if (null != jdbcTemplate) {
-            String user="";
-            try{
-                BasicDataSource ds = (BasicDataSource) jdbcTemplate.getDataSource();
-                user= ds.getUsername();
-            }catch(Exception e){
-                ComboPooledDataSource ds=(ComboPooledDataSource)jdbcTemplate.getDataSource();
-                user=ds.getUser();
-
-            }
-            return user;
-        }
-        return "";
-    }
+//    public String getDataSourceUsername() {
+//        if (null != jdbcTemplate) {
+//            String user="";
+//            try{
+//                BasicDataSource ds = (BasicDataSource) jdbcTemplate.getDataSource();
+//                user= ds.getUsername();
+//            }catch(Exception e){
+//                ComboPooledDataSource ds=(ComboPooledDataSource)jdbcTemplate.getDataSource();
+//                user=ds.getUser();
+//
+//            }
+//            return user;
+//        }
+//        return "";
+//    }
 }
