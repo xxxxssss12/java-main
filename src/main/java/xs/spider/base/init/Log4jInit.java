@@ -2,6 +2,7 @@ package xs.spider.base.init;
 
 import org.apache.log4j.PropertyConfigurator;
 import xs.spider.base.config.ConfigProvider;
+import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.PropUtil;
 
 /**
@@ -14,5 +15,6 @@ public class Log4jInit {
             System.setProperty("log.root", log_root_path);
         }
         PropertyConfigurator.configure(ConfigProvider.getProp());//装入log4j配置信息
+        LogUtil.info(Log4jInit.class,"init over...");
     }
 }

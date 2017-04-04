@@ -2,6 +2,10 @@ package xs.spider.base.util;
 
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -220,4 +224,26 @@ public class Util {
 		return builder.toString();
 	}
 
+	public static String streamToStr(InputStream is, String s) {
+		if (is == null || s == null) return null;
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(is));
+			StringBuffer buffer = new StringBuffer();
+			String line = "";
+			while ((line = in.readLine()) != null) {
+				buffer.append(line);
+			}
+			return buffer.toString();
+		} catch (Exception e) {
+			log.error("streamToStr error", e);
+		}
+		return null;
+	}
+
+	public static String getLineOnKeyBoradInput() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String yzm = null;
+		yzm = br.readLine();
+		return yzm;
+	}
 }

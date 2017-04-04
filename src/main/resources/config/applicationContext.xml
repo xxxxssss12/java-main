@@ -8,7 +8,6 @@
     <bean id="propertyConfigurer"
           class="xs.spider.base.config.SimplePropertyPlaceholderConfigurer">
     </bean>
-
     <!-- 邮件bean -->
     <!-- 申明JavaMailSenderImpl对象 -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -82,4 +81,7 @@
     <!-- 扫描service,dao自动注入为bean -->
     <context:component-scan base-package="xs.spider" annotation-config="true"/>
     <tx:annotation-driven/>
+
+    <bean id="applicationContextHandle" class="xs.spider.base.util.ApplicationContextHandle">
+    </bean>
 </beans>
