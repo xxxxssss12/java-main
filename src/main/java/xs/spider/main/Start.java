@@ -35,6 +35,7 @@ public class Start {
     private static Logger logger = LoggerFactory.getLogger(Start.class);
     private static ClassPathXmlApplicationContext context;
     private static TitleInfoDao titleInfoDao;
+    private static int cnt = 0;
     public static void main(String[] args) throws Exception {
         logger.info("SpringContextContainer begin starting.....");
         Log4jInit.init();
@@ -62,7 +63,7 @@ public class Start {
             if (ri.getCode() == 1) {
                 Document loginPage = Jsoup.parse(Util.null2string(ri.getData()));
                 Elements elements = loginPage.select("input[name=captcha-id]");
-                if (elements != null && !Util.isBlank(elements.first().val())) {
+                if (elements != null && !elements.isEmpty() && !Util.isBlank(elements.first().val())) {
                     String captchaId = elements.first().val();
                     String yzm_pic_url = loginPage.select("[id=captcha_image]").attr("src");
                     HttpClientUtil.getStaticToFile(yzm_pic_url, "C:\\Users\\hasee\\Desktop\\a.jpg");
@@ -82,8 +83,9 @@ public class Start {
                     return;
                 }
                 LogUtil.info(HttpClientUtil.class, "登录完毕。。。");
-                for (int i=0; i<50; i++) {
+                for (int i=378; i<5000; i++) {
                     getFangzuInfo(httpclient, cookieStore, i);
+                    if (cnt > 90000) break;
                 }
             } else {
                 System.out.println(ri.getMessage());
@@ -113,7 +115,13 @@ public class Start {
                     titleInfo.setUrl(row.child(0).select("a").first().attr("href"));
                     titleInfo.setPagenum(pagenum+1);
                     titleInfo.setTime(row.select(".td-time").first().attr("title"));
-                    titleInfoDao.save(titleInfo);
+                    try {
+                        titleInfoDao.save(titleInfo);
+                        cnt++;
+                    } catch (Exception e) {
+                        LogUtil.error(Start.class, e, "插入数据库失败");
+                    }
+                    if (cnt > 90000) break;
                 }
             } catch (Exception e) {
                 LogUtil.error(Start.class, e, "爬取异常！");
