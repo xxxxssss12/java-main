@@ -1,10 +1,13 @@
 package xs.spider.base.util;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.log4j.Logger;
 import xs.spider.base.anno.Column;
+import xs.spider.base.anno.Table;
 import xs.spider.base.anno.UserDefined;
 import xs.spider.base.bean.BaseEntity;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -49,7 +52,7 @@ public class BeanUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	private static Method getMethod(Class clazz, String propertyName,	boolean isSetMethod) throws Exception {
+	private static Method getMethod(Class clazz, String propertyName, boolean isSetMethod) throws Exception {
 		try {
 			Method method = null;
 			String methodname = propertyName.substring(1);
@@ -166,5 +169,18 @@ public class BeanUtil {
             }
         }
         return bean;
+	}
+	@JsonIgnore
+	public static String getTableName(Class clazz) {
+		Annotation anno = clazz.getAnnotation(Table.class);
+		if(anno != null){
+			try {
+				Method me = anno.annotationType().getMethod("value", null);
+				return Util.null2string(me.invoke(anno, null));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return "";
 	}
 }

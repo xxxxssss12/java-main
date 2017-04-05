@@ -1,6 +1,7 @@
 package xs.spider.base.dao.impl;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -23,7 +24,7 @@ import java.util.*;
  * Created by hasee on 2016/8/28.
  */
 public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> implements DaoSupport<T,PK> {
-
+    @Autowired
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private Class<T> clazz;
@@ -58,7 +59,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         try {
             BaseEntity baseEntity = clazz.newInstance();
             StringBuffer sql = new StringBuffer(" SELECT * FROM ")
-                    .append(baseEntity.getTableName())
+                    .append(BeanUtil.getTableName(clazz))
                     .append(" dtb WHERE dtb.")
                     .append(baseEntity.getPkName()).append(" =? ");
             List<T> list = jdbcTemplate.query(sql.toString(), new Object[]{id}, new BeanPropertyRowMapper<T>(clazz));
@@ -107,7 +108,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
 
     private StringBuffer getListBaseSql(T t, List<Object> paramlist) throws Exception {
         if (null == paramlist) return null;
-        StringBuffer sql = new StringBuffer(" SELECT * from " + t.getTableName() + " dtb  where 1=1 ");
+        StringBuffer sql = new StringBuffer(" SELECT * from " + BeanUtil.getTableName(clazz) + " dtb  where 1=1 ");
         StringBuffer where = null;
         List<String> attrNames = t.gotAttrNames();
         where = getWhereCondition(t, attrNames, paramlist);
@@ -151,7 +152,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         List<Object> paramlist = new ArrayList<>();
         StringBuffer sql = getListBaseSql(t, paramlist);
         if (sql == null) {
-            sql = new StringBuffer( "SELECT * from " + t.getTableName() + " dtb ");
+            sql = new StringBuffer( "SELECT * from " + BeanUtil.getTableName(clazz) + " dtb ");
         }
         PageBean page = new PageBean();
         page.setPageNum(pageNum);
@@ -192,8 +193,8 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     @Override
     public int save(T entity) throws Exception {
         StringBuffer sql = new StringBuffer(" INSERT INTO ")
-                .append(entity.getTableName());
-        StringBuffer finalsb = new StringBuffer("INSERT INTO " + entity.getTableName() + " (");
+                .append(BeanUtil.getTableName(clazz));
+        StringBuffer finalsb = new StringBuffer("INSERT INTO " + BeanUtil.getTableName(clazz) + " (");
         StringBuffer paramsb = new StringBuffer();
         StringBuffer valuesb = new StringBuffer("(");
         List<String> attrNames = entity.gotAttrNames();
@@ -232,7 +233,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     public void delete(PK id) {
         try {
             BaseEntity baseEntity = clazz.newInstance();
-            String sql = "DELETE FROM " + baseEntity.getTableName() + " where " + baseEntity.getPkName() + "=?";
+            String sql = "DELETE FROM " + BeanUtil.getTableName(clazz) + " where " + baseEntity.getPkName() + "=?";
             jdbcTemplate.update(sql, id);
         }catch (Exception e) {
             LogUtil.error(getClass(), "delete wrong:" + ExceptionWrite.get(e));
@@ -243,7 +244,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     public int update(T entity, boolean isEmptyUp) throws Exception {
         try {
             StringBuffer sb = new StringBuffer(" update ");
-            sb.append(entity.getTableName()).append(" dtb set ");
+            sb.append(BeanUtil.getTableName(entity.getClass())).append(" dtb set ");
             String where = null;
             List<String> attrNames = entity.gotAttrNames();
             List<Object> setValueList = new ArrayList<>();

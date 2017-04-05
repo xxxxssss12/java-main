@@ -1,12 +1,17 @@
 package xs.spider.base.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javafx.scene.control.Tab;
+import xs.spider.base.anno.Table;
 import xs.spider.base.anno.UserDefined;
 import xs.spider.base.util.BeanUtil;
+import xs.spider.base.util.Util;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,9 +81,9 @@ public abstract class BaseEntity implements Serializable {
         BeanUtil.setProperty(this, name, value);
     }
 
-    @JsonIgnore
-    public abstract String getTableName();
-
+//    @JsonIgnore
+//    public abstract String getTableName();
+//
     @JsonIgnore
     public abstract String getPkName();
 }

@@ -1,30 +1,27 @@
 package xs.spider.main;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import xs.spider.base.bean.ResultInfo;
 import xs.spider.base.init.Log4jInit;
-import xs.spider.base.util.ExceptionWrite;
+import xs.spider.base.util.ApplicationContextHandle;
 import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.Util;
 import xs.spider.base.util.http.HttpClientUtil;
 import xs.spider.base.util.http.HttpReqBean;
 import xs.spider.base.util.http.HttpRespBean;
+import xs.spider.work.bean.TitleInfo;
+import xs.spider.work.dao.TitleInfoDao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +34,7 @@ import java.util.Map;
 public class Start {
     private static Logger logger = LoggerFactory.getLogger(Start.class);
     private static ClassPathXmlApplicationContext context;
+    private static TitleInfoDao titleInfoDao;
     public static void main(String[] args) throws Exception {
         logger.info("SpringContextContainer begin starting.....");
         Log4jInit.init();
@@ -47,7 +45,7 @@ public class Start {
         );
         context.start();
         logger.info("SpringContextContainer is starting.....");
-
+        titleInfoDao = (TitleInfoDao) ApplicationContextHandle.getBean("titleInfoDao");
         //--------------------------------------------开始----------------------------------------
         BasicCookieStore cookieStore = new BasicCookieStore();
         try(CloseableHttpClient httpclient = HttpClients.custom()
@@ -84,7 +82,9 @@ public class Start {
                     return;
                 }
                 LogUtil.info(HttpClientUtil.class, "登录完毕。。。");
-                getFangzuInfo(httpclient, cookieStore);
+                for (int i=0; i<50; i++) {
+                    getFangzuInfo(httpclient, cookieStore, i);
+                }
             } else {
                 System.out.println(ri.getMessage());
             }
@@ -93,6 +93,33 @@ public class Start {
         }
     }
 
-    private static void getFangzuInfo(CloseableHttpClient httpclient, BasicCookieStore cookieStore) {
+    /**
+     * 获取租房信息
+     * @param httpclient
+     * @param cookieStore
+     */
+    private static void getFangzuInfo(CloseableHttpClient httpclient, BasicCookieStore cookieStore, Integer pagenum) {
+        String url = "https://www.douban.com/group/?start=" + pagenum*50;
+        HttpReqBean req = new HttpReqBean(url, null, 0, null, null);
+        HttpRespBean resp = HttpClientUtil.doGet(req, httpclient, cookieStore);
+        if (resp.getCode() == 1) {
+            try {
+                Document page = Jsoup.parse(resp.getResponseBody());
+                Elements trs = page.select(".topics").first().child(0).child(0).children();
+                for (int i=0; i<trs.size(); i++) {
+                    Element row = trs.get(i);
+                    TitleInfo titleInfo = new TitleInfo();
+                    titleInfo.setContent(row.child(0).select("a").first().attr("title"));
+                    titleInfo.setUrl(row.child(0).select("a").first().attr("href"));
+                    titleInfo.setPagenum(pagenum+1);
+                    titleInfo.setTime(row.select(".td-time").first().attr("title"));
+                    titleInfoDao.save(titleInfo);
+                }
+            } catch (Exception e) {
+                LogUtil.error(Start.class, e, "爬取异常！");
+            }
+        } else {
+            LogUtil.info(Start.class, "请求异常");
+        }
     }
 }
