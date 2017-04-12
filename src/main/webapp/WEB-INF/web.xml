@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+    <display-name>Archetype Created Web Application</display-name>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:config/spring.xml,classpath:config/spring-jdbc.xml</param-value>
+    </context-param>
+    <!-- log4j初始化 -->
+    <servlet>
+        <servlet-name>log4j</servlet-name>
+        <servlet-class>xs.spider.base.init.Log4jInit</servlet-class>
+        <init-param>
+            <param-name>log4j</param-name>
+            <param-value>WEB-INF/classes/config/log4j.properties</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+        <init-param>
+
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>pageFilter</filter-name>
+        <filter-class>xs.spider.base.pager.PageFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>pageFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!--
+    <filter>
+      <filter-name>testFilter</filter-name>
+      <filter-class>xs.base.filter.TestFilter</filter-class>
+    </filter>
+    -->
+    <!-- openSessionInView配置 作用是延迟session关闭到view层 -->
+    <!--<filter>-->
+    <!--<filter-name>openSessionInViewFilter</filter-name>-->
+    <!--<filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>-->
+    <!--<init-param>-->
+    <!--<param-name>singleSession</param-name>-->
+    <!--<param-value>true</param-value>-->
+    <!--</init-param>-->
+    <!--</filter>-->
+
+    <!-- 监听servletContext，启动contextConfigLocation中的spring配置信息 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- 防止spring内存溢出监听器 -->
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+
+    <servlet>
+        <description>spring mvc servlet</description>
+        <servlet-name>rest</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <!-- 此处配置的是SpringMVC的配置文件 -->
+            <param-value>classpath:config/spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>rest</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!--<filter-mapping>-->
+    <!--<filter-name>openSessionInViewFilter</filter-name>-->
+    <!--<url-pattern>/</url-pattern>-->
+    <!--</filter-mapping>-->
+
+    <!-- 配置session超时时间，单位分钟 -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>static/redirect.html</welcome-file>
+    </welcome-file-list>
+    <!-- 加载配置文件到内存 -->
+    <servlet>
+        <servlet-name>constInit</servlet-name>
+        <servlet-class>xs.account.common.init.ConstInit</servlet-class>
+        <load-on-startup>9999</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>constInit</servlet-name>
+        <url-pattern>/const.init</url-pattern>
+    </servlet-mapping>
+</web-app>

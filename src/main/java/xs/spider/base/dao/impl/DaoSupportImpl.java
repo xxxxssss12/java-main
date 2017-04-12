@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import xs.spider.base.bean.BaseEntity;
 import xs.spider.base.bean.PageBean;
 import xs.spider.base.dao.DaoSupport;
+import xs.spider.base.pager.PageContext;
 import xs.spider.base.util.BeanUtil;
 import xs.spider.base.util.ExceptionWrite;
 import xs.spider.base.util.LogUtil;
@@ -135,16 +136,14 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     }
 
     @Override
-    public PageBean getPage(T t, Integer num, Integer size) throws Exception {
-        return getPage(t, null, num, size);
+    public PageBean getPage(T t) throws Exception {
+        return getPage(t, null);
     }
 
     @Override
-    public PageBean getPage(T t, String orderStr, Integer num, Integer size) throws Exception {
-//        Integer pageNum = PageContext.getPageNum();
-//        Integer pageSize = PageContext.getPageSize();
-        Integer pageNum = num;
-        Integer pageSize = size;
+    public PageBean getPage(T t, String orderStr) throws Exception {
+        Integer pageNum = PageContext.getPageNum();
+        Integer pageSize = PageContext.getPageSize();
         if (Util.isBlank(pageNum) || Util.isBlank(pageSize)) {
             return null;
         }

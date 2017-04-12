@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>房源信息</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/showDetail.css">
+    <link rel="stylesheet" href="./tools/datepicker/bootstrap-datetimepicker.min.css">
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="javascript:void(true)">房源</a>
+            </div>
+            <!--<div id="navbar" class="collapse navbar-collapse">-->
+                <!--<ul class="nav navbar-nav">-->
+                    <!--<li class="active"><a href="javascript:void(true)">流水</a></li>-->
+                    <!--<li><a href="./report_overview.html">报表</a></li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        </div>
+    </nav>
+    <!--<div class="container-fluid">-->
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="javascript:void(true)">房源列表</a></li>
+                <!--<li><a href="./addDetail.html">添加流水</a></li>-->
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header" style="font-family: 'Microsoft YaHei UI Light'">房源信息</h1>
+            <div class="container-fluid">
+                <div class="row">
+                    <div id="form1" class="col-xs-4">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label font-yahei">开始日期</label>
+                                <div class="input-append date form_datetime input-group" style="width: 250px" data-link-field="startDate_inp">
+                                    <input size="16" class="form-control" type="text" value="" placeholder="开始日期" readonly>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="add-on input-group-addon "><i class="icon-th glyphicon glyphicon-th"></i></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label font-yahei">结束日期</label>
+                                <div class="input-append date form_datetime input-group" style="width: 250px" data-link-field="endDate_inp">
+                                    <input size="16" class="form-control" type="text" value="" placeholder="结束日期" readonly>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="add-on input-group-addon "><i class="icon-th glyphicon glyphicon-th"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="form2" class="col-xs-4">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label font-yahei">房源信息</label>
+                                <div class="input-group" style="width: 250px">
+                                    <input class="form-control num" style="border-radius:5px;" type="text" id="fangyuan">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-3"></div>
+                                <input type="button" class="btn btn-default" id="query" value="查询">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive" id="grid">
+            </div>
+
+            <input type="hidden" id="startDate_inp" value="" /><br/>
+            <input type="hidden" id="endDate_inp" value="" /><br/>
+        </div>
+    </div>
+</div>
+<script src="./js/jquery-3.1.1.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/xsgrid-bootstrap.js"></script>
+<script src="./tools/datepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="./tools/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script>
+    grid = $("#grid").xsGrid({
+        url: baseUrl + "/accountDetail/getByPage",
+        pageSize: 10,
+        gridid:"grid",
+        title: "流水",
+        params: {
+            orderStr: " zhichudate desc,zhichutime desc "
+        },
+        columns : [
+            {type:'hide',name:"id", display:"主键"},
+            {type:'lable',name:"realname", display:"名字"},
+            {type:'lable',name:"typename", display:"类型"
+//                    render: function (row) {
+//                        if (castTypes) {
+//                            for (var i=0; i<castTypes.length; i++) {
+//                                if (row.type == castTypes[i].id) {
+//                                    return castTypes[i].typename;
+//                                }
+//                            }
+//                        } else {
+//                            return row.type;
+//                        }
+//                    }
+            },
+            {type:'lable',name:"afterpayDebt", display:"开销后欠债"},
+        ]
+    });
+    $("#query").click(function() {
+        var querydata = new Object();
+        if ($("#startDate_inp").val()) {
+            querydata["startDate"] = $("#startDate_inp").val();
+        }
+        if ($("#endDate_inp").val()) {
+            querydata["endDate"] = $("#endDate_inp").val();
+        }
+        if ($("#userid_query").val() != -1) {
+            querydata["userId"] = $("#userid_query").val();
+        }
+        if ($("#type_query").val() != -1) {
+            querydata["types"] = $("#type_query").val();
+        }
+        if ($("#payway_query").val() != -1) {
+            querydata["payways"] = $("#payway_query").val();
+        }
+        if ($("#minAmount_query").val()) {
+            querydata["minAmount"] = $("#minAmount_query").val();
+        }
+        if ($("#maxAmount_query").val()) {
+            querydata["maxAmount"] = $("#maxAmount_query").val();
+        }
+        grid.xsQuery({
+            data:querydata,
+            search: "first"
+        })
+    })
+    $(".form_datetime").datetimepicker({
+        language:"zh-CN",
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayBtn: true,
+        weekStart: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>
+</body>
+</html>

@@ -13,7 +13,7 @@ public class TitleInfo extends BaseEntity {
     private Integer id;
     private String url;
     private String content;
-    private String time;
+    private Date time;
     private Integer pagenum;
 
     public Integer getId() {
@@ -40,11 +40,11 @@ public class TitleInfo extends BaseEntity {
         this.content = content;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

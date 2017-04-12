@@ -15,6 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import xs.spider.base.bean.ResultInfo;
 import xs.spider.base.init.Log4jInit;
 import xs.spider.base.util.ApplicationContextHandle;
+import xs.spider.base.util.DateUtil;
 import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.Util;
 import xs.spider.base.util.http.HttpClientUtil;
@@ -82,7 +83,7 @@ public class Start {
                     return;
                 }
                 LogUtil.info(HttpClientUtil.class, "登录完毕。。。");
-                for (int i=0; i<50; i++) {
+                for (int i=0; i<2000; i++) {
                     getFangzuInfo(httpclient, cookieStore, i);
                 }
             } else {
@@ -106,14 +107,23 @@ public class Start {
             try {
                 Document page = Jsoup.parse(resp.getResponseBody());
                 Elements trs = page.select(".topics").first().child(0).child(0).children();
+                if (trs.isEmpty()) {
+                    LogUtil.info(Start.class, "没有数据了");
+                    System.exit(0);
+                }
                 for (int i=0; i<trs.size(); i++) {
                     Element row = trs.get(i);
                     TitleInfo titleInfo = new TitleInfo();
                     titleInfo.setContent(row.child(0).select("a").first().attr("title"));
                     titleInfo.setUrl(row.child(0).select("a").first().attr("href"));
                     titleInfo.setPagenum(pagenum+1);
-                    titleInfo.setTime(row.select(".td-time").first().attr("title"));
-                    titleInfoDao.save(titleInfo);
+                    titleInfo.setTime(DateUtil.parseStringToDate(row.select(".td-time").first().attr("title")
+                            , DateUtil.C_YYYY_MM_DD_HH_MM_SS));
+                    try {
+                        titleInfoDao.save(titleInfo);
+                    } catch (Exception e) {
+                        LogUtil.info(Start.class, "重复信息");
+                    }
                 }
             } catch (Exception e) {
                 LogUtil.error(Start.class, e, "爬取异常！");
