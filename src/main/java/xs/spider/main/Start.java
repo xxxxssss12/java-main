@@ -83,7 +83,7 @@ public class Start {
                     return;
                 }
                 LogUtil.info(HttpClientUtil.class, "登录完毕。。。");
-                for (int i=0; i<2000; i++) {
+                for (int i=0; i<50; i++) {
                     getFangzuInfo(httpclient, cookieStore, i);
                 }
             } else {
@@ -117,13 +117,8 @@ public class Start {
                     titleInfo.setContent(row.child(0).select("a").first().attr("title"));
                     titleInfo.setUrl(row.child(0).select("a").first().attr("href"));
                     titleInfo.setPagenum(pagenum+1);
-                    titleInfo.setTime(DateUtil.parseStringToDate(row.select(".td-time").first().attr("title")
-                            , DateUtil.C_YYYY_MM_DD_HH_MM_SS));
-                    try {
-                        titleInfoDao.save(titleInfo);
-                    } catch (Exception e) {
-                        LogUtil.info(Start.class, "重复信息");
-                    }
+                    titleInfo.setTime(row.select(".td-time").first().attr("title"));
+                    titleInfoDao.save(titleInfo);
                 }
             } catch (Exception e) {
                 LogUtil.error(Start.class, e, "爬取异常！");
