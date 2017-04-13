@@ -2,14 +2,14 @@
  * Created by hasee on 2017/1/25.
  */
 var baseUrl;
-$(function () {
+// $(function () {
     basepath=function(){
         var location = (window.location+"").split("/");
         var basePath = location[0]+"//"+location[2]+"/"+location[3]+"/";
         return basePath;
     };
     baseUrl = basepath();
-})
+// })
 function getNowFormatDate() {
     var date = new Date();
     var seperator1 = "-";

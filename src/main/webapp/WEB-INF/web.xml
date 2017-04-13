@@ -6,7 +6,7 @@
     <display-name>Archetype Created Web Application</display-name>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:config/spring.xml,classpath:config/spring-jdbc.xml</param-value>
+        <param-value>classpath:config/applicationContext.xml</param-value>
     </context-param>
     <!-- log4j初始化 -->
     <servlet>
@@ -77,7 +77,7 @@
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <!-- 此处配置的是SpringMVC的配置文件 -->
-            <param-value>classpath:config/spring-mvc.xml</param-value>
+            <param-value>classpath:config/applicationContext-mvc.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -100,14 +100,4 @@
     <welcome-file-list>
         <welcome-file>static/redirect.html</welcome-file>
     </welcome-file-list>
-    <!-- 加载配置文件到内存 -->
-    <servlet>
-        <servlet-name>constInit</servlet-name>
-        <servlet-class>xs.account.common.init.ConstInit</servlet-class>
-        <load-on-startup>9999</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>constInit</servlet-name>
-        <url-pattern>/const.init</url-pattern>
-    </servlet-mapping>
 </web-app>

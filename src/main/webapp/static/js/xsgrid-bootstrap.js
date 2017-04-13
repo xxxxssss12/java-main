@@ -2,7 +2,7 @@
  * 第一个控件！分页。
  * Created by hasee on 2017/1/25.
  */
-$(function() {
+// $(function() {
     $.fn.xsGrid = function(options) {
         var $this= $(this);
         var url = options.url;
@@ -179,4 +179,4 @@ $(function() {
         })
         return $this;
     }
-})
+// })

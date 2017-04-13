@@ -1,9 +1,11 @@
 package xs.spider.test;
 
+import com.alibaba.fastjson.JSON;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import xs.spider.base.init.Log4jInit;
+import xs.spider.base.pager.PageContext;
 import xs.spider.base.util.ApplicationContextHandle;
 import xs.spider.base.util.JsonUtil;
 import xs.spider.work.bean.TitleInfo;
@@ -39,5 +41,10 @@ public class ATest {
         bean.setId(1);
         titleInfoDao.save(bean);
     }
-
+    @Test
+    public void testPage() throws Exception {
+        PageContext.initPage(1, 10);
+        TitleInfoDao titleInfoDao = (TitleInfoDao) ApplicationContextHandle.getBean("titleInfoDao");
+        System.out.println(JSON.toJSONString(titleInfoDao.getPage("三元桥 和平 亮马桥 安贞 惠新 芍药居")));
+    }
 }

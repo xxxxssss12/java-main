@@ -139,7 +139,38 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     public PageBean getPage(T t) throws Exception {
         return getPage(t, null);
     }
-
+    @Override
+    public PageBean getPage(String sql, List<Object> paramlist) {
+        Integer pageNum = PageContext.getPageNum();
+        Integer pageSize = PageContext.getPageSize();
+        if (Util.isBlank(pageNum) || Util.isBlank(pageSize)) {
+            return null;
+        }
+        Integer startLine = (pageNum-1) * pageSize;
+        PageBean page = new PageBean();
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setTotal(getCount(sql.toString(), paramlist));
+        if (page.getTotal() == null) {
+            page.setCode(-1);
+            return page;
+        }
+        sql += " LIMIT " + startLine + "," + pageSize;
+        try {
+            List<T> result = jdbcTemplate.query(sql.toString(), paramlist.toArray(), new BeanPropertyRowMapper<T>(clazz));
+            page.setCode(1);
+            if (Util.isBlank(result) || result.isEmpty()) {
+                return page;
+            } else {
+                page.setData(result);
+                return page;
+            }
+        } catch (Exception e) {
+            LogUtil.error(getClass(), ExceptionWrite.get(e));
+            page.setCode(-1);
+            return page;
+        }
+    }
     @Override
     public PageBean getPage(T t, String orderStr) throws Exception {
         Integer pageNum = PageContext.getPageNum();
@@ -183,7 +214,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         try {
             StringBuffer finalSql = new StringBuffer();
             finalSql.append(" SELECT COUNT(*) FROM (").append(sql).append(") cnt");
-            return jdbcTemplate.queryForObject(finalSql.toString(), paramList.toArray(), Integer.class);
+            return jdbcTemplate.queryForObject(finalSql.toString(), paramList!=null?paramList.toArray():null, Integer.class);
         } catch (Exception e) {
             LogUtil.error(getClass(), "get Count error!" + ExceptionWrite.get(e));
             return null;

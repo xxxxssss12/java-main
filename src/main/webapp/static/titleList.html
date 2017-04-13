@@ -94,23 +94,31 @@
     </div>
 </div>
 <script src="./js/jquery-3.1.1.min.js"></script>
+<script src="./js/common.js"></script>
 <script src="./js/bootstrap.min.js"></script>
 <script src="./js/xsgrid-bootstrap.js"></script>
 <script src="./tools/datepicker/bootstrap-datetimepicker.min.js"></script>
 <script src="./tools/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script>
     grid = $("#grid").xsGrid({
-        url: baseUrl + "/accountDetail/getByPage",
+        url: baseUrl + "/title/getByPage",
         pageSize: 10,
         gridid:"grid",
-        title: "流水",
+        title: "房源",
         params: {
-            orderStr: " zhichudate desc,zhichutime desc "
+            orderStr: ""
         },
         columns : [
             {type:'hide',name:"id", display:"主键"},
-            {type:'lable',name:"realname", display:"名字"},
-            {type:'lable',name:"typename", display:"类型"
+            {type:'lable',name:"content", display:"名字",
+                render: function(row) {
+                    var title = row.content;
+                    if (title && title.length > 60) title = title.substring(0,60) + '...';
+                    var str = "<a href='"+row.url+"' title='"+row.content+"' target='_blank'>"+title+"</a>";
+                    return str
+                }
+            },
+            {type:'lable',name:"time", display:"最后回复时间"
 //                    render: function (row) {
 //                        if (castTypes) {
 //                            for (var i=0; i<castTypes.length; i++) {
@@ -122,35 +130,14 @@
 //                            return row.type;
 //                        }
 //                    }
-            },
-            {type:'lable',name:"afterpayDebt", display:"开销后欠债"},
+            }
         ]
     });
     $("#query").click(function() {
-        var querydata = new Object();
-        if ($("#startDate_inp").val()) {
-            querydata["startDate"] = $("#startDate_inp").val();
-        }
-        if ($("#endDate_inp").val()) {
-            querydata["endDate"] = $("#endDate_inp").val();
-        }
-        if ($("#userid_query").val() != -1) {
-            querydata["userId"] = $("#userid_query").val();
-        }
-        if ($("#type_query").val() != -1) {
-            querydata["types"] = $("#type_query").val();
-        }
-        if ($("#payway_query").val() != -1) {
-            querydata["payways"] = $("#payway_query").val();
-        }
-        if ($("#minAmount_query").val()) {
-            querydata["minAmount"] = $("#minAmount_query").val();
-        }
-        if ($("#maxAmount_query").val()) {
-            querydata["maxAmount"] = $("#maxAmount_query").val();
-        }
         grid.xsQuery({
-            data:querydata,
+            data: {
+                "title":$("#fangyuan").val()
+            },
             search: "first"
         })
     })

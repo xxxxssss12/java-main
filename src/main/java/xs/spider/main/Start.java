@@ -38,7 +38,7 @@ public class Start {
     private static TitleInfoDao titleInfoDao;
     public static void main(String[] args) throws Exception {
         logger.info("SpringContextContainer begin starting.....");
-        Log4jInit.init();
+        Log4jInit.init1();
         context = new ClassPathXmlApplicationContext(
                 new String[]{
                         "classpath:config/applicationContext*.xml"
@@ -117,7 +117,8 @@ public class Start {
                     titleInfo.setContent(row.child(0).select("a").first().attr("title"));
                     titleInfo.setUrl(row.child(0).select("a").first().attr("href"));
                     titleInfo.setPagenum(pagenum+1);
-                    titleInfo.setTime(row.select(".td-time").first().attr("title"));
+                    titleInfo.setTime(DateUtil.parseStringToDate(row.select(".td-time").first().attr("title"),
+                            DateUtil.C_YYYY_MM_DD_HH_MM_SS));
                     titleInfoDao.save(titleInfo);
                 }
             } catch (Exception e) {
