@@ -181,10 +181,10 @@ public class HttpClientUtil {
 		List<Cookie> cookies = reqBean.getCookies();
 		LogUtil.info(HttpClientUtil.class, "httpRequest url:" + url + ";param:" + JsonUtil.beanToJson(parammap));
 		StringBuffer url_final = new StringBuffer(url);
-		if (url.indexOf("?") == -1) {
+		if (url.indexOf("?") == -1 && !Util.isBlank(reqBean.getParamStr())) {
 			url_final.append("?");
 		}
-		if (cookies != null && !cookies.isEmpty()) {
+		if (cookies != null && !cookies.isEmpty() && cookieStore != null) {
 			for (Cookie cookie : cookies)
 				cookieStore.addCookie(cookie);
 		}
@@ -206,7 +206,7 @@ public class HttpClientUtil {
 		List<Cookie> cookies = reqBean.getCookies();
 		LogUtil.info(HttpClientUtil.class, "httpRequest url:" + url + ";param:" + JsonUtil.beanToJson(parammap));
 		HttpPost post = new HttpPost(url);
-		if (cookies != null && !cookies.isEmpty()) {
+		if (cookies != null && !cookies.isEmpty()&& cookieStore != null) {
 			for (Cookie cookie : cookies)
 				cookieStore.addCookie(cookie);
 		}

@@ -157,7 +157,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         }
         sql += " LIMIT " + startLine + "," + pageSize;
         try {
-            List<T> result = jdbcTemplate.query(sql.toString(), paramlist.toArray(), new BeanPropertyRowMapper<T>(clazz));
+            List<T> result = jdbcTemplate.query(sql.toString(), paramlist==null?null:paramlist.toArray(), new BeanPropertyRowMapper<T>(clazz));
             page.setCode(1);
             if (Util.isBlank(result) || result.isEmpty()) {
                 return page;

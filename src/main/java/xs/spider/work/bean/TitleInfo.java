@@ -15,7 +15,7 @@ public class TitleInfo extends BaseEntity {
     private String content;
     private Date time;
     private Integer pagenum;
-
+    private Integer isValid;
     public Integer getId() {
         return id;
     }
@@ -59,5 +59,13 @@ public class TitleInfo extends BaseEntity {
     @Override
     public String getPkName() {
         return "id";
+    }
+
+    public Integer getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(Integer isValid) {
+        this.isValid = isValid;
     }
 }

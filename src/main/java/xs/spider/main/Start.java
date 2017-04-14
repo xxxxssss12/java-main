@@ -33,20 +33,11 @@ import java.util.Map;
  * Created by xs on 2017/4/1.
  */
 public class Start {
-    private static Logger logger = LoggerFactory.getLogger(Start.class);
-    private static ClassPathXmlApplicationContext context;
-    private static TitleInfoDao titleInfoDao;
+    static {
+        Init.init();
+    }
+    private static TitleInfoDao titleInfoDao = (TitleInfoDao) ApplicationContextHandle.getBean("titleInfoDao");
     public static void main(String[] args) throws Exception {
-        logger.info("SpringContextContainer begin starting.....");
-        Log4jInit.init1();
-        context = new ClassPathXmlApplicationContext(
-                new String[]{
-                        "classpath:config/applicationContext*.xml"
-                }
-        );
-        context.start();
-        logger.info("SpringContextContainer is starting.....");
-        titleInfoDao = (TitleInfoDao) ApplicationContextHandle.getBean("titleInfoDao");
         //--------------------------------------------开始----------------------------------------
         BasicCookieStore cookieStore = new BasicCookieStore();
         try(CloseableHttpClient httpclient = HttpClients.custom()
