@@ -73,7 +73,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label font-yahei">房源信息</label>
                                 <div class="input-group" style="width: 250px">
-                                    <input class="form-control num" style="border-radius:5px;" type="text" id="fangyuan">
+                                    <input class="form-control num" onkeyup="enter()" style="border-radius:5px;" type="text" id="fangyuan">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -109,7 +109,13 @@
             orderStr: ""
         },
         columns : [
-            {type:'hide',name:"id", display:"主键"},
+            {type:'hide',name:"id", display:"主键", title:"true"},
+            {type:'lable',name:"content", display:"操作",
+                render: function(row) {
+                    var str = "<a href='javascript:void(0)' onclick='javascript:remove("+row.id+")' >不感兴趣</a>";
+                    return str;
+                }
+            },
             {type:'lable',name:"content", display:"名字",
                 render: function(row) {
                     var title = row.content;
@@ -133,6 +139,35 @@
             }
         ]
     });
+    var enter = function() {
+        var code = event.keyCode;
+        if(code == 13) {
+            $("#query").click();
+        }
+    }
+    var remove = function(id) {
+//        var flag = confirm("确定？")
+//        if (!flag) return;
+        $.ajax({
+            url:baseUrl + "/title/remove",
+            type:"post",
+            data:{ "id":id},
+            dataType:"json",
+            success:function(ri) {
+                if (ri && ri.code == 1) {
+                    var td = $("td[title='"+id+"']")
+                    if (td) {
+                        td.parent().remove();
+                    }
+                } else {
+                    alert(ri.message);
+                }
+            },
+            error:function() {
+
+            }
+        })
+    }
     $("#query").click(function() {
         grid.xsQuery({
             data: {

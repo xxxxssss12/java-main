@@ -75,13 +75,13 @@ public class CleanInvalid {
 
                     Thread.sleep(1000 + (ran.nextInt(3000)-1000));
                 }
-                pagenum++;
+//                pagenum++;
             }
         } catch (Exception e) {
         }
     }
 
-    private static ResultInfo checkUrl(CloseableHttpClient httpClient, String url, int retry) {
+    private static ResultInfo checkUrl(CloseableHttpClient httpClient, String url, int retry) throws Exception {
         if (Util.isBlank(url)) {
             return new ResultInfo(-1, "");
         }
@@ -114,8 +114,13 @@ public class CleanInvalid {
                 if (status.equals(404)) {
                     return new ResultInfo(-1, "");
                 } else {
-                    System.out.println("请求了"+cnt+"次后停下来了");
-                    System.exit(1);
+                    if (retry >3) {
+                        System.out.println("请求了"+cnt+"次后停下来了");
+                        System.exit(1);
+                    } else {
+                        DoubanHttpUtil.dologin(httpClient);
+                        return checkUrl(httpClient, url, retry + 1);
+                    }
                 }
             }
         }

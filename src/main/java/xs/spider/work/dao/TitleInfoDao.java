@@ -21,7 +21,7 @@ public class TitleInfoDao extends DaoSupportImpl<TitleInfo,Integer> {
         StringBuffer sql = new StringBuffer();
         String[] condition = title.split(" ");
         sql.append("select * from ").append(BeanUtil.getTableName(TitleInfo.class))
-                .append(" t where ");
+                .append(" t where t.isValid>0 and (");
         int cnt = 0;
         for (int i=0; i<condition.length; i++) {
             if (!Util.isBlank(condition[i])) {
@@ -30,7 +30,7 @@ public class TitleInfoDao extends DaoSupportImpl<TitleInfo,Integer> {
                 cnt++;
             }
         }
-        sql.append(" order by t.time desc ");
+        sql.append(" ) order by t.time desc ");
         System.out.println(sql);
         return getPage(sql.toString(),new ArrayList());
     }

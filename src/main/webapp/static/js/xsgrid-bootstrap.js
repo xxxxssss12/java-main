@@ -130,6 +130,7 @@
                         var hide = false;
                         if (type == 'hide') hide = true;
                         var name = columns[j].name;
+                        var title = columns[j].title;
                         var value = list[i][columns[j].name];
                         var render = columns[j].render;
                         if (render) {
@@ -139,7 +140,7 @@
                             value = "";
                         }
                         html_str += "<td name='" + name + "' id='" + gridid + "_l_" + i + "_" + j + "'" +
-                            (hide?" style='display:none' ":'') + ">" + value + "</td>";
+                            (hide?" style='display:none' ":'') + (title?" title='"+value+"'":"")+ ">" + value + "</td>";
                     }
                     html_str += "</tr>";
                 }

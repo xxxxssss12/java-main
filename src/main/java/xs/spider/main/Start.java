@@ -43,42 +43,9 @@ public class Start {
         try(CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultCookieStore(cookieStore)
                 .build()) {
-            ResultInfo ri = HttpClientUtil.doGet("https://www.douban.com/login?source=group", null);
-            Map<String, Object> map = new HashMap<>();
-            map.put("source", "group");
-            map.put("redir", "https://www.douban.com/group/");
-            map.put("form_email", "xs94xs@sina.com");
-            map.put("form_password", "wdmmwrz123");
-            map.put("remember", "on");
-            List<NameValuePair> pairList = new ArrayList<>();
-            if (ri.getCode() == 1) {
-                Document loginPage = Jsoup.parse(Util.null2string(ri.getData()));
-                Elements elements = loginPage.select("input[name=captcha-id]");
-                if (elements != null && !Util.isBlank(elements.first().val())) {
-                    String captchaId = elements.first().val();
-                    String yzm_pic_url = loginPage.select("[id=captcha_image]").attr("src");
-                    HttpClientUtil.getStaticToFile(yzm_pic_url, "C:\\Users\\hasee\\Desktop\\a.jpg");
-                    String yzm = Util.getLineOnKeyBoradInput();
-                    pairList.add(new BasicNameValuePair("captcha-id", captchaId));
-                    pairList.add(new BasicNameValuePair("captcha-solution", yzm));
-                    map.put("captcha-id", captchaId);
-                    map.put("captcha-solution", yzm);
-                } else {
-                    LogUtil.info(Start.class, "不需要验证码...");
-                }
-                LogUtil.info(HttpClientUtil.class, "登录开始。。。");
-                HttpReqBean reqBean = new HttpReqBean("https://accounts.douban.com/login", map, 1, null, null);
-                HttpRespBean resp = HttpClientUtil.doPost(reqBean, httpclient, cookieStore);
-                if (resp.getCode() != 1) {
-                    LogUtil.info(Start.class, resp.getMessage());
-                    return;
-                }
-                LogUtil.info(HttpClientUtil.class, "登录完毕。。。");
-                for (int i=0; i<50; i++) {
-                    getFangzuInfo(httpclient, cookieStore, i);
-                }
-            } else {
-                System.out.println(ri.getMessage());
+            DoubanHttpUtil.dologin(httpclient);
+            for (int i=0; i<50; i++) {
+                getFangzuInfo(httpclient, cookieStore, i);
             }
         } catch(Exception e) {
             LogUtil.error(Start.class, e, "系统发生异常");
