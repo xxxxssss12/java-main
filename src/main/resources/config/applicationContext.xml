@@ -86,4 +86,5 @@
     <bean id="applicationContextHandle" class="xs.spider.base.util.ApplicationContextHandle">
     </bean>
     <import resource="classpath*:config/applicationContext-mvc.xml" />
+    <import resource="classpath*:config/spring-shiro.xml" />
 </beans>
