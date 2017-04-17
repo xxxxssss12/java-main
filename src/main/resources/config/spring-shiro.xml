@@ -52,8 +52,8 @@
                 <prop key="/static/tools/*">anon</prop>
                 <prop key="/static/redirect.html">anon</prop>
                 <prop key="/auth/doLogin">anon</prop>
-                <prop key="/**">permissionFilter</prop>
                 <prop key="/static/*.html">authc</prop>
+                <prop key="/**">permissionFilter</prop>
             </props>
         </property>
         <property name="filters">

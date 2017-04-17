@@ -49,11 +49,17 @@ public class PermissionFilter implements Filter {
                 chain.doFilter(servletRequest,servletResponse);
                 return;
             }
-            if (url.indexOf(".") != -1 || noAuthUrls.contains(url)) {
+            if (url.indexOf(".") != -1) {
                 //放行
                 chain.doFilter(servletRequest,servletResponse);
                 return;
             }
+            if (noAuthUrls.contains(url)) {
+                //放行
+                chain.doFilter(servletRequest,servletResponse);
+                return;
+            }
+
             if (isLogin() && !Util.isBlank(Util.null2string(SecurityUtils.getSubject().getPrincipal()))) {
                 chain.doFilter(servletRequest, servletResponse);
                 return;

@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="container">
-    <form class="form-signin">
+    <div class="form-signin">
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
@@ -25,9 +25,8 @@
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" id="submit">Sign in</button>
-    </form>
-
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" id="submit">Sign in</button>
 </div> <!-- /container -->
 <script src="./js/jquery-3.1.1.min.js"></script>
 <script src="./js/common.js"></script>
@@ -46,6 +45,7 @@
         $.ajax({
             url:baseUrl + "auth/doLogin",
             type:"post",
+//            contentType:"application/json;",
             data:{
                 "username":username,
                 "password":password
