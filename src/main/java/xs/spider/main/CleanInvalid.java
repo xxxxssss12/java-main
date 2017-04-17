@@ -12,6 +12,7 @@ import xs.spider.base.bean.PageBean;
 import xs.spider.base.bean.ResultInfo;
 import xs.spider.base.pager.PageContext;
 import xs.spider.base.util.ApplicationContextHandle;
+import xs.spider.base.util.DateUtil;
 import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.Util;
 import xs.spider.base.util.http.HttpClientUtil;
@@ -40,9 +41,10 @@ public class CleanInvalid {
         try(CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultCookieStore(cookieStore)
                 .build()) {
+            DoubanHttpUtil.dologin(httpclient);
             while (true) {
                 PageContext.initPage(pagenum, 50);
-                PageBean page = titleInfoDao.getPage("select * from title_info t where isValid=1 order by id asc", null);
+                PageBean page = titleInfoDao.getPage("SELECT * from title_info WHERE createTime = '2017-04-16 11:00:33' and isValid=3 order by id asc", null);
                 List<TitleInfo> list = page.getData();
                 if (list == null || list.isEmpty()) {
                     log.info("结束了..");
@@ -63,6 +65,10 @@ public class CleanInvalid {
                         }
                         info.setIsValid(2);
                         try {
+                            if (!Util.isBlank(isValid.getData())) {
+                                info.setCreateTime(DateUtil.parseStringToDate(isValid.getData().toString(),
+                                        DateUtil.C_YYYY_MM_DD_HH_MM_SS));
+                            }
                             int i = titleInfoDao.update(info, false);
                             if (i==-1) {
                                 info.setIsValid(0);
@@ -87,24 +93,42 @@ public class CleanInvalid {
         }
         HttpReqBean req = new HttpReqBean(url, null, 0, null, null);
         HttpRespBean resp = HttpClientUtil.doGet(req, httpClient, null);
+        ResultInfo ri = new ResultInfo(1, "");
         if (resp.getCode() == 1) {
             try {
                 Document page = Jsoup.parse(resp.getResponseBody());
-                String title = page.select("title").first().text();
-                System.out.println(title);
-                if (title.equals("页面不存在")) {
-                    return new ResultInfo(-1, "");
-                } else {
-                    if (title.endsWith("...")) {
-                        title = page.select(".infobox").first().select("tr").get(1).select(".tablecc").first().text();
-                        if (!Util.isBlank(title) && title.indexOf("</strong>") != -1) {
-                            title.replace(".*</strong>", "");
-                        } else {
-                            title = title.replace("标题：", "");
-                        }
-                    }
-                    return new ResultInfo(1, title);
+                String title = "";
+                try {
+                    title = page.select("title").first().text();
+                } catch (Exception e) {
+
                 }
+                System.out.println(title);
+                if (title.equals("页面不存在") || title.equals("豆瓣")) {
+                    return new ResultInfo(-1, "");
+                }
+                if (title.endsWith("...")) {
+                    try {
+                        title = page.select(".infobox").first().select("tr").get(1).select(".tablecc").first().text();
+                    } catch (Exception e) {
+                        log.error(e);
+                        title = "";
+                    }
+                    if (!Util.isBlank(title)) {
+                        title = title.replace("标题：", "");
+                    }
+                }
+                String createTime = null;
+                try {
+                    createTime = page.select(".topic-doc").first().child(0).select(".color-green").first().text();
+                } catch (Exception e) {
+                    log.error(e);
+                }
+                ri.setCodeAndMsg(1, title);
+                if (!Util.isBlank(createTime)) {
+                    ri.setData(createTime);
+                }
+                return ri;
             } catch (Exception e) {
                 log.error("异常", e);
             }

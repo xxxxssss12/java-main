@@ -22,10 +22,14 @@ public class TitleController {
         return titleInfoDao.getPage(title);
     }
     @RequestMapping("/remove")
-    public ResultInfo remove(Integer id) throws Exception {
+    public ResultInfo remove(Integer id, Integer isDelete) throws Exception {
         if (id == null) return new ResultInfo(-1, "缺少参数");
         TitleInfo info = titleInfoDao.get(id);
-        info.setIsValid(-1);
+        if (isDelete!=null && isDelete==1) {
+            info.setIsValid(0);
+        } else {
+            info.setIsValid(-1);
+        }
         titleInfoDao.update(info, false);
         return new ResultInfo(1,"成功");
     }

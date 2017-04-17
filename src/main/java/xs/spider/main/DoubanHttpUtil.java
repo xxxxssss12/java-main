@@ -34,7 +34,7 @@ public class DoubanHttpUtil {
         if (ri.getCode() == 1) {
             Document loginPage = Jsoup.parse(Util.null2string(ri.getData()));
             Elements elements = loginPage.select("input[name=captcha-id]");
-            if (elements != null && !Util.isBlank(elements.first().val())) {
+            if (elements != null && !Util.isBlank(elements.first())) {
                 String captchaId = elements.first().val();
                 String yzm_pic_url = loginPage.select("[id=captcha_image]").attr("src");
                 HttpClientUtil.getStaticToFile(yzm_pic_url, "C:\\Users\\hasee\\Desktop\\a.jpg");

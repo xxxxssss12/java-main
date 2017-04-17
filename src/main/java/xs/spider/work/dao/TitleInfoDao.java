@@ -17,21 +17,24 @@ public class TitleInfoDao extends DaoSupportImpl<TitleInfo,Integer> {
 
     public PageBean getPage(String title) throws Exception {
         String temp = Util.null2string(title).trim();
-        if (Util.isBlank(temp)) return getPage(new TitleInfo());
+//        if (Util.isBlank(temp)) return getPage(new TitleInfo(), " dtb.createTime desc, dtb.time desc ");
         StringBuffer sql = new StringBuffer();
-        String[] condition = title.split(" ");
         sql.append("select * from ").append(BeanUtil.getTableName(TitleInfo.class))
-                .append(" t where t.isValid>0 and (");
-        int cnt = 0;
-        for (int i=0; i<condition.length; i++) {
-            if (!Util.isBlank(condition[i])) {
-                if (cnt != 0) sql.append(" or ");
-                sql.append(" t.content like '%").append(condition[i]).append("%' ");
-                cnt++;
+                .append(" t where t.isValid>0 ");
+        if (!Util.isBlank(temp)) {
+            String[] condition = title.split(" ");
+            sql.append(" and (");
+            int cnt = 0;
+            for (int i = 0; i < condition.length; i++) {
+                if (!Util.isBlank(condition[i])) {
+                    if (cnt != 0) sql.append(" or ");
+                    sql.append(" t.content like '%").append(condition[i]).append("%' ");
+                    cnt++;
+                }
             }
+            sql.append(" ) ");
         }
-        sql.append(" ) order by t.time desc ");
-        System.out.println(sql);
+        sql.append(" order by t.createTime desc, t.time desc ");
         return getPage(sql.toString(),new ArrayList());
     }
 }

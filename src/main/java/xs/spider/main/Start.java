@@ -1,33 +1,21 @@
 package xs.spider.main;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import xs.spider.base.bean.ResultInfo;
-import xs.spider.base.init.Log4jInit;
 import xs.spider.base.util.ApplicationContextHandle;
 import xs.spider.base.util.DateUtil;
 import xs.spider.base.util.LogUtil;
-import xs.spider.base.util.Util;
 import xs.spider.base.util.http.HttpClientUtil;
 import xs.spider.base.util.http.HttpReqBean;
 import xs.spider.base.util.http.HttpRespBean;
 import xs.spider.work.bean.TitleInfo;
 import xs.spider.work.dao.TitleInfoDao;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by xs on 2017/4/1.
@@ -37,6 +25,7 @@ public class Start {
         Init.init();
     }
     private static TitleInfoDao titleInfoDao = (TitleInfoDao) ApplicationContextHandle.getBean("titleInfoDao");
+    private static Logger log = LogUtil.getLogger(Start.class);
     public static void main(String[] args) throws Exception {
         //--------------------------------------------开始----------------------------------------
         BasicCookieStore cookieStore = new BasicCookieStore();
@@ -44,7 +33,7 @@ public class Start {
                 .setDefaultCookieStore(cookieStore)
                 .build()) {
             DoubanHttpUtil.dologin(httpclient);
-            for (int i=0; i<50; i++) {
+            for (int i=0; i<1000; i++) {
                 getFangzuInfo(httpclient, cookieStore, i);
             }
         } catch(Exception e) {
@@ -77,7 +66,11 @@ public class Start {
                     titleInfo.setPagenum(pagenum+1);
                     titleInfo.setTime(DateUtil.parseStringToDate(row.select(".td-time").first().attr("title"),
                             DateUtil.C_YYYY_MM_DD_HH_MM_SS));
-                    titleInfoDao.save(titleInfo);
+                    try {
+                        titleInfoDao.save(titleInfo);
+                    } catch (Exception e) {
+                        log.info("房源已存在");
+                    }
                 }
             } catch (Exception e) {
                 LogUtil.error(Start.class, e, "爬取异常！");

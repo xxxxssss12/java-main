@@ -13,6 +13,7 @@ public class TitleInfo extends BaseEntity {
     private Integer id;
     private String url;
     private String content;
+    private Date createTime;
     private Date time;
     private Integer pagenum;
     private Integer isValid;
@@ -67,5 +68,13 @@ public class TitleInfo extends BaseEntity {
 
     public void setIsValid(Integer isValid) {
         this.isValid = isValid;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

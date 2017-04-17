@@ -112,7 +112,9 @@
             {type:'hide',name:"id", display:"主键", title:"true"},
             {type:'lable',name:"content", display:"操作",
                 render: function(row) {
-                    var str = "<a href='javascript:void(0)' onclick='javascript:remove("+row.id+")' >不感兴趣</a>";
+                    var str = "<a href='javascript:void(0)' onclick='javascript:remove("+row.id+",0)' >不感兴趣</a>";
+                    str += "&nbsp;";
+                    str += "<a href='javascript:void(0)' onclick='javascript:remove("+row.id+",1)' >删除</a>"
                     return str;
                 }
             },
@@ -124,6 +126,7 @@
                     return str
                 }
             },
+            {type:'lable', name:"createTime", display:"创建时间"},
             {type:'lable',name:"time", display:"最后回复时间"
 //                    render: function (row) {
 //                        if (castTypes) {
@@ -145,13 +148,13 @@
             $("#query").click();
         }
     }
-    var remove = function(id) {
+    var remove = function(id, isDelete) {
 //        var flag = confirm("确定？")
 //        if (!flag) return;
         $.ajax({
             url:baseUrl + "/title/remove",
             type:"post",
-            data:{ "id":id},
+            data:{ "id":id, "isDelete":isDelete},
             dataType:"json",
             success:function(ri) {
                 if (ri && ri.code == 1) {
