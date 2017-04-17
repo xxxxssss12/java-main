@@ -5,19 +5,29 @@ import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import xs.spider.base.bean.ResultInfo;
+import xs.spider.base.config.ConfigProvider;
 import xs.spider.base.util.LogUtil;
+import xs.spider.base.util.PropUtil;
 import xs.spider.base.util.Util;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by xs on 2017/4/17.
  */
 public class PermissionFilter implements Filter {
     private static Logger log = LogUtil.getLogger(PermissionFilter.class);
+    private static Set<String> noAuthUrls;
+    static {
+        String str = ConfigProvider.get("noauth.urls","");
+        noAuthUrls = new HashSet<String>(Arrays.asList(str.split(",")));
+    }
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -39,7 +49,7 @@ public class PermissionFilter implements Filter {
                 chain.doFilter(servletRequest,servletResponse);
                 return;
             }
-            if (url.indexOf(".") != -1) {
+            if (url.indexOf(".") != -1 || noAuthUrls.contains(url)) {
                 //放行
                 chain.doFilter(servletRequest,servletResponse);
                 return;

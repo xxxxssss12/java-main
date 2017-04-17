@@ -19,7 +19,7 @@ public class Init {
         Log4jInit.init1();
         context = new ClassPathXmlApplicationContext(
                 new String[]{
-                        "classpath:config/applicationContext*.xml"
+                        "classpath:config/applicationContext.xml"
                 }
         );
         context.start();
