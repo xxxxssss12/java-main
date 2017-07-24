@@ -28,7 +28,7 @@ public class DoubanHttpUtil {
         map.put("source", "group");
         map.put("redir", "https://www.douban.com/group/");
         map.put("form_email", "xs94xs@sina.com");
-        map.put("form_password", "wdmmwrz123");
+        map.put("form_password", "");
         map.put("remember", "on");
         List<NameValuePair> pairList = new ArrayList<>();
         if (ri.getCode() == 1) {
