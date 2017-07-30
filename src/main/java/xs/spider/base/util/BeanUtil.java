@@ -82,7 +82,7 @@ public class BeanUtil {
 	 * @throws Exception
 	 */
 	public static void setProperty(Object bean, String propertyName,
-			Object value) throws Exception {
+			Object value) {
 		Method method;
 		try {
 			method = bhelp.getMethod(bean.getClass(), propertyName, true);
@@ -105,7 +105,11 @@ public class BeanUtil {
 		}
 		if (method == null)
 			return;
-		method.invoke(bean, new Object[] { value });
+		try {
+			method.invoke(bean, new Object[]{value});
+		} catch (Exception e) {
+			log.error(e);
+		}
 	}
 
 	/**

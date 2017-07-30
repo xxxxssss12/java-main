@@ -72,7 +72,7 @@ public abstract class BaseEntity implements Serializable {
      * @param value
      * @throws Exception
      */
-    public void setAttributeValue(String name, Object value) throws Exception {
+    public void setAttributeValue(String name, Object value) {
         BeanUtil.setProperty(this, name, value);
     }
 
