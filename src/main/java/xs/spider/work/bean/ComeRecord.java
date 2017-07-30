@@ -18,6 +18,8 @@ public class ComeRecord extends BaseEntity {
     private Date lastUpTime;
     private Long stayTime;
     private Integer failTime;   // 失败次数
+    private Integer maxScore;
+
     public Integer getId() {
         return id;
     }
@@ -64,5 +66,13 @@ public class ComeRecord extends BaseEntity {
 
     public void setFailTime(Integer failTime) {
         this.failTime = failTime;
+    }
+
+    public Integer getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(Integer maxScore) {
+        this.maxScore = maxScore;
     }
 }

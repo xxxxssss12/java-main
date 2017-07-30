@@ -10,4 +10,8 @@ import xs.spider.work.bean.ComeRecord;
  */
 @Service
 public class ComeRecordService extends DaoSupportImpl<ComeRecord, Integer> implements DaoSupport<ComeRecord, Integer> {
+    public Integer getMaxScore() {
+        String sql = "SELECT max(maxScore) From come_record t";
+        return getJdbcTemplate().queryForObject(sql, Integer.class);
+    }
 }

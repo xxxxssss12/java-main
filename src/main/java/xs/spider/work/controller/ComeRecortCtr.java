@@ -31,12 +31,18 @@ public class ComeRecortCtr {
         return new ResultInfo(1, "success", id);
     }
     @RequestMapping("/update")
-    public ResultInfo update(Integer id, Integer failTime) {
+    public ResultInfo update(Integer id, Integer failTime, Integer maxScore) {
         if (id == null) return new ResultInfo(-1, "param lost");
         ComeRecord record = comeRecordService.get(id);
         record.setFailTime(failTime);
         record.setStayTime(new Date().getTime() - record.getCreateTime().getTime());
+        if (record.getMaxScore() == null) record.setMaxScore(maxScore);
+        else if (maxScore != null && maxScore > record.getMaxScore()) record.setMaxScore(maxScore);
         comeRecordService.update(record, false);
         return new ResultInfo(1, "success");
+    }
+    @RequestMapping("/getMaxScore")
+    public ResultInfo getMaxScore() {
+        return new ResultInfo(1, "success", comeRecordService.getMaxScore());
     }
 }
