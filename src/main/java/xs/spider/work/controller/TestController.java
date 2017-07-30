@@ -23,7 +23,7 @@ public class TestController {
         bean.setUpdateTime(new Date());
         bean.setTestC(testc);
         bean.setCreateTime(new Date());
-        testService.save(bean);
+//        testService.save(bean);
         return new ResultInfo(1, "success", bean);
     }
 }

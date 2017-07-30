@@ -243,7 +243,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     }
 
     @Override
-    public int update(T entity, boolean isEmptyUp) throws Exception {
+    public int update(T entity, boolean isEmptyUp) {
         try {
             StringBuffer sb = new StringBuffer(" update ");
             sb.append(entity.getTableName()).append(" dtb set ");
