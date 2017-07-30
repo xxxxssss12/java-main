@@ -28,16 +28,18 @@ public class ConfigProvider {
                 && prop.size() > 0) {
             return;
         }
-
+        System.out.println("init FundamentalConfigProvider.prop.");
         LogUtil.info(ConfigProvider.class, "init FundamentalConfigProvider.prop.");
         Properties properties = null;
         if (properties != null && properties.size() > 0) {
             prop = properties;
+            System.out.println("find properties from ConfigProperties");
             LogUtil.info(ConfigProvider.class, "find properties from ConfigProperties");
         } else {
             String configPathStr = System.getProperty("config.path");
 
             if (configPathStr == null) {
+                System.out.println("can't load config from:System.getProperty(Constants.CONFIG_PATH)");
                 LogUtil.info(ConfigProvider.class,"can't load config from:System.getProperty(Constants.CONFIG_PATH)");
                 configPathStr = System.getenv("config.path");
                 LogUtil.info(ConfigProvider.class,"can't load config from:System.getenv(Constants.CONFIG_PATH)");
@@ -46,6 +48,7 @@ public class ConfigProvider {
                     configPathStr = DEFAULT_CONFIG_PATH;
                 }
             }
+            System.out.println("config.path:"+ configPathStr);
             LogUtil.info(ConfigProvider.class,"config.path:"+ configPathStr);
 
             prop = new Properties();
