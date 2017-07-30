@@ -1,5 +1,6 @@
 package xs.spider.base.util;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -108,7 +109,7 @@ public class HttpClientUtil {
 	 */
 	public static ResultInfo doPost(String url, Map<String, Object> parammap) throws Exception {
 		if (Util.isBlank(url)) return null;
-		LogUtil.info(HttpClientUtil.class, "dopost url:" + url + ";param:" + JsonUtil.beanToJson(parammap));
+		LogUtil.info(HttpClientUtil.class, "dopost url:" + url + ";param:" + JSON.toJSONString(parammap));
 		ResultInfo ri = new ResultInfo(1, "success");
 		CloseableHttpClient httpclient = HttpClients.createDefault();
         try {

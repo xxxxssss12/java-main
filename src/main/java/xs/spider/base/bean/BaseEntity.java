@@ -1,6 +1,8 @@
 package xs.spider.base.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.alibaba.fastjson.annotation.JSONField;
+import xs.spider.base.anno.Id;
+import xs.spider.base.anno.Table;
 import xs.spider.base.anno.UserDefined;
 import xs.spider.base.util.BeanUtil;
 
@@ -22,7 +24,6 @@ public abstract class BaseEntity implements Serializable {
     /**
      * 获取所有属性名和属性类型（通过注解进行排除）
      */
-    @JsonIgnore
     public List<String> gotAttrNames() {
         Class<? extends BaseEntity> clazz = this.getClass();
         Field[] fs = clazz.getDeclaredFields();
@@ -53,8 +54,8 @@ public abstract class BaseEntity implements Serializable {
      * @return
      * @throws Exception
      */
-    @JsonIgnore
-    public Object getAttributeValue(String name) throws Exception {
+    @JSONField(serialize=false)
+    public Object getAttributeValue(String name) {
         if (name==null || name.length()==0) {
             return null;
         }
@@ -71,14 +72,23 @@ public abstract class BaseEntity implements Serializable {
      * @param value
      * @throws Exception
      */
-    @JsonIgnore
     public void setAttributeValue(String name, Object value) throws Exception {
         BeanUtil.setProperty(this, name, value);
     }
 
-    @JsonIgnore
-    public abstract String getTableName();
-
-    @JsonIgnore
-    public abstract String getPkName();
+    @JSONField(serialize=false)
+    public String getTableName() {
+        Table tbAnno = this.getClass().getAnnotation(Table.class);
+        if (tbAnno != null) {
+            return tbAnno.value();
+        }
+        return null;
+    }
+    @JSONField(serialize=false)
+    public String getPkName() {
+        Id idAnno = this.getClass().getAnnotation(Id.class);
+        if (idAnno != null)
+            return idAnno.value();
+        return null;
+    }
 }

@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by xs on 2017/4/1.
+ * Created by xs on 2017/7/29
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Table {
+public @interface Id {
     String value();
 }

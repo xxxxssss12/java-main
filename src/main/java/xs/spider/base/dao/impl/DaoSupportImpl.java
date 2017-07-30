@@ -1,6 +1,7 @@
 package xs.spider.base.dao.impl;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -24,6 +25,7 @@ import java.util.*;
  */
 public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> implements DaoSupport<T,PK> {
 
+    @Autowired
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private Class<T> clazz;
@@ -190,7 +192,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         }
     }
     @Override
-    public int save(T entity) throws Exception {
+    public int save(T entity) {
         StringBuffer sql = new StringBuffer(" INSERT INTO ")
                 .append(entity.getTableName());
         StringBuffer finalsb = new StringBuffer("INSERT INTO " + entity.getTableName() + " (");

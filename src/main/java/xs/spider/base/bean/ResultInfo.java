@@ -18,6 +18,12 @@ public class ResultInfo implements Serializable {
         this.code = code;
         this.message = message;
     }
+    public ResultInfo(Integer code, String message, Object data) {
+        super();
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
 
     public void setCodeAndMsg(Integer code, String message) {
         this.code = code;

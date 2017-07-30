@@ -25,7 +25,7 @@ public class BeanUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Object getProperty(Object bean, String propertyName) throws Exception
+	public static Object getProperty(Object bean, String propertyName)
 	{
 		Method method = null;
 		try {
@@ -39,7 +39,12 @@ public class BeanUtil {
 		}
 		if (method == null)
 			return null;
-		return method.invoke(bean, NULL_ARGUMENTS);
+		try {
+			return method.invoke(bean, NULL_ARGUMENTS);
+		} catch (Exception e) {
+			log.error(e);
+			return null;
+		}
 	}
 	/**
 	 * 获取属性的get、set方法
