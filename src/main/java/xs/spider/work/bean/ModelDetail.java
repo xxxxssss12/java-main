@@ -10,7 +10,7 @@ import xs.spider.base.bean.BaseEntity;
  */
 @Id("id")
 @Table("tb_model_detail")
-public class modelDetail extends BaseEntity {
+public class ModelDetail extends BaseEntity {
     private Integer id;
     private String detail;
     private String remark;

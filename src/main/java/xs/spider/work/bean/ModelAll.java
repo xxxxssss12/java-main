@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Id("id")
 @Table("tb_model_all")
-public class mdelAll extends BaseEntity {
+public class ModelAll extends BaseEntity {
     private Integer id;
     private String drawing_no;  // 图纸编号
     private String name;        // 名称
