@@ -81,6 +81,7 @@ public class HttpClientUtil {
                 }
                 EntityUtils.consume(entity);
                 System.out.println(sb.toString());
+                ri.setData(sb.toString());
             } catch(Exception e) {
             	ri.setCode(-2);
             	ri.setMessage(e.getMessage());
@@ -97,7 +98,7 @@ public class HttpClientUtil {
         } finally {
             httpclient.close();
         }
-		return null;
+		return ri;
 		
 	}
 	/**

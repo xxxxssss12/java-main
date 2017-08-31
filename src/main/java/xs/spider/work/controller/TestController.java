@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xs.spider.base.bean.ResultInfo;
 import xs.spider.work.bean.TestBean;
+import xs.spider.work.service.CustomerServiceImpl;
 import xs.spider.work.service.TestServiceImpl;
 
 import java.util.Date;
@@ -17,13 +18,10 @@ import java.util.Date;
 public class TestController {
     @Autowired
     private TestServiceImpl testService;
-    @RequestMapping("/insert")
-    public ResultInfo insert(String testc) {
-        TestBean bean = new TestBean();
-        bean.setUpdateTime(new Date());
-        bean.setTestC(testc);
-        bean.setCreateTime(new Date());
-        testService.save(bean);
-        return new ResultInfo(1, "success", bean);
+    @Autowired
+    private CustomerServiceImpl customerService;
+    @RequestMapping("/get")
+    public ResultInfo get(String phone) throws Exception {
+        return customerService.getInfo(phone);
     }
 }

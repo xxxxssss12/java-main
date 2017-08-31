@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type="text" id="phone" name="phone">
+    <input type="button" id="btn" name="btn" value="query">
+    <div >
+        <p id="info"></p>
+    </div>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+        $(function() {
+            basepath=function(){
+                var location = (window.location+"").split("/");
+                var basePath = location[0]+"//"+location[2]+"/"+location[3]+"/";
+                return basePath;
+            };
+            $.baseURI=basepath();
+            $("#btn").click(function() {
+                $("#info").text("");
+                var phone = $("#phone").val();
+                if (phone) phone = phone.replace(/ /, "");
+                if (phone) {
+                    $.ajax({
+                        url: $.baseURI + "test/get?phone=" + phone,
+                        type: "get",
+                        dataType: "json",
+                        success : function (ri) {
+                            if (ri && ri.code) {
+                                $("#info").html(ri.data.sb);
+                            }
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+</html>
