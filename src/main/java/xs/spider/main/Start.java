@@ -16,7 +16,7 @@ public class Start {
         Log4jInit.init();
         context = new ClassPathXmlApplicationContext(
                 new String[]{
-                        "classpath*:config/spring/applicationContext*"
+                        "classpath*:config/applicationContext*"
                 }
         );
         context.start();

@@ -82,4 +82,5 @@
     <!-- 扫描service,dao自动注入为bean -->
     <context:component-scan base-package="xs.spider" annotation-config="true"/>
     <tx:annotation-driven/>
+
 </beans>
