@@ -223,7 +223,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
                     ,new String[]{entity.getPkName()});
             Number num = holder.getKey();
             if (null != num) {
-                entity.setAttributeValue(entity.getPkName(), num);
+                entity.setAttributeValue(entity.getPkName(), num.intValue());
                 return num.intValue();
             } else {
                 return -1;

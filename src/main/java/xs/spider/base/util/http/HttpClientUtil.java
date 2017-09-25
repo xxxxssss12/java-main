@@ -46,7 +46,7 @@ public class HttpClientUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ResultInfo doGet(String url, Map<String, Object> parammap) throws Exception {
+	public static ResultInfo doGet(String url, Map<String, Object> parammap) throws IOException {
 		if (Util.isBlank(url)) return null;
 		CookieStore cookieStore = new BasicCookieStore();
 		ResultInfo ri = new ResultInfo(1, "success");
