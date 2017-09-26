@@ -2,8 +2,10 @@ package xs.spider.base.util;
 
 import org.apache.log4j.Logger;
 import xs.spider.base.anno.Column;
+import xs.spider.base.anno.Table;
 import xs.spider.base.anno.UserDefined;
 import xs.spider.base.bean.BaseEntity;
+import xs.spider.work.bean.TitleInfo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -175,5 +177,14 @@ public class BeanUtil {
             }
         }
         return bean;
+	}
+
+	public static String getTableName(Class<? extends BaseEntity> clazz) {
+		if (clazz == null) return null;
+		Table tbAnno = clazz.getAnnotation(Table.class);
+		if (tbAnno != null) {
+			return tbAnno.value();
+		}
+		return null;
 	}
 }
