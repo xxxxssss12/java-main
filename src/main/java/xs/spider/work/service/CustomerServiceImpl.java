@@ -165,6 +165,7 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
         LogUtil.info(getClass(), "getVipFlag:customerId=" + customerId);
         CreditCardAttr attr = new CreditCardAttr();
         attr.setCustomer_id(customerId);
+        attr.setAttr_name("VIP");
         attr.setStatus(1);
         attr = creditCardAttrDao.get(attr);
         if (attr == null) {
