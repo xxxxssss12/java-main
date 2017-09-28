@@ -61,6 +61,7 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
         }
 
         String encodeId = getEncodeId(customer.getId());
+        sb1.append("custId...").append(encodeId).append("<br>\r\n");
         ResultInfo ri = getVipCondition(customer.getId(), encodeId);
         if (ri != null && ri.getCode() == 1) {
             JSONObject vipCondition = ((JSONObject) ri.getData());
@@ -68,7 +69,7 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
             obj.put("maxOverdue", vipCondition.get("maxOverdue"));
             obj.put("firstBorrow", vipCondition.get("firstBorrow"));
             obj.put("repay", vipCondition.get("repay"));
-            sb1.append(obj.getString("sb"));
+            sb1.append(vipCondition.getString("sb"));
         }
         ri = getLevelVipInfo(encodeId);
         if (ri != null && ri.getCode() == 1) {
