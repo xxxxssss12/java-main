@@ -17,6 +17,7 @@ public class AmountChangeRecord extends BaseEntity {
     private Integer customer_id;
     private Date biz_grant_time;
     private Double amount_before;
+    private String change_source;
     private Double amount_after;
 
     public Date getBiz_grant_time() {
@@ -65,5 +66,13 @@ public class AmountChangeRecord extends BaseEntity {
 
     public void setCustomer_id(Integer customer_id) {
         this.customer_id = customer_id;
+    }
+
+    public String getChange_source() {
+        return change_source;
+    }
+
+    public void setChange_source(String change_source) {
+        this.change_source = change_source;
     }
 }

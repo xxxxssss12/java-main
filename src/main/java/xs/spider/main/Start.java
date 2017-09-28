@@ -9,6 +9,8 @@ import xs.spider.base.bean.ResultInfo;
 import xs.spider.base.init.Log4jInit;
 import xs.spider.work.service.CustomerServiceImpl;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,8 +29,41 @@ public class Start {
         );
         context.start();
         logger.info("SpringContextContainer is starting.....");
-        CustomerServiceImpl service = context.getBean(CustomerServiceImpl.class);
-        ResultInfo info = service.getInfo("13872923990");
-        System.out.println(JSON.toJSONString(info));
+        dealUpLevelInfo();
+    }
+
+    private static void dealUpLevelInfo() throws Exception {
+        CustomerServiceImpl customerService = context.getBean(CustomerServiceImpl.class);
+        List<Integer> custIds = Arrays.asList(
+                2822487,
+                23833992,
+                23797323,
+                23680285,
+                23681235,
+                23619951,
+                23496421,
+                23538897,
+                22937341,
+                22848171,
+                22223121,
+                20638901,
+                20376328,
+                19555243,
+                19099118,
+                18417790,
+                16316705,
+                16136785,
+                15131094,
+                13612865,
+                10533097,
+                12973936,
+                2267266,
+                40684,
+                5307353,
+                2736007,
+                10741896);
+        for (Integer a : custIds) {
+            System.out.println("检查数据..." + a + "..." + customerService.checkLevelVipQuestion(null, a));
+        }
     }
 }

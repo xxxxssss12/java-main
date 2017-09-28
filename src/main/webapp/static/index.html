@@ -5,13 +5,23 @@
     <title>Title</title>
 </head>
 <body>
+<div>
     <input type="text" id="phone" name="phone">
+    <input type="text" id="customerId" name="customerId">
     <input type="button" id="btn" name="btn" value="query">
+</div>
+<div>
+    <textarea id="customerIds" name="customerIds">
+
+    </textarea>
+    <input type="button" id="checkbtn" name="checkbtn" value="query">
+</div>
     <div >
         <p id="info"></p>
     </div>
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <script>
+
         $(function() {
             basepath=function(){
                 var location = (window.location+"").split("/");
@@ -19,17 +29,42 @@
                 return basePath;
             };
             $.baseURI=basepath();
-            $("#btn").click(function() {
-                $("#info").text("");
-                var phone = $("#phone").val();
-                if (phone) phone = phone.replace(/ /, "");
-                if (phone) {
+            $("#checkbtn").click(function() {
+                var customerIdStr = $("#customerIds").val();
+                if (!customerIdStr) customerIdStr = $("#customerIds").text();
+                if (customerIdStr) {
+                    customerIdStr = customerIdStr.replace(/ /, "")
+                }
+                if (customerIdStr) {
+                    $("#info").text("");
                     $.ajax({
-                        url: $.baseURI + "test/get?phone=" + phone,
+                        url: $.baseURI + "test/check?customerIdStr=" + customerIdStr,
                         type: "get",
                         dataType: "json",
                         success : function (ri) {
-                            if (ri && ri.code) {
+                            if (ri && ri.code > 0) {
+                                $("#info").html(ri.data);
+                            } else {
+                                alert(ri.message);
+                            }
+                        }
+                    })
+                }
+            })
+            $("#btn").click(function() {
+                $("#info").text("");
+                var phone = $("#phone").val();
+                var id = $("#customerId").val();
+                if (phone) phone = phone.replace(/ /, "");
+                if (id) id = id.replace(/ /, "");
+
+                if (phone || id) {
+                    $.ajax({
+                        url: $.baseURI + "test/get?phone=" + phone + "&id=" + id,
+                        type: "get",
+                        dataType: "json",
+                        success : function (ri) {
+                            if (ri && ri.code > 0) {
                                 $("#info").html(ri.data.sb);
                             }
                         }
