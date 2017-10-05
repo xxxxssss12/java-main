@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>redirect</title>
+</head>
+<body>
+<script>
+    basepath=function(){
+        var location = (window.location+"").split("/");
+        var basePath = location[0]+"//"+location[2]+"/"+location[3]+"/";
+        return basePath;
+    };
+    window.location.href= basepath() + "static/titleList.html";
+</script>
+</body>
+</html>

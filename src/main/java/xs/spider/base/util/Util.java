@@ -2,14 +2,15 @@ package xs.spider.base.util;
 
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -123,43 +124,51 @@ public class Util {
 		if (obj == null) return "";
 		else return obj.toString();
 	}
+
+
+	public static String getLineOnKeyBoradInput() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String yzm = null;
+		yzm = br.readLine();
+		return yzm;
+	}
 	/**
 	 * 获取请求中的信息
 	 * @return*/
-//	public static Map<String, Object> getrequestInfo(ServletRequest request) {
-//		HttpServletRequest httpreq = (HttpServletRequest) request;
-//		//ȡcookies
-//		Cookie[] cookies = httpreq.getCookies();
-//		Map<String, String> cookiemap = new HashMap<String, String>();
-//		if (!isBlank(cookies)) {
-//			for (Cookie cookie : cookies) {
-//				String name = cookie.getName();
-//				String value = cookie.getValue() + ";path=" + cookie.getPath();
-//				cookiemap.put(name, value);
-//			}
-//		}
-//		Enumeration<String> headernames = httpreq.getHeaderNames();
-//		//ȡheader
-//		Map<String, String> headermap = new HashMap<String, String>();
-//		while (headernames.hasMoreElements()) {
-//			String name = headernames.nextElement();
-//			String value = httpreq.getHeader(name);
-//			headermap.put(name, value);
-//		}
-//		//ȡparam
-//		Map<String, String[]> tempparammap = httpreq.getParameterMap();
-//		Map<String, String> parammap = new HashMap<String , String>();
-//		if (!isBlank(tempparammap)) {
-//			for (Entry<String,String[]> entry : tempparammap.entrySet()) {
-//				parammap.put(entry.getKey(), entry.getValue()[0]);
-//			}
-//		}
-//		Map<String, Object> all = new HashMap<String, Object>();
-//		all.put("cookies", cookiemap);
-//		all.put("headers", headermap);
-//		all.put("params", parammap);
-//		return all;
-//	}
+	public static Map<String, Object> getrequestInfo(ServletRequest request) {
+		HttpServletRequest httpreq = (HttpServletRequest) request;
+		//ȡcookies
+		Cookie[] cookies = httpreq.getCookies();
+		Map<String, String> cookiemap = new HashMap<String, String>();
+		if (!isBlank(cookies)) {
+			for (Cookie cookie : cookies) {
+				String name = cookie.getName();
+				String value = cookie.getValue() + ";path=" + cookie.getPath();
+				cookiemap.put(name, value);
+			}
+		}
+		Enumeration<String> headernames = httpreq.getHeaderNames();
+		//ȡheader
+		Map<String, String> headermap = new HashMap<String, String>();
+		while (headernames.hasMoreElements()) {
+			String name = headernames.nextElement();
+			String value = httpreq.getHeader(name);
+			headermap.put(name, value);
+		}
+		//ȡparam
+		Map<String, String[]> tempparammap = httpreq.getParameterMap();
+		Map<String, String> parammap = new HashMap<String , String>();
+		if (!isBlank(tempparammap)) {
+			for (Entry<String,String[]> entry : tempparammap.entrySet()) {
+				parammap.put(entry.getKey(), entry.getValue()[0]);
+			}
+		}
+		Map<String, Object> all = new HashMap<String, Object>();
+		all.put("cookies", cookiemap);
+		all.put("headers", headermap);
+		all.put("params", parammap);
+		return all;
+	}
 	public static String toLowFirst(String str) {
 		try {
 			if (isBlank(str)) return str;

@@ -5,12 +5,19 @@ import java.util.List;
 /**
  * Created by hasee on 2017/1/25.
  */
-public class PageBean {
+public class PageBean<T> {
     private Integer pageNum;
     private Integer pageSize;
-    private List data;
+    private List<T> data;
     private Integer code;
     private Integer total;
+    public PageBean() {
+
+    }
+
+    public PageBean(Integer code) {
+        this.code = code;
+    }
 
     public Integer getPageNum() {
         return pageNum;
@@ -28,11 +35,11 @@ public class PageBean {
         this.pageSize = pageSize;
     }
 
-    public List getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void setData(List data) {
+    public void setData(List<T> data) {
         this.data = data;
     }
 

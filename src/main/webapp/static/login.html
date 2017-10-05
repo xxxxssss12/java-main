@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>登陆</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" id="submit">Sign in</button>
+</div> <!-- /container -->
+<script src="./js/jquery-3.1.1.min.js"></script>
+<script src="./js/common.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script>
+    $("#submit").click(function() {
+        var username = $("#inputUsername").val();
+        var password = $("#inputPassword").val();
+        var errstr = "";
+        if (!username) errstr += "用户名不能为空";
+        if (!password) errstr += ";密码不能为空";
+        if (errstr) {
+            alert(errstr);
+            return;
+        }
+        $.ajax({
+            url:baseUrl + "auth/doLogin",
+            type:"post",
+//            contentType:"application/json;",
+            data:{
+                "username":username,
+                "password":password
+            },
+            dataType:"json",
+            success:function(ri) {
+                if (ri && ri.code==1) {
+                    window.location.href='./titleList.html';
+                    return;
+                } else {
+                    alert(ri.message);
+                }
+            },
+            error: function() {
+                alert("网络异常");
+            }
+        })
+    })
+</script>
+</body>
+</html>

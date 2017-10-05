@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>房源信息</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/showDetail.css">
+    <link rel="stylesheet" href="./tools/datepicker/bootstrap-datetimepicker.min.css">
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="javascript:void(true)">房源</a>
+            </div>
+            <!--<div id="navbar" class="collapse navbar-collapse">-->
+                <!--<ul class="nav navbar-nav">-->
+                    <!--<li class="active"><a href="javascript:void(true)">流水</a></li>-->
+                    <!--<li><a href="./report_overview.html">报表</a></li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        </div>
+    </nav>
+    <!--<div class="container-fluid">-->
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="javascript:void(true)">房源列表</a></li>
+                <!--<li><a href="./addDetail.html">添加流水</a></li>-->
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header" style="font-family: 'Microsoft YaHei UI Light'">房源信息</h1>
+            <div class="container-fluid">
+                <div class="row">
+                    <div id="form2" class="col-xs-4">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label font-yahei">房源信息</label>
+                                <div class="input-group" style="width: 250px">
+                                    <input class="form-control num" onkeyup="enter()" style="border-radius:5px;" type="text" id="fangyuan">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-3"></div>
+                                <input type="button" class="btn btn-default" id="query" value="查询">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive" id="grid">
+            </div>
+
+            <input type="hidden" id="startDate_inp" value="" /><br/>
+            <input type="hidden" id="endDate_inp" value="" /><br/>
+        </div>
+    </div>
+</div>
+<script src="./js/jquery-3.1.1.min.js"></script>
+<script src="./js/common.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/xsgrid-bootstrap.js"></script>
+<script src="./tools/datepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="./tools/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script>
+    grid = $("#grid").xsGrid({
+        url: baseUrl + "/title/getEsByPage",
+        pageSize: 10,
+        gridid:"grid",
+        title: "房源",
+        params: {
+            orderStr: ""
+        },
+        columns : [
+            {type:'hide',name:"_id", display:"主键", title:"true"},
+            {type:'lable',name:"content", display:"操作",
+                render: function(row) {
+                    var str = "<a href='javascript:void(0)' onclick='javascript:remove("+row._id+",0)' >不感兴趣</a>";
+                    str += "&nbsp;";
+                    str += "<a href='javascript:void(0)' onclick='javascript:remove("+row._id+",1)' >删除</a>"
+                    return str;
+                }
+            },
+            {type:'lable',name:"content", display:"名字",
+                render: function(row) {
+                    var source = row.highlight;
+                    var title;
+                    if (source) title = source.content;
+                    else title = row._source.title;
+//                    if (title && title.length > 60) title = title.substring(0,60) + '...';
+                    var str = "<a href='"+row._source.titleUrl+"' title='"+row._source.title+"' target='_blank'>"+title+"</a>";
+                    return str
+                }
+            },
+            {type:'lable', name:"createTime", display:"创建时间",
+                render: function(row) {
+
+                    return row._source.time;
+                }
+            },
+            {type:'lable', name:"isHavePic", display:"是否有图",
+                render: function(row) {
+
+                    return row._source.isHavePic?'是':'否';
+                }
+            }
+        ]
+    });
+    var enter = function() {
+        var code = event.keyCode;
+        if(code == 13) {
+            $("#query").click();
+        }
+    }
+    var remove = function(id, isDelete) {
+//        var flag = confirm("确定？")
+//        if (!flag) return;
+        $.ajax({
+            url:baseUrl + "/title/remove",
+            type:"post",
+            data:{ "id":id, "isDelete":isDelete},
+            dataType:"json",
+            success:function(ri) {
+                if (ri && ri.code == 1) {
+                    var td = $("td[title='"+id+"']")
+                    if (td) {
+                        td.parent().remove();
+                    }
+                } else {
+                    alert(ri.message);
+                }
+            },
+            error:function() {
+
+            }
+        })
+    }
+    $("#query").click(function() {
+        grid.xsQuery({
+            data: {
+                "searchText":$("#fangyuan").val()
+            },
+            search: "first"
+        })
+    })
+    $(".form_datetime").datetimepicker({
+        language:"zh-CN",
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayBtn: true,
+        weekStart: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>
+</body>
+</html>

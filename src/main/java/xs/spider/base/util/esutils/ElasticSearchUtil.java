@@ -5,6 +5,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -46,18 +48,21 @@ public class ElasticSearchUtil {
         if (timeOutMs == null) timeOutMs=-1;
     }
     public static ResultInfo insert(String index, String type, String id, JSONObject requestBody) throws ConfigLostException {
-        String url = getInsertUrl(index, type, id);
+        String url = getUrl(index, type, id);
         return EsConnectUtil.put(url, requestBody.toJSONString(), timeOutMs);
     }
-
-    private static String getInsertUrl(String index, String type, String id) throws ConfigLostException {
+    public static ResultInfo search(String index, String type, String id, JSONObject requestBody) throws ConfigLostException {
+        String url = getUrl(index, type, id) + "_search";
+        return EsConnectUtil.post(url, requestBody.toJSONString(), timeOutMs);
+    }
+    private static String getUrl(String index, String type, String id) throws ConfigLostException {
         if (StringUtils.isEmpty(host)) throw new ConfigLostException("host is Empty");
         StringBuilder sb = new StringBuilder();
         sb.append("http://").append(host)
                 .append(":").append(port).append("/")
-                .append(index).append("/")
-                .append(type).append("/")
-                .append(id);
+                .append(index).append("/");
+        if (!Util.isBlank(type)) sb.append(type).append("/");
+        if (!Util.isBlank(id)) sb.append(id);
         return sb.toString();
     }
 }
@@ -104,5 +109,27 @@ class EsConnectUtil {
             LogUtil.error(HttpClientUtil.class, e, "entityToString Error");
         }
         return null;
+    }
+
+    public static ResultInfo post(String url, String jsonBody, Integer timeOutMs) {
+        if (timeOutMs == null) timeOutMs = -1;
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(timeOutMs).setConnectionRequestTimeout(timeOutMs)
+                    .setSocketTimeout(timeOutMs).build();
+            HttpPost get = new HttpPost(url);
+            get.setConfig(requestConfig);
+            get.setHeader("Accept", "application/json");
+            get.addHeader("Content-type","application/json; charset=utf-8");
+            get.setEntity(new StringEntity(jsonBody, Charset.forName("UTF-8")));
+            try (CloseableHttpResponse response = client.execute(get)) {
+                return respToBean(response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResultInfo(-999, "异常");
     }
 }

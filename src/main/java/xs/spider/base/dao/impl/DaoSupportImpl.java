@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import xs.spider.base.bean.BaseEntity;
 import xs.spider.base.bean.PageBean;
 import xs.spider.base.dao.DaoSupport;
+import xs.spider.base.pager.PageContext;
 import xs.spider.base.util.BeanUtil;
 import xs.spider.base.util.ExceptionWrite;
 import xs.spider.base.util.LogUtil;
@@ -76,7 +77,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     }
 
     @Override
-    public T get(T t) throws Exception {
+    public T get(T t)  {
         List<T> result = this.getList(t);
         if (result == null || result.isEmpty())
             return null;
@@ -85,13 +86,13 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     }
 
     @Override
-    public List<T> getList(T t) throws Exception {
+    public List<T> getList(T t) {
         return getList(t, null);
 
     }
 
     @Override
-    public List<T> getList(T t, String orderStr) throws Exception {
+    public List<T> getList(T t, String orderStr) {
         if (t==null) return null;
         List<Object> paramlist = new ArrayList<>();
         StringBuffer sql = getListBaseSql(t, paramlist);
@@ -107,7 +108,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         }
     }
 
-    private StringBuffer getListBaseSql(T t, List<Object> paramlist) throws Exception {
+    private StringBuffer getListBaseSql(T t, List<Object> paramlist) {
         if (null == paramlist) return null;
         StringBuffer sql = new StringBuffer(" SELECT * from " + t.getTableName() + " dtb  where 1=1 ");
         StringBuffer where = null;
@@ -121,7 +122,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         return sql;
     }
 
-    private StringBuffer getWhereCondition(T t, List<String> attrNames, List<Object> paramlist) throws Exception {
+    private StringBuffer getWhereCondition(T t, List<String> attrNames, List<Object> paramlist) {
         StringBuffer where = new StringBuffer();
         for (String name : attrNames) {
             Object value = t.getAttributeValue(name);
@@ -134,14 +135,87 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         }
         return where;
     }
-
     @Override
-    public PageBean getPage(T t, Integer num, Integer size) throws Exception {
+    public PageBean getPage(T t) throws Exception {
+        return getPage(t, null);
+    }
+    @Override
+    public PageBean<T> getPage(String sql, List<Object> paramlist) {
+        Integer pageNum = PageContext.getPageNum();
+        Integer pageSize = PageContext.getPageSize();
+        if (Util.isBlank(pageNum) || Util.isBlank(pageSize)) {
+            return null;
+        }
+        Integer startLine = (pageNum-1) * pageSize;
+        PageBean page = new PageBean();
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setTotal(getCount(sql.toString(), paramlist));
+        if (page.getTotal() == null) {
+            page.setCode(-1);
+            return page;
+        }
+        sql += " LIMIT " + startLine + "," + pageSize;
+        try {
+            List<T> result = jdbcTemplate.query(sql.toString(), paramlist==null?null:paramlist.toArray(), new BeanPropertyRowMapper<T>(clazz));
+            page.setCode(1);
+            if (Util.isBlank(result) || result.isEmpty()) {
+                return page;
+            } else {
+                page.setData(result);
+                return page;
+            }
+        } catch (Exception e) {
+            LogUtil.error(getClass(), ExceptionWrite.get(e));
+            page.setCode(-1);
+            return page;
+        }
+    }
+    @Override
+    public PageBean<T> getPage(T t, String orderStr) throws Exception {
+        Integer pageNum = PageContext.getPageNum();
+        Integer pageSize = PageContext.getPageSize();
+        if (Util.isBlank(pageNum) || Util.isBlank(pageSize)) {
+            return null;
+        }
+        Integer startLine = (pageNum-1) * pageSize;
+        List<Object> paramlist = new ArrayList<>();
+        StringBuffer sql = getListBaseSql(t, paramlist);
+        if (sql == null) {
+            sql = new StringBuffer( "SELECT * from " + BeanUtil.getTableName(clazz) + " dtb ");
+        }
+        PageBean page = new PageBean();
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setTotal(getCount(sql.toString(), paramlist));
+        if (page.getTotal() == null) {
+            page.setCode(-1);
+            return page;
+        }
+        if (!Util.isBlank(orderStr)) sql.append(" ORDER BY " + orderStr + " ");
+        sql.append(" LIMIT " + startLine + "," + pageSize);
+        try {
+            List<T> result = jdbcTemplate.query(sql.toString(), paramlist.toArray(), new BeanPropertyRowMapper<T>(clazz));
+            page.setCode(1);
+            if (Util.isBlank(result) || result.isEmpty()) {
+                return page;
+            } else {
+                page.setData(result);
+                return page;
+            }
+        } catch (Exception e) {
+            LogUtil.error(getClass(), ExceptionWrite.get(e));
+            page.setCode(-1);
+            return page;
+        }
+    }
+    @Override
+    public PageBean<T> getPage(T t, Integer num, Integer size) throws Exception {
         return getPage(t, null, num, size);
     }
 
     @Override
-    public PageBean getPage(T t, String orderStr, Integer num, Integer size) throws Exception {
+    public PageBean<T> getPage(T t, String orderStr, Integer num, Integer size) throws Exception {
 //        Integer pageNum = PageContext.getPageNum();
 //        Integer pageSize = PageContext.getPageSize();
         Integer pageNum = num;
@@ -185,7 +259,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         try {
             StringBuffer finalSql = new StringBuffer();
             finalSql.append(" SELECT COUNT(*) FROM (").append(sql).append(") cnt");
-            return jdbcTemplate.queryForObject(finalSql.toString(), paramList.toArray(), Integer.class);
+            return jdbcTemplate.queryForObject(finalSql.toString(), paramList==null?null:paramList.toArray(), Integer.class);
         } catch (Exception e) {
             LogUtil.error(getClass(), "get Count error!" + ExceptionWrite.get(e));
             return null;
@@ -243,7 +317,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     }
 
     @Override
-    public int update(T entity, boolean isEmptyUp) throws Exception {
+    public int update(T entity, boolean isEmptyUp) {
         try {
             StringBuffer sb = new StringBuffer(" update ");
             sb.append(entity.getTableName()).append(" dtb set ");

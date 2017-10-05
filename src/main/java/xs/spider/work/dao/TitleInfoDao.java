@@ -35,7 +35,18 @@ public class TitleInfoDao extends DaoSupportImpl<TitleInfo,Integer> {
             sql.append(" ) ");
         }
         sql.append(" order by t.createTime desc, t.time desc ");
-//        return getPage(sql.toString(),new ArrayList());
-        return null;
+        return getPage(sql.toString(),new ArrayList());
+//        return null;
+    }
+
+    public void deleteTitlePic(Integer titleId) {
+        String sql = " delete from title_pic where titleId =" + titleId;
+        getJdbcTemplate().execute(sql);
+    }
+
+    public void saveTitlePic(Integer titleId, Integer picId) {
+        if (titleId == null || picId == null) return;
+        String sql = " insert into title_pic (titleId, picId, createTime) values (?,?,now()) ";
+        getJdbcTemplate().update(sql, titleId, picId);
     }
 }

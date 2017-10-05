@@ -27,7 +27,9 @@ public class SubwayService {
 
     @Autowired
     private SubwayStationDao subwayStationDao;
-
+    public SubwayStation getStationById(Integer stationId) {
+        return subwayStationDao.get(stationId);
+    }
     public void importStationAndLineInfo() throws Exception {
         Map<String,List<String>> map =  SubwayUtil.getLineStationMap();
         if (map == null) return;

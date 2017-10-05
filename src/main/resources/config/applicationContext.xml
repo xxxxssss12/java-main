@@ -81,9 +81,9 @@
     <tx:annotation-driven transaction-manager="transactionManager" />
     <!-- elasticSearch -->
     <bean id="elasticSearchUtil" class="xs.spider.base.util.esutils.ElasticSearchUtil">
-        <property name="host" value="#{es.host}"/>
-        <property name="port" value="#{es.port}"/>
-        <property name="timeOutMs" value="#{es.timeOutMs}"/>
+        <property name="host" value="${es.host}"/>
+        <property name="port" value="${es.port}"/>
+        <property name="timeOutMs" value="${es.timeOutMs}"/>
     </bean>
     <!-- 扫描service,dao自动注入为bean -->
     <context:component-scan base-package="xs.spider" annotation-config="true"/>

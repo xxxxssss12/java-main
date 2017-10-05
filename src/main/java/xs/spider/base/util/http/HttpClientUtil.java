@@ -165,7 +165,7 @@ public class HttpClientUtil {
 		}
 		return ri;
 	}
-	public static HttpRespBean httpRequest(HttpReqBean reqBean, CloseableHttpClient httpClient, CookieStore cookieStore) {
+	public static HttpRespBean httpRequest(HttpReqBean reqBean, HttpClient httpClient, CookieStore cookieStore) {
 		Integer type = reqBean.getType();
 		if (type == null || type!=1) reqBean.setType(0);
 		if (Util.isBlank(reqBean.getUrl())) return new HttpRespBean(-999, "缺少参数");
@@ -175,7 +175,7 @@ public class HttpClientUtil {
 			return doPost(reqBean, httpClient, cookieStore);
 		}
 	}
-	public static HttpRespBean doGet(HttpReqBean reqBean, CloseableHttpClient httpClient, CookieStore cookieStore) {
+	public static HttpRespBean doGet(HttpReqBean reqBean, HttpClient httpClient, CookieStore cookieStore) {
 		String url = reqBean.getUrl();
 		Map<String,Object> parammap = reqBean.getParams();
 		List<Cookie> cookies = reqBean.getCookies();
@@ -192,7 +192,7 @@ public class HttpClientUtil {
 		if (!Util.isBlank(paramStr)) url_final.append(paramStr);
 		LogUtil.info(HttpClientUtil.class, "doget reqBean url..." + url_final);
 		HttpGet httpGet = new HttpGet(url_final.toString());
-		try (CloseableHttpResponse resp = httpClient.execute(httpGet)) {
+		try (CloseableHttpResponse resp = ((CloseableHttpClient)httpClient).execute(httpGet)) {
 			return respToBean(resp, cookieStore);
 		} catch (Exception e) {
 			LogUtil.error(HttpClientUtil.class, e, "doget respBean error");
@@ -200,7 +200,7 @@ public class HttpClientUtil {
 		}
 
 	}
-	public static HttpRespBean doPost(HttpReqBean reqBean, CloseableHttpClient httpClient, CookieStore cookieStore) {
+	public static HttpRespBean doPost(HttpReqBean reqBean, HttpClient httpClient, CookieStore cookieStore) {
 		String url = reqBean.getUrl();
 		Map<String,Object> parammap = reqBean.getParams();
 		List<Cookie> cookies = reqBean.getCookies();
@@ -217,21 +217,21 @@ public class HttpClientUtil {
 			} catch (Exception e) {
 				LogUtil.error(HttpClientUtil.class, e, "post.setEntity error");
 			}
-		try(CloseableHttpResponse response = httpClient.execute(post)) {
+		try(CloseableHttpResponse response = ((CloseableHttpClient)httpClient).execute(post)) {
 			return respToBean(response, cookieStore);
 		} catch (Exception e) {
 			LogUtil.error(HttpClientUtil.class, e, "doPost 发生异常");
 			return new HttpRespBean(-998, "系统发生异常：" + e.getMessage());
 		}
 	}
-	public static ResultInfo getStaticToFile(String url, String fileName) throws Exception {
+	public static ResultInfo getStaticToFile(String url, String fileName) {
 		if (Util.isBlank(url)) return null;
 		CookieStore cookieStore = new BasicCookieStore();
 		ResultInfo ri = new ResultInfo(1, "success");
-		CloseableHttpClient httpclient = HttpClients.custom()
+
+		try(CloseableHttpClient httpclient = HttpClients.custom()
 				.setDefaultCookieStore(cookieStore)
-				.build();
-		try {
+				.build()) {
 			StringBuffer url_final = new StringBuffer(url);
 			LogUtil.info(HttpClientUtil.class, "doget url:" + url_final.toString());
 			HttpGet httpGet = new HttpGet(url_final.toString());
@@ -256,8 +256,6 @@ public class HttpClientUtil {
 			ri.setMessage(e.getMessage());
 			ri.setData(ExceptionWrite.get(e));
 			LogUtil.error(HttpClientUtil.class, ExceptionWrite.get(e));
-		} finally {
-			httpclient.close();
 		}
 		return ri;
 	}

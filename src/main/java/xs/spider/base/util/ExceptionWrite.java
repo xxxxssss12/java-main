@@ -26,11 +26,11 @@ public class ExceptionWrite extends PrintWriter {
 	 * @param e
 	 * @return
 	 */
-	public static String get(Exception e) {
-		ExceptionWrite spw = new ExceptionWrite();
-		e.printStackTrace(spw);
-		return spw.getString();
-	}
+//	public static String get(Exception e) {
+//		ExceptionWrite spw = new ExceptionWrite();
+//		e.printStackTrace(spw);
+//		return spw.getString();
+//	}
 	/**
 	 * 将异常信息转化成字符串
 	 * @param t
