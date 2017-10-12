@@ -85,4 +85,5 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <aop:config proxy-target-class="true"></aop:config>
+
 </beans>

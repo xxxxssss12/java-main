@@ -2,6 +2,10 @@ package xs.spider.base.util;
 
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -220,4 +224,18 @@ public class Util {
 		return builder.toString();
 	}
 
+	public static String streamToStr(InputStream is, String encode) {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, encode));
+			String s; // 依次循环，至到读的值为空
+			StringBuilder sb = new StringBuilder();
+			while ((s = reader.readLine()) != null) {
+				sb.append(s);
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
