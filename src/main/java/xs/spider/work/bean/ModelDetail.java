@@ -14,9 +14,9 @@ public class ModelDetail extends BaseEntity {
     private Integer id;
     private String detail;
     private String remark;
-    private Integer model_all_id;
+    private Integer modelAllId;
     private Integer num;
-    private String part_name;
+    private String partName;
 
     public Integer getId() {
         return id;
@@ -42,12 +42,12 @@ public class ModelDetail extends BaseEntity {
         this.remark = remark;
     }
 
-    public Integer getModel_all_id() {
-        return model_all_id;
+    public Integer getModelAllId() {
+        return modelAllId;
     }
 
-    public void setModel_all_id(Integer model_all_id) {
-        this.model_all_id = model_all_id;
+    public void setModelAllId(Integer modelAllId) {
+        this.modelAllId = modelAllId;
     }
 
     public Integer getNum() {
@@ -58,11 +58,11 @@ public class ModelDetail extends BaseEntity {
         this.num = num;
     }
 
-    public String getPart_name() {
-        return part_name;
+    public String getPartName() {
+        return partName;
     }
 
-    public void setPart_name(String part_name) {
-        this.part_name = part_name;
+    public void setPartName(String partName) {
+        this.partName = partName;
     }
 }
