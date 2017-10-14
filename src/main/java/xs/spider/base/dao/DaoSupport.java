@@ -21,6 +21,12 @@ public interface DaoSupport<T extends BaseEntity, PK extends Serializable> {
 
     PageBean getPage(T t, String orderStr, Integer num, Integer size) throws Exception;
 
+    PageBean getPage(T t) throws Exception;
+
+    PageBean getPage(String sql, List<Object> paramlist);
+
+    PageBean getPage(T t, String orderStr) throws Exception;
+
     Integer getCount(String sql, List<Object> paramList);
 
     int save(T entity) throws Exception;

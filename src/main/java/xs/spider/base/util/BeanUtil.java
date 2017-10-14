@@ -2,6 +2,7 @@ package xs.spider.base.util;
 
 import org.apache.log4j.Logger;
 import xs.spider.base.anno.Column;
+import xs.spider.base.anno.Table;
 import xs.spider.base.anno.UserDefined;
 import xs.spider.base.bean.BaseEntity;
 
@@ -175,5 +176,15 @@ public class BeanUtil {
             }
         }
         return bean;
+	}
+
+	public static <T extends BaseEntity> String getTableName(Class<T> clazz) {
+		try {
+			Table anno = clazz.getAnnotation(Table.class);
+			if (anno != null) return anno.value();
+		} catch (Exception e) {
+			log.error("getTableName error:" + ExceptionWrite.get(e));
+		}
+		return null;
 	}
 }

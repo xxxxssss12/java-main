@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by hasee on 2017/1/25.
  */
-public class PageBean {
+public class PageBean<Object> {
     private Integer pageNum;
     private Integer pageSize;
     private List data;
