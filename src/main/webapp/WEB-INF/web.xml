@@ -69,4 +69,12 @@
     <welcome-file-list>
         <welcome-file>/static/redirect.html</welcome-file>
     </welcome-file-list>
+    <filter>
+        <filter-name>pageFilter</filter-name>
+        <filter-class>xs.spider.base.pager.PageFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>pageFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>
