@@ -8,7 +8,7 @@
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     <!-- Root Context: defines shared resources visible to all other web components -->
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
     <!-- 数据库保存的密码是使用MD5算法加密的，所以这里需要配置一个密码匹配对象 -->
     <bean id="credentialsMatcher" class="xs.spider.work.shiro.UserCredentialsMatcher"/>
@@ -16,14 +16,14 @@
     <!-- 缓存管理 -->
     <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
 
-    <bean id="authRealm" class="xs.spider.work.shiro.UserRealm">
+    <bean id="userRealm" class="xs.spider.work.shiro.UserRealm">
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
     </bean>
     <!-- Shiro安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realms">
             <list>
-                <ref bean="authRealm"/>
+                <ref bean="userRealm"/>
             </list>
         </property>
         <property name="cacheManager" ref="cacheManager"/>
@@ -39,23 +39,27 @@
         <!-- Shiro的核心安全接口，这个属性是必须的 -->
         <property name="securityManager" ref="securityManager"/>
         <!-- 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
-        <property name="loginUrl" value="/login.html"/>
+        <property name="loginUrl" value="/static/login.html"/>
         <!-- 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在AuthController里硬编码) -->
         <!-- <property name="successUrl" value="/" ></property> -->
         <!-- 用户访问未对其授权的资源时，所显示的连接 -->
         <property name="unauthorizedUrl" value="/static/none.html"/>
         <property name="filterChainDefinitionMap">
             <props>
-                <prop key="/*/**.js">anon</prop>
-                <prop key="/*/**.css">anon</prop>
+                <prop key="/static/js/*">anon</prop>
+                <prop key="/static/css/*">anon</prop>
+                <prop key="/static/fonts/*">anon</prop>
+                <prop key="/static/img/*">anon</prop>
+                <prop key="/static/tools/*">anon</prop>
                 <prop key="/auth/doLogin">anon</prop>
-                <prop key="/get*">permissionFilter</prop>
-                <prop key="/update*">permissionFilter</prop>
-                <prop key="/delete*">permissionFilter</prop>
-                <prop key="/insert*">permissionFilter</prop>
-                <prop key="/save*">permissionFilter</prop>
-                <prop key="/find*">permissionFilter</prop>
-                <!--<prop key="/**">authc</prop>-->
+
+                <prop key="/*/*get*">permissionFilter</prop>
+                <prop key="/*/*update*">permissionFilter</prop>
+                <prop key="/*/*delete*">permissionFilter</prop>
+                <prop key="/*/*insert*">permissionFilter</prop>
+                <prop key="/*/*save*">permissionFilter</prop>
+                <prop key="/*/*find*">permissionFilter</prop>
+                <prop key="/static/*.html">authc</prop>
             </props>
         </property>
         <property name="filters">
@@ -74,10 +78,10 @@
     <!--
     -->
     <bean
-            class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean>
+            class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
     <bean
             class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"></property>
+        <property name="securityManager" ref="securityManager" />
     </bean>
     <!-- 会话Cookie模板
     sessionIdCookie：maxAge=-1表示浏览器关闭时失效此Cookie；

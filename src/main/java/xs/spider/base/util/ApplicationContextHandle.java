@@ -1,5 +1,6 @@
 package xs.spider.base.util;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -18,7 +19,11 @@ public class ApplicationContextHandle implements ApplicationContextAware{
      * @return Object 一个以所给名字注册的bean的实例  
      * @throws BeansException  
      */    
-    public static Object getBean(String name) throws BeansException {
+    public static Object getBean(String name) {
         return applicationContext.getBean(name);    
     }
+
+    public static <T> T getBean(Class<T> clazz) {
+    	return applicationContext.getBean(clazz);
+	}
 }

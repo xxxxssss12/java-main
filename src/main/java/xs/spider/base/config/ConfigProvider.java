@@ -135,11 +135,23 @@ public class ConfigProvider {
         try {
             return Integer.parseInt(value);
         } catch (Exception ex) {
-            LogUtil.error(ConfigProvider.class, ex,"get int error, return null.");
             return null;
         }
     }
-
+    /**
+     * 返回Integer型的配置结果。如果没有找到配置，返回defaultValue
+     *
+     * @param key
+     * @return
+     */
+    public static Integer getInt(String key, Integer defaultValue) {
+        String value = get(key);
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception ex) {
+            return defaultValue;
+        }
+    }
     /**
      * 返回Boolean型的配置结果。如果没有找到配置，返回false
      *

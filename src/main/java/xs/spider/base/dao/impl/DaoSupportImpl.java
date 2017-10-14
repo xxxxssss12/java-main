@@ -76,7 +76,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     }
 
     @Override
-    public T get(T t) throws Exception {
+    public T get(T t) {
         List<T> result = this.getList(t);
         if (result == null || result.isEmpty())
             return null;
@@ -85,13 +85,13 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     }
 
     @Override
-    public List<T> getList(T t) throws Exception {
+    public List<T> getList(T t) {
         return getList(t, null);
 
     }
 
     @Override
-    public List<T> getList(T t, String orderStr) throws Exception {
+    public List<T> getList(T t, String orderStr) {
         if (t==null) return null;
         List<Object> paramlist = new ArrayList<>();
         StringBuffer sql = getListBaseSql(t, paramlist);
@@ -107,7 +107,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         }
     }
 
-    private StringBuffer getListBaseSql(T t, List<Object> paramlist) throws Exception {
+    private StringBuffer getListBaseSql(T t, List<Object> paramlist) {
         if (null == paramlist) return null;
         StringBuffer sql = new StringBuffer(" SELECT * from " + t.getTableName() + " dtb  where 1=1 ");
         StringBuffer where = null;
@@ -121,7 +121,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         return sql;
     }
 
-    private StringBuffer getWhereCondition(T t, List<String> attrNames, List<Object> paramlist) throws Exception {
+    private StringBuffer getWhereCondition(T t, List<String> attrNames, List<Object> paramlist) {
         StringBuffer where = new StringBuffer();
         for (String name : attrNames) {
             Object value = t.getAttributeValue(name);
@@ -223,7 +223,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
                     ,new String[]{entity.getPkName()});
             Number num = holder.getKey();
             if (null != num) {
-                entity.setAttributeValue(entity.getPkName(), num);
+                entity.setAttributeValue(entity.getPkName(), num.intValue());
                 return num.intValue();
             } else {
                 return -1;

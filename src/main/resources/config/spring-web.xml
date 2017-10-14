@@ -8,11 +8,11 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
        ">
 
-    <import resource="classpath:config/applicationContext.xml" />
-    <import resource="spring-shiro.xml" />
+
     <context:component-scan base-package="xs.spider.work">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
+
     <mvc:resources mapping="/static/**" location="/static/" />
     <mvc:annotation-driven>
         <mvc:message-converters>
@@ -57,4 +57,7 @@
             <value>WARN</value>
         </property>
     </bean>
+
+    <import resource="classpath:config/applicationContext.xml" />
+    <import resource="classpath:config/spring-shiro.xml" />
 </beans>

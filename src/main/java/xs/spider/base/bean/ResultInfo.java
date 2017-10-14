@@ -1,5 +1,8 @@
 package xs.spider.base.bean;
 
+import com.alibaba.fastjson.JSONObject;
+import xs.spider.work.bean.User;
+
 import java.io.Serializable;
 
 /**
@@ -57,5 +60,28 @@ public class ResultInfo implements Serializable {
     @Override
     public String toString() {
         return "result:[code=" + code + ";message=" + message + ";data=" + (data==null?"":data.toString()) + "]";
+    }
+
+    public static ResultInfo build() {
+        return new ResultInfo(1, "success");
+    }
+
+    public static ResultInfo build(int code, String message) {
+        return new ResultInfo(code, message);
+    }
+    public static ResultInfo buildFail(int code, String message) {
+        return new ResultInfo(code, message);
+    }
+
+    public static ResultInfo buildFail(String message) {
+        return new ResultInfo(-1, message);
+    }
+
+    public static ResultInfo build(Object data) {
+        return new ResultInfo(1, "success", data);
+    }
+
+    public static ResultInfo buildFail(int code, String message, Object data) {
+        return new ResultInfo(code, message, data);
     }
 }

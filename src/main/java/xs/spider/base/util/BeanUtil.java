@@ -42,7 +42,7 @@ public class BeanUtil {
 		try {
 			return method.invoke(bean, NULL_ARGUMENTS);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ExceptionWrite.get(e));
 			return null;
 		}
 	}
@@ -108,7 +108,7 @@ public class BeanUtil {
 		try {
 			method.invoke(bean, new Object[]{value});
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ExceptionWrite.get(e));
 		}
 	}
 

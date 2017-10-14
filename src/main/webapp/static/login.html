@@ -1,43 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <title>登录</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>登陆</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="./css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="./css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="./css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+    <link href="./css/templatemo_style.css" rel="stylesheet" type="text/css">
+    <link href="./css/bootstrapValidator.min.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="img/changbeng.ico" media="screen"  />
     <style type="text/css">
         .font-yahei {
             font-family: "Microsoft YaHei UI";
         }
     </style>
 </head>
-<body>
+<body class="templatemo-bg-gray">
 <div class="container">
-    <div class="form-signin">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputUsername" class="sr-only">Username</label>
-        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
+    <div class="col-md-12">
+        <h1 class="margin-bottom-15">
+            长泵模具系统</h1>
+        <form class="form-horizontal templatemo-container templatemo-login-form-1 margin-bottom-30" data-toggle="validator" role="form" action="#" id="loginForm" method="post">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <div class="control-wrapper">
+                        <label for="inputUsername" class="control-label fa-label"><i class="fa fa-user fa-medium"></i></label>
+                        <input id="inputUsername" type="text" class="form-control font-yahei" required
+                               data-bv-notempty-message="用户名不能为空"
+                               name="username" placeholder="用户名">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="control-wrapper">
+                        <label for="inputPassword" class="control-label fa-label"><i class="fa fa-lock fa-medium"></i></label>
+                        <input id="inputPassword" type="password" class="form-control font-yahei" required
+                               data-bv-notempty-message="密码不能为空"
+                               name="password" placeholder="密码">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="checkbox control-wrapper">
+                        <label class=" font-yahei">
+                            <input type="checkbox"> 记住我
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="control-wrapper">
+                        <input id="submit" type="submit" class="btn btn-info font-yahei" value="登录" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="text-center">
+            <p class="templatemo-create-new">Powered by xs</i></p>
         </div>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" id="submit">Sign in</button>
-</div> <!-- /container -->
+</div>
+
 <script src="./js/jquery-3.1.1.min.js"></script>
-<script src="./js/common.js"></script>
 <script src="./js/bootstrap.min.js"></script>
+<script src="./js/bootstrapValidator.min.js"></script>
+<script src="./js/validator_zh_CN.js"></script>
+<script src="./js/common.js"></script>
 <script>
+    var validator = $('#loginForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            username: {
+                message: '用户名无效',
+                validators: {
+                    notEmpty: {
+                        message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        min: 5,
+                        max: 30,
+                        message: '用户名长度为5-30'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\.]+$/,
+                        message: '用户名只能为字母数字和下划线'
+                    }
+                }
+            },
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: '密码不能为空'
+                    }
+                }
+            }
+        }
+    });
+    validator.on('success.form.bv', function(e) {
+        // Prevent form submission
+        e.preventDefault();
+        // Get the form instance
+        var $form = $(e.target);
+        // Get the BootstrapValidator instance
+        var bv = $form.data('bootstrapValidator');
+        login();
+    })
     $("#submit").click(function() {
+
+    })
+    var login = function() {
         var username = $("#inputUsername").val();
         var password = $("#inputPassword").val();
         var errstr = "";
-        if (!username) errstr += "用户名不能为空";
-        if (!password) errstr += ";密码不能为空";
+        if (!username || !password) errstr += "用户名/密码不能为空";
         if (errstr) {
             alert(errstr);
             return;
@@ -53,17 +140,25 @@
             dataType:"json",
             success:function(ri) {
                 if (ri && ri.code==1) {
-                    window.location.href='modelAllList.html';
+                    redirect();
                     return;
                 } else {
                     alert(ri.message);
+                    $("#submit").prop("disabled", false);
                 }
             },
             error: function() {
                 alert("网络异常");
+                $("#submit").prop("disabled", false);
             }
         })
-    })
+    }
+    var redirect = function() {
+        var redirectUrl = getRequestParams("redirect");
+        if (redirectUrl) window.location.href = redirectUrl;
+        else window.location.href='modelAllList.html';
+    }
 </script>
+
 </body>
 </html>

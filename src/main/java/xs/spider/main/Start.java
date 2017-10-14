@@ -27,6 +27,6 @@ public class Start {
 
     private static void testImport() {
         CBServiceImpl cbService = context.getBean(CBServiceImpl.class);
-        cbService.importOnXls("D:\\documents\\!xs\\长沙水泵厂\\顺模具专用\\标准件8b.xls");
+        cbService.importOnXls("/Users/xs/Documents/xs/长沙水泵厂/import.xls");
     }
 }

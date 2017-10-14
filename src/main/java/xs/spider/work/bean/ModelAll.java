@@ -23,6 +23,7 @@ public class ModelAll extends BaseEntity {
     private Integer functionTypeId;   // 功能类型表主键
     private Integer useLevelId;       // 使用级别表id（民用，军工级，核电级）
     private String materialQuality;    // 铸件材质
+    private String modelTypeName;
     private Integer modelTypeId;
     private Integer isUnuse;
     private String remark;      // 备注
@@ -129,5 +130,13 @@ public class ModelAll extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getModelTypeName() {
+        return modelTypeName;
+    }
+
+    public void setModelTypeName(String modelTypeName) {
+        this.modelTypeName = modelTypeName;
     }
 }
