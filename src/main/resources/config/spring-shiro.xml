@@ -60,6 +60,8 @@
                 <prop key="/*/*save*">permissionFilter</prop>
                 <prop key="/*/*find*">permissionFilter</prop>
                 <prop key="/static/*.html">authc</prop>
+                <prop key="/static/*/*.html">authc</prop>
+                <prop key="/static/*/*/*.html">authc</prop>
             </props>
         </property>
         <property name="filters">

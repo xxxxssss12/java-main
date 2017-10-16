@@ -60,7 +60,8 @@ public class CurrentUserHelper {
      */
     public static Set<String> getCurrentUserRoles() {
         try {
-            Set<String> roleSet = getCacheRole();
+//            Set<String> roleSet = getCacheRole();
+            Set<String> roleSet = null;
             if (roleSet == null || roleSet.isEmpty()) {
                 AuthorizationInfo info = getUserRealm().doGetAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
                 roleSet = (Set<String>) info.getStringPermissions();
@@ -78,11 +79,12 @@ public class CurrentUserHelper {
      */
     public static Set<String> getCurrentUserPermissions() {
         try {
-            Set<String> perSet = getCachePermission();
+//            Set<String> perSet = getCachePermission();
+            Set<String> perSet = null;
             if (perSet == null || perSet.isEmpty()) {
                 AuthorizationInfo info = getUserRealm().doGetAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
                 perSet = (Set<String>) info.getStringPermissions();
-                setCachePerm(perSet);
+//                setCachePerm(perSet);
             }
             return perSet;
         } catch (Exception e) {

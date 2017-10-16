@@ -34,7 +34,6 @@ public class PermissionFilter implements Filter {
         OutputStream out = servletResponse.getOutputStream();
         try {
             HttpServletRequest request = (HttpServletRequest) servletRequest;
-            System.out.println(Util.null2string(request.getRequestURL()));
             if (!Util.isBlank(AuthUtil.isOpen) && AuthUtil.isOpen.equals("true")) {
                 log.info("权限isopen=true，全部放行");
                 chain.doFilter(servletRequest,servletResponse);
@@ -58,6 +57,7 @@ public class PermissionFilter implements Filter {
                             chain.doFilter(servletRequest,servletResponse);
                             return;
                         } else {
+                            servletResponse.setContentType("application/json;charset=UTF-8");
                             out.write(JSON.toJSONString(authRes).getBytes("utf-8"));
                             return;
                         }
@@ -70,7 +70,8 @@ public class PermissionFilter implements Filter {
                 return;
             }
         } catch (Exception e) {
-            log.error("系统异常",e);
+            log.error("系统异常");
+            servletResponse.setContentType("application/json;charset=UTF-8");
             out.write(JSON.toJSONString(ResultInfo.buildFail("系统异常")).getBytes("utf-8"));
         }
     }

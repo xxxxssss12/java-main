@@ -1,0 +1,62 @@
+
+<style type="text/css">
+    #title{
+        width:100%;
+        text-align: center;
+        font-size: 30px;
+        height: 68px;
+        line-height: 58px;
+    }
+
+    #userInfo{
+        position: absolute;
+        bottom: 20px;
+        right: 5px;
+        font-size: 14px;
+        display: none;
+    }
+
+
+    #userInfo div{
+       float: left;
+    }
+    #userNameDiv
+    {
+        cursor: pointer;
+    }
+    a{
+       text-decoration: none;
+        color: #000000;
+    }
+</style>
+<script>
+    var currentUser = null;
+    $(document).ready(function(){
+        $.get(baseUrl + "user/getCurrentUserInfo",null,userInfoCallback,"json");
+    });
+
+    function userInfoCallback(ri){
+        if(ri!=null){
+            currentUser = ri.data;
+			if(currentUser){
+	            var userName = currentUser.username;
+	
+	            $("#userInfo").show();
+	            $("#userNameDiv").html(userName);
+	            $("#adminLinkDiv").show();
+	            $("#logoutDiv").show();
+	
+	            $("#userImage").attr("src",currentUser.image);
+			}else{
+				location.href=$.URL.main.login;
+			}
+        }
+    }
+</script>
+<div id="title"><a href="index.jsp" id="titleLink">模具管理系统</a></div>
+<div id="userInfo">
+    <div>欢迎您，</div>
+    <div id="userNameDiv"></div>
+    <div id="adminLinkDiv" style="display: none">|<a href="admin.html">管理后台</a></div>
+    <div id="logoutDiv">|<a href="javascript:logout()">安全退出</a></div>
+</div>

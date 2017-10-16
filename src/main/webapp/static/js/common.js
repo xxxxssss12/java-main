@@ -11,7 +11,7 @@ var basepath=function(){
 baseUrl = basepath();
 
 var urls = {
-    index: baseUrl + "static/modelAllList.html",
+    index: baseUrl + "static/manage.html",
     login: baseUrl + "static/login.html"
 }
 function getNowFormatDate() {
@@ -56,7 +56,7 @@ var logout = function() {
         dataType: "json",
         success: function(ri) {
             if (ri && ri.code >= 1) {
-                window.location.href = urls.login;
+                top.location.href = urls.login;
             }
         }
     })

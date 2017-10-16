@@ -9,6 +9,7 @@ import xs.spider.work.dao.UserDao;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,23 +23,41 @@ public class UserServiceImpl {
     Map<Integer, Set<String>> levelPermissionLevel;
 
     private static final String P_LOGOUT = "doLogout";
-    private static final String P_REFRESH = "refresh";
-    private static final String P_SELECT = "select";
-    private static final String P_UPDATE = "update";
-    private static final String P_DELETE = "delete";
-    private static final String P_INSERT = "insert";
+//    private static final String P_REFRESH = "refresh";
+    private static final String P_SELECT = "select,get,find";
+    private static final String P_UPDATE = "update,refresh";
+    private static final String P_DELETE = "delete,remove";
+    private static final String P_INSERT = "insert,save";
     @PostConstruct
     public void init() {
         levelPermissionLevel = new HashMap<>();
-        Set<String> level1Set = Sets.newHashSet(P_LOGOUT, P_REFRESH, P_SELECT);
-        Set<String> level2Set = Sets.newHashSet(P_LOGOUT, P_REFRESH, P_SELECT, P_UPDATE);
-        Set<String> level3Set = Sets.newHashSet(P_LOGOUT, P_REFRESH, P_SELECT, P_UPDATE, P_INSERT);
-        Set<String> level4Set = Sets.newHashSet(P_LOGOUT, P_REFRESH, P_SELECT, P_UPDATE, P_INSERT, P_DELETE);
+        String[] select = P_SELECT.split(",");
+        String[] update = P_UPDATE.split(",");
+        String[] delete = P_DELETE.split(",");
+        String[] insert = P_INSERT.split(",");
+        Set<String> level1Set = createSet(select);
+        Set<String> level2Set = createSet(select, insert);
+        Set<String> level3Set = createSet(select, update, insert);
+        Set<String> level4Set = createSet(select, update, insert, delete);
         levelPermissionLevel.put(1, level1Set);
         levelPermissionLevel.put(2, level2Set);
         levelPermissionLevel.put(3, level3Set);
         levelPermissionLevel.put(4, level4Set);
     }
+
+    private Set<String> createSet(String[]... permissions) {
+        Set<String> set = new HashSet<>();
+        for (String[] permission : permissions) {
+            if (permission != null && permission.length > 0) {
+                for (String per : permission) {
+                    set.add(per);
+                }
+            }
+        }
+        set.add(P_LOGOUT);
+        return set;
+    }
+
     public User getUserByUsername(String username) {
         if (Util.isBlank(username)) return null;
         User user = new User();
