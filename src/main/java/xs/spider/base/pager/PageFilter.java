@@ -11,6 +11,11 @@ import java.io.IOException;
  */
 public class PageFilter implements Filter {
 
+//    private static final String pagenumKey = "pager.pageNum";
+//    private static final String pagesizeKey = "pager.pageSize";
+    private static final String pagenumKey = "page";
+    private static final String pagesizeKey = "pagesize";
+
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
@@ -36,7 +41,7 @@ public class PageFilter implements Filter {
     protected int getPageNum(HttpServletRequest request) {
         int pageNum = 10;
         try {
-            String pageOff = request.getParameter("pager.pageNum");
+            String pageOff = request.getParameter(pagenumKey);
             if (!Util.isBlank(pageOff)) {
                 pageNum =Integer.parseInt(pageOff);
             }
@@ -52,7 +57,7 @@ public class PageFilter implements Filter {
     protected int getPageSize(HttpServletRequest request) {
         int pageSize = 20;
         try {
-            String pageOff = request.getParameter("pager.pageSize");
+            String pageOff = request.getParameter(pagesizeKey);
             if (!Util.isBlank(pageOff)) {
                 pageSize =Integer.parseInt(pageOff);
             }

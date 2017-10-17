@@ -5,9 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>模具总表信息</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/showDetail.css">
-    <link rel="stylesheet" href="./tools/datepicker/bootstrap-datetimepicker.min.css">
+    <link href="tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+    <script src="js/common.js"></script>
     <style type="text/css">
         .font-yahei {
             font-family: "Microsoft YaHei UI";
@@ -15,147 +17,52 @@
     </style>
 </head>
 <body>
-<div class="container-fluid">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="javascript:void(true)">长沙水泵厂</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="javascript:logout()">登出</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!--<div class="container-fluid">-->
-    <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
-                <li class="active"><a href="javascript:void(true)">模具列表</a></li>
-                <!--<li><a href="./addDetail.html">添加流水</a></li>-->
-            </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header" style="font-family: 'Microsoft YaHei UI Light'">模具总表信息</h1>
-            <div class="container-fluid">
-                <div class="row">
-                    <div id="form2" class="col-xs-4">
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label font-yahei">模具名称</label>
-                                <div class="input-group" style="width: 250px">
-                                    <input class="form-control num" onkeyup="enter()" style="border-radius:5px;" type="text" id="modelName">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-3"></div>
-                                <input type="button" class="btn btn-default" id="query" value="查询">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="table-responsive" id="grid">
-            </div>
-
-            <input type="hidden" id="startDate_inp" value="" /><br/>
-            <input type="hidden" id="endDate_inp" value="" /><br/>
-        </div>
+<div id="form1" class="liger-form">
+    <div class="fields">
+        <input data-type="text" data-label="标题" data-name="q_modelNo" />
     </div>
 </div>
-<script src="./js/jquery-3.1.1.min.js"></script>
-<script src="./js/common.js"></script>
-<script src="./js/bootstrap.min.js"></script>
-<script src="./js/xsgrid-bootstrap.js"></script>
-<script src="./tools/datepicker/bootstrap-datetimepicker.min.js"></script>
-<script src="./tools/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-<script>
-    grid = $("#grid").xsGrid({
-        url: baseUrl + "/modelAll/getByPage",
-        pageSize: 20,
-        gridid:"grid",
-        title: "模具汇总",
-        params: {
-            orderStr: ""
-        },
-        columns : [
-            {type:'hide',name:"_id", display:"主键", title:"true"},
-            {type:'lable',name:"modelNo", display:"编号"},
-            {type:'lable',name:"name", display:"名字"},
-            {type:'lable', name:"modelTypeName", display:"类型"},
-            {type:'lable', name:"storeLocation", display:"存放位置"},
-            {type:'lable', name:"lingjiancaizhi", display:"零件材质"},
-            {type:'lable', name:"createTime", display:"创建时间",
-                render:function(row) {
-                    if (row.createTime) {
-                        return row.createTime.substr(0, 10);
-                    } else {
-                        return "";
-                    }
-                }
-            },
-            {type:'lable', name:"createLocation", display:"创建地点"},
-            {type:'lable', name:"remark", display:"备注"},
-            {type:'lable', name:"detail", display:"查看明细"}
-        ]
-    });
-    var enter = function() {
-        var code = event.keyCode;
-        if(code == 13) {
-            $("#query").click();
-        }
-    }
-    var remove = function(id, isDelete) {
-//        var flag = confirm("确定？")
-//        if (!flag) return;
-        $.ajax({
-            url:baseUrl + "/title/remove",
-            type:"post",
-            data:{ "id":id, "isDelete":isDelete},
-            dataType:"json",
-            success:function(ri) {
-                if (ri && ri.code == 1) {
-                    var td = $("td[title='"+id+"']")
-                    if (td) {
-                        td.parent().remove();
-                    }
-                } else {
-                    alert(ri.message);
-                }
-            },
-            error:function() {
-
-            }
-        })
-    }
-    $("#query").click(function() {
-        grid.xsQuery({
-            data: {
-                "searchText":$("#fangyuan").val()
-            },
-            search: "first"
-        })
-    })
-    $(".form_datetime").datetimepicker({
-        language:"zh-CN",
-        format: "yyyy-mm-dd",
-        autoclose: true,
-        todayBtn: true,
-        weekStart: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0,
-        pickerPosition: 'bottom-left'
-    });
-</script>
+<button type="button" id="query" class="l-button l-button-submit">查询</button>
+<div id="modelAllGrid"></div>
+    <script>
+        $(function() {
+            var modelAllGrid = $("#modelAllGrid").ligerGrid({
+                columns:[
+                    {type:'lable',name:"modelNo", display:"编号"},
+                    {type:'lable',name:"name", display:"名字"},
+                    {type:'lable', name:"modelTypeName", display:"类型"},
+                    {type:'lable', name:"storeLocation", display:"存放位置"},
+                    {type:'lable', name:"lingjiancaizhi", display:"零件材质"},
+                    {type:'lable', name:"createTime", display:"创建时间",
+                        render:function(row) {
+                            if (row.createTime) {
+                                return row.createTime.substr(0, 10);
+                            } else {
+                                return "";
+                            }
+                        }
+                    },
+                    {type:'lable', name:"createLocation", display:"创建地点"},
+                    {type:'lable', name:"remark", display:"备注"},
+                    {type:'lable', name:"detail", display:"查看明细"}
+                ],
+                toolbar:{
+                    items:[
+                        {text: '新增', click: void(0), icon: 'add' },
+                        {line: true },
+                        {text: '保存', click: void(0), icon: 'edit' },
+                        {line: true },
+                    ]
+                },
+                url:baseUrl + "modelAll/getByPage",
+                enabledEdit: true,clickToEdit:true, isScroll: false,
+                width: '100%'
+            })
+            $("#query").click(function() {
+                modelAllGrid.set({url:baseUrl + "modelAll/getByPage?modelNo=" + $("input[ligeruiid=q_modelNo]").val()});
+                modelAllGrid.changePage('first');
+            })
+        });
+    </script>
 </body>
 </html>
