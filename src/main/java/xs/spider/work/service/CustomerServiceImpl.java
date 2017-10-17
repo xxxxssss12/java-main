@@ -92,7 +92,7 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
             JSONObject obj = (JSONObject) ri.getData();
             System.out.println(obj.toJSONString());
             String level = obj.getString("level");
-            if (!"bronze".equals(level)) return "没有问题";
+//            if (!"bronze".equals(level)) return "没有问题";
             String canUpLevel = obj.getString("canUpLevel");
             Integer process = obj.getInteger("process");
             JSONArray array = obj.getJSONArray("buyInfo");
