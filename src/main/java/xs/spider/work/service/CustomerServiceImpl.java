@@ -14,11 +14,9 @@ import xs.spider.base.util.ExceptionWrite;
 import xs.spider.base.util.HttpClientUtil;
 import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.Util;
-import xs.spider.work.bean.AmountChangeRecord;
-import xs.spider.work.bean.CreditCardAttr;
-import xs.spider.work.bean.Customer;
-import xs.spider.work.bean.RepaymentInfo;
+import xs.spider.work.bean.*;
 import xs.spider.work.dao.AmountChangeRecordDao;
+import xs.spider.work.dao.BusinessPayDao;
 import xs.spider.work.dao.CreditCardAttrDao;
 
 import java.util.Arrays;
@@ -34,7 +32,8 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
     private AmountChangeRecordDao amountChangeRecordDao;
     @Autowired
     private CreditCardAttrDao creditCardAttrDao;
-
+    @Autowired
+    private BusinessPayDao businessPayDao;
     public ResultInfo getInfo(String phone, Integer id) throws Exception {
         if (Util.isBlank(phone) && Util.isBlank(id)) return new ResultInfo(-1, "fail");
         StringBuilder sb = new StringBuilder();
@@ -71,12 +70,13 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
             obj.put("repay", vipCondition.get("repay"));
             sb1.append(vipCondition.getString("sb"));
         }
-        ri = getLevelVipInfo(encodeId);
+        ri = getLevelVipInfo(customer.getId(), encodeId);
         if (ri != null && ri.getCode() == 1) {
             JSONObject levelInfo = ((JSONObject) ri.getData());
             obj.put("level", levelInfo.get("levelCode"));
             obj.put("canUpLevel", levelInfo.get("canUpLevel"));
             obj.put("process", levelInfo.get("process"));
+            obj.put("buyInfo", levelInfo.get("buyInfo"));
             String tempQuotaInfo = getTempquotaInfo(encodeId, ri.getMessage());
             sb1.append(levelInfo.getString("sb")).append(tempQuotaInfo);
         }
@@ -95,14 +95,19 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
             if (!"bronze".equals(level)) return "没有问题";
             String canUpLevel = obj.getString("canUpLevel");
             Integer process = obj.getInteger("process");
-
+            JSONArray array = obj.getJSONArray("buyInfo");
+            BusinessPay pay = null;
+            if (array != null && !array.isEmpty()) {
+                pay = array.getObject(0, BusinessPay.class);
+            }
             String creditScore = obj.getString("creditScore");
             String maxOverdue = obj.getString("maxOverdue");
             String firstBorrow = obj.getString("firstBorrow");
             String repay = obj.getString("repay");
             sb.append("当前等级：").append(level)
-                    .append(";可升级等级:")
-                    .append(canUpLevel).append(";升级进程:").append(process)
+                    .append(";可升级等级:").append(canUpLevel)
+                    .append(";购买等级:").append(pay==null?"null": pay.getForeign_key() + ":" + pay.getIs_valid())
+                    .append(";升级进程:").append(process)
                     .append(";四项数据：creditScore=").append(creditScore)
                     .append(";maxOverdue=").append(maxOverdue)
                     .append(";firstBorrow=").append(firstBorrow)
@@ -242,12 +247,13 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
         return new ResultInfo(-1, "fail");
     }
 
-    public ResultInfo getLevelVipInfo(String encodeId) {
+    public ResultInfo getLevelVipInfo(Integer customerId, String encodeId) {
 
         String url = "http://121.199.39.118:8000/wecash-platform-web/platform/customer/levelVip/index?CUSTOMER_ID="
                 + encodeId;
         JSONObject www = new JSONObject();
         try {
+
             if (Util.isBlank(encodeId)) return null;
             ResultInfo ri = HttpClientUtil.doGet(url, null);
             if (ri.getCode() == 1) {
@@ -256,16 +262,22 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
                 JSONObject vipInfo = obj.getJSONObject("data").getJSONObject("levelVipInfo");
                 JSONObject currentLevelInfo = vipInfo.getJSONObject("levelConfig");
                 String canUpLevel = "null";
+
+                List<BusinessPay> payList = getBusinessPay(customerId, "level");
+                BusinessPay businessPay = null;
+                if (payList != null && !payList.isEmpty()) businessPay = payList.get(0);
                 if (vipInfo.getJSONObject("canUplevelInfo") != null)
                     canUpLevel = vipInfo.getJSONObject("canUplevelInfo").getString("canUplevel");
                 StringBuilder sb = new StringBuilder();
                 sb.append("用户当前新vip数据：等级：")
                         .append(currentLevelInfo.getString("levelCode"))
                         .append(";可升级等级：").append(canUpLevel)
+                        .append(";购买等级：").append(businessPay==null?"null": businessPay.getForeign_key())
                         .append(";升级进程:").append(vipInfo.getString("levelProcess"))
                         .append("<br>");
                 sb.append("<br>");
                 www.put("levelCode",currentLevelInfo.getString("levelCode") );
+                www.put("buyInfo", payList);
                 www.put("canUpLevel",canUpLevel);
                 www.put("process",vipInfo.getInteger("levelProcess") );
                 www.put("sb", sb);
@@ -276,6 +288,14 @@ public class CustomerServiceImpl extends DaoSupportImpl<Customer, Integer> imple
         }
         return new ResultInfo(-1, "fail");
     }
+
+    private List<BusinessPay> getBusinessPay(Integer customerId, String businessType) throws Exception {
+        BusinessPay pay = new BusinessPay();
+        pay.setBusiness_type(businessType);
+        pay.setCustomer_id(customerId);
+        return businessPayDao.getList(pay, " id desc ");
+    }
+
     private String getTempquotaInfo(String encodeId, String levelCode) {
         if (Util.isBlank(levelCode) || "bronze".equals(levelCode)) {
             return "";
