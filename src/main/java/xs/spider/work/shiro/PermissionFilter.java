@@ -103,7 +103,7 @@ public class PermissionFilter implements Filter {
         Set<String> permissions = CurrentUserHelper.getCurrentUserPermissions();
         if (permissions == null) return -3;
         for (String permission : permissions) {
-            if (!Util.isBlank(permission) && url.contains(permission)) {
+            if (!Util.isBlank(permission) && url.toLowerCase().contains(permission.toLowerCase())) {
                 return 1;
             }
         }

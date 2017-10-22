@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,19 +20,49 @@
 <div id="form1" class="liger-form">
     <div class="fields">
         <input data-type="text" data-label="标题" data-name="q_modelNo" />
+        <div data-type="select" data-label="分类" data-name="q_modelType" data-newline="false">
+            <input class="editor"  data-textField="name" data-valueField="id"/>
+        </div>
     </div>
 </div>
 <button type="button" id="query" class="l-button l-button-submit">查询</button>
 <div id="modelAllGrid"></div>
     <script>
+        var modelAllGrid;
+        var modelTypes = [{"id":1,"name":"中开泵"},{"id":2,"name":"中开泵RS"},{"id":3,"name":"中开泵sa"},{"id":4,"name":"中开泵sap"},{"id":5,"name":"中开泵slaz"},{"id":6,"name":"军工泵"},{"id":7,"name":"冷凝泵"},{"id":8,"name":"挖泥泵"},{"id":9,"name":"斜流泵"},{"id":10,"name":"杂泵老泵"},{"id":11,"name":"标准件"},{"id":12,"name":"核泵"},{"id":13,"name":"沅江泵YJ"},{"id":14,"name":"沅江泵YJG"},{"id":15,"name":"湘江泵"},{"id":16,"name":"湘阴泵"},{"id":17,"name":"美国泵"},{"id":18,"name":"老泵杂泵"},{"id":19,"name":"脱硫泵"},{"id":20,"name":"风能"}];
+        var modelTypeLiger;
+        var saveFlag = false;
+        var addFlag = false;
         $(function() {
-            var modelAllGrid = $("#modelAllGrid").ligerGrid({
+            modelTypeLiger = liger.get('q_modelType');
+            modelAllGrid = $("#modelAllGrid").ligerGrid({
                 columns:[
-                    {type:'lable',name:"modelNo", display:"编号"},
-                    {type:'lable',name:"name", display:"名字"},
-                    {type:'lable', name:"modelTypeName", display:"类型"},
-                    {type:'lable', name:"storeLocation", display:"存放位置"},
-                    {type:'lable', name:"lingjiancaizhi", display:"零件材质"},
+                    {type:'lable',name:"modelNo", display:"编号", width:"200"},
+                    {type:'lable',name:"name", display:"名字", width:"90",
+                        editor:  {
+                            type:"text"
+                        }
+                    },
+                    {type:'lable', name:"modelTypeId", display:"类型", width:"90",
+                        render: function(row) {
+                            if (row.modelTypeId) {
+                                return modelTypes[row.modelTypeId-1].name
+                            }
+                        },
+                        editor:  {
+                            type:"select", data:modelTypes, valueField: "id", textField: "name"
+                        }
+                    },
+                    {type:'lable', name:"storeLocation", display:"存放位置",
+                        editor:  {
+                            type:"text"
+                        }
+                    },
+                    {type:'lable', name:"lingjiancaizhi", display:"零件材质",
+                        editor:  {
+                            type:"text"
+                        }
+                    },
                     {type:'lable', name:"createTime", display:"创建时间",
                         render:function(row) {
                             if (row.createTime) {
@@ -42,27 +72,122 @@
                             }
                         }
                     },
-                    {type:'lable', name:"createLocation", display:"创建地点"},
-                    {type:'lable', name:"remark", display:"备注"},
-                    {type:'lable', name:"detail", display:"查看明细"}
+                    {type:'lable', name:"createLocation", display:"创建地点",
+                        editor:  {
+                            type:"text"
+                        }
+                    },
+                    {type:'lable', name:"remark", display:"备注",
+                        editor: {
+                            type:"text"
+                        }
+                    },
+                    {type:'lable', name:"operator", display:"操作",
+                        render: function (row) {
+                            var showDetail = "<a href='javascript:showDetail(" + row.id + ")'>查看明细</a>";
+                            var del = "<a href='javascript:del(" + row.id + ")'>删除</a>";
+                            return showDetail + "&nbsp;" + del;
+                        }
+                    }
                 ],
                 toolbar:{
                     items:[
-                        {text: '新增', click: void(0), icon: 'add' },
+                        {text: '新增', click: add, icon: 'add' },
                         {line: true },
-                        {text: '保存', click: void(0), icon: 'edit' },
+                        {text: '批量保存', click: save, icon: 'edit' },
                         {line: true },
                     ]
                 },
                 url:baseUrl + "modelAll/getByPage",
-                enabledEdit: true,clickToEdit:true, isScroll: false,
+                enabledEdit: true,clickToeditor: true, isScroll: false,
                 width: '100%'
             })
             $("#query").click(function() {
-                modelAllGrid.set({url:baseUrl + "modelAll/getByPage?modelNo=" + $("input[ligeruiid=q_modelNo]").val()});
+                modelAllGrid.set({
+                    url:baseUrl + "modelAll/getByPage?modelNo=" + $("input[ligeruiid=q_modelNo]").val()
+                                + "&modelTypeId=" + modelTypeLiger.selectedValue});
                 modelAllGrid.changePage('first');
             })
+            $.ajax({
+                url: baseUrl + "modelAll/getAllType",
+                type: "get",
+                dataType: "json",
+                success: function(ri) {
+                    if (ri && ri.code && ri.code>0) {
+                        modelTypes = ri.data;
+                        modelTypeLiger.set("data", modelTypes);
+                    }
+                }
+            })
         });
+        var add = function () {
+            $.ligerDialog.open({title:"新增模具",url:"addModel.html",width:700,height:500,showMax:true});
+        }
+        var save = function() {
+            if (saveFlag) {
+                $.ligerDialog.warn("已经有保存在进行中，请稍后再试");
+                return;
+            }
+            var changes = modelAllGrid.getUpdated();
+            if (!changes || changes.length <= 0) {
+                $.ligerDialog.warn("没有数据需要更新");
+                return;
+            }
+            saveFlag = true;
+            $.ajax({
+                url : baseUrl + "modelAll/batchUpdate",
+                type: "post",
+                data: {
+                    "modelAllListJson": JSON.stringify(changes)
+                },
+                dataType: "json",
+                success: function(ri) {
+                    if (ri && ri.code > 0) {
+                        $.ligerDialog.success("保存成功");
+                        modelAllGrid.loadData(true);
+                    } else {
+                        $.ligerDialog.error(ri.message);
+                    }
+                    saveFlag = false;
+                },
+                error: function() {
+                    $.ligerDialog.error("系统发生异常");
+                    saveFlag = false;
+                }
+            })
+        }
+        var showDetail = function(modelId) {
+        }
+        var del = function(modelId) {
+            if (!modelId || modelId <= 0) {
+                $.ligerDialog.warn("id异常");
+                return;
+            }
+            $.ligerDialog.confirm("确定删除？", function(yes) {
+                if (yes) {
+
+                    $.ajax({
+                        url: baseUrl + "modelAll/delete",
+                        type: "post",
+                        data: {
+                            "id": modelId
+                        },
+                        dataType: "json",
+                        success: function(ri) {
+                            if (ri && ri.code > 0) {
+                                $.ligerDialog.success("删除成功");
+                                modelAllGrid.loadData(true);
+                            } else {
+                                $.ligerDialog.error(ri.message);
+                            }
+                        },
+                        error: function() {
+                            $.ligerDialog.error("系统发生异常");
+                        }
+                    });
+                }
+            })
+        }
     </script>
 </body>
 </html>

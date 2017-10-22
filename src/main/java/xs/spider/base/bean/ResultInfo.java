@@ -84,4 +84,8 @@ public class ResultInfo implements Serializable {
     public static ResultInfo buildFail(int code, String message, Object data) {
         return new ResultInfo(code, message, data);
     }
+
+    public static ResultInfo buildFail() {
+        return new ResultInfo(-1, "fail");
+    }
 }

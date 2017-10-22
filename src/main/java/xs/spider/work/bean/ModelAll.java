@@ -27,6 +27,8 @@ public class ModelAll extends BaseEntity {
     private Integer modelTypeId;
     private Integer isUnuse;
     private String remark;      // 备注
+    private Integer isDel;
+    private Date addtime;
 
     public Integer getId() {
         return id;
@@ -138,5 +140,21 @@ public class ModelAll extends BaseEntity {
 
     public void setModelTypeName(String modelTypeName) {
         this.modelTypeName = modelTypeName;
+    }
+
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
+    }
+
+    public Date getAddtime() {
+        return addtime;
+    }
+
+    public void setAddtime(Date addtime) {
+        this.addtime = addtime;
     }
 }

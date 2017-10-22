@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>添加模具</title>
+    <link href="tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+    <div id="form1" class="liger-form">
+        <div class="fields">
+            <input data-type="text" data-label="编号" data-name="q_modelNo" id="q_modelNo" />
+            <input data-type="text" data-label="名字" data-name="q_name" id="q_name"/>
+            <div data-type="select" data-label="类型" data-name="q_modelType">
+                <input class="editor"  data-textField="name" data-valueField="id"/>
+            </div>
+            <input data-type="text" data-label="存放位置" data-name="q_storeLocation" id="q_storeLocation"/>
+            <input data-type="text" data-label="零件材质" data-name="q_lingjiancaizhi" id="q_lingjiancaizhi"/>
+            <input data-type="date" data-label="创建时间" data-name="q_createTime" id="q_createTime"/>
+            <input data-type="text" data-label="创建地点" data-name="q_createLocation" id="q_createLocation"/>
+            <input data-type="text" data-label="备注" data-name="q_remark" id="q_remark"/>
+            <input data-type="text" data-label="明细(|分割多条)" data-name="q_detail" id="q_detail"/>
+
+        </div>
+    </div>
+    <button type="button" id="add" class="l-button l-button-submit">保存</button>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        var addFlag = false;
+        var modelTypes = [{"id":1,"name":"中开泵"},{"id":2,"name":"中开泵RS"},{"id":3,"name":"中开泵sa"},{"id":4,"name":"中开泵sap"},{"id":5,"name":"中开泵slaz"},{"id":6,"name":"军工泵"},{"id":7,"name":"冷凝泵"},{"id":8,"name":"挖泥泵"},{"id":9,"name":"斜流泵"},{"id":10,"name":"杂泵老泵"},{"id":11,"name":"标准件"},{"id":12,"name":"核泵"},{"id":13,"name":"沅江泵YJ"},{"id":14,"name":"沅江泵YJG"},{"id":15,"name":"湘江泵"},{"id":16,"name":"湘阴泵"},{"id":17,"name":"美国泵"},{"id":18,"name":"老泵杂泵"},{"id":19,"name":"脱硫泵"},{"id":20,"name":"风能"}];
+        var modelTypeLiger;
+        var createTime;
+        $(function() {
+            modelTypeLiger = liger.get('q_modelType');
+            modelTypeLiger.set("data", modelTypes);
+            createTime = liger.get("q_createTime");
+            $.ajax({
+                url: baseUrl + "modelAll/getAllType",
+                type: "get",
+                dataType: "json",
+                success: function(ri) {
+                    if (ri && ri.code && ri.code>0) {
+                        modelTypes = ri.data;
+                        modelTypeLiger.set("data", modelTypes);
+                    }
+                }
+            })
+            $("#add").click(function() {
+                if (addFlag) {
+                    $.ligerDialog.warn("已经有保存在进行中，请稍后再试");
+                    return;
+                }
+                var modelNo = $("input[ligeruiid=q_modelNo]").val();
+                var name = $("input[ligeruiid=q_name]").val();
+                var modelTypeId = modelTypeLiger.selectedValue;
+                var storeLocation = $("input[ligeruiid=q_storeLocation]").val();
+                var lingjiancaizhi = $("input[ligeruiid=q_lingjiancaizhi]").val();
+                var createTime = $("input[ligeruiid=q_createTime]").val();
+                var createLocation = $("input[ligeruiid=q_createLocation]").val();
+                var remark = $("input[ligeruiid=q_remark]").val();
+                var detail = $("input[ligeruiid=q_detail]").val();
+                if (modelNo) modelNo = modelNo.trim();
+                if (!modelNo) {
+                    $.ligerDialog.warn("编号不能为空");
+                    return;
+                }
+                addFlag = true;
+                $.ajax({
+                    url: baseUrl + "modelAll/add",
+                    type: "post",
+                    data: {
+                        modelNo:modelNo,
+                        name:name,
+                        modelTypeId:modelTypeId,
+                        storeLocation:storeLocation,
+                        lingjiancaizhi:lingjiancaizhi,
+                        createTime:createTime,
+                        remark:remark,
+                        createLocation:createLocation,
+                        detail:detail
+                    },
+                    dataType: "json",
+                    success: function(ri) {
+                        if (ri && ri.code > 0) {
+                            $.ligerDialog.success("保存成功");
+
+                            $("input[ligeruiid=q_modelNo]").val("");
+                            $("input[ligeruiid=q_name]").val("");
+                            modelTypeLiger.selectValue(null);
+                            $("input[ligeruiid=q_storeLocation]").val("");
+                            $("input[ligeruiid=q_lingjiancaizhi]").val("");
+                            $("input[ligeruiid=q_createTime]").val("");
+                            $("input[ligeruiid=q_createLocation]").val("");
+                            $("input[ligeruiid=q_remark]").val("");
+                            $("input[ligeruiid=q_detail]").val("");
+                        } else {
+                            $.ligerDialog.error(ri.message);
+                        }
+                        addFlag = false;
+                    },
+                    error: function() {
+                        $.ligerDialog.error("系统发生异常");
+                        addFlag = false;
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>

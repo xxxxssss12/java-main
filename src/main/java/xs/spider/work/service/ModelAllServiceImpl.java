@@ -15,11 +15,15 @@ import java.util.List;
  */
 @Service
 public class ModelAllServiceImpl extends DaoSupportImpl<ModelAll, Integer> implements DaoSupport<ModelAll, Integer> {
-    public PageBean<ModelAll> getPage(String modelNo) {
-        StringBuilder sql = new StringBuilder("SELECT t.* FROM tb_model_all t WHERE 1=1 ");
+    public PageBean<ModelAll> getPage(String modelNo, Integer modelTypeId) {
+        StringBuilder sql = new StringBuilder("SELECT t.* FROM tb_model_all t WHERE isDel=0 ");
         List<Object> list = new ArrayList<>();
         if (!Util.isBlank(modelNo)) {
             sql.append(" AND modelNo like '%").append(modelNo).append("%'");
+        }
+        if (!Util.isBlank(modelTypeId)) {
+            sql.append(" AND modelTypeId=? ");
+            list.add(modelTypeId);
         }
         return getPage(sql.toString(), list);
     }
