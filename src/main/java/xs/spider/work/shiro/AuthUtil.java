@@ -42,7 +42,7 @@ public class AuthUtil {
                 return ResultInfo.build(-998,"请重新登录");
             case -3:
                 //权限校验失败
-                return ResultInfo.build(-997,"你没有权限访问该接口");
+                return ResultInfo.build(-997,"您没有操作权限");
             default:
                 return ResultInfo.build(-996, "未知错误");
         }

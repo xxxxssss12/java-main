@@ -55,6 +55,8 @@
 
                 <prop key="/*/*get*">permissionFilter</prop>
                 <prop key="/*/*update*">permissionFilter</prop>
+                <prop key="/*/*add*">permissionFilter</prop>
+                <prop key="/*/*Update*">permissionFilter</prop>
                 <prop key="/*/*delete*">permissionFilter</prop>
                 <prop key="/*/*insert*">permissionFilter</prop>
                 <prop key="/*/*save*">permissionFilter</prop>

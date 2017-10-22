@@ -27,7 +27,7 @@ public class UserServiceImpl {
     private static final String P_SELECT = "select,get,find";
     private static final String P_UPDATE = "update,refresh";
     private static final String P_DELETE = "delete,remove";
-    private static final String P_INSERT = "insert,save";
+    private static final String P_INSERT = "insert,save,add";
     @PostConstruct
     public void init() {
         levelPermissionLevel = new HashMap<>();
