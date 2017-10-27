@@ -136,7 +136,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         return where;
     }
     @Override
-    public PageBean getPage(T t) throws Exception {
+    public PageBean getPage(T t) {
         return getPage(t, null);
     }
     @Override
@@ -172,7 +172,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         }
     }
     @Override
-    public PageBean<T> getPage(T t, String orderStr) throws Exception {
+    public PageBean<T> getPage(T t, String orderStr) {
         Integer pageNum = PageContext.getPageNum();
         Integer pageSize = PageContext.getPageSize();
         if (Util.isBlank(pageNum) || Util.isBlank(pageSize)) {

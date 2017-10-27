@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.UnauthenticatedException;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
-import xs.spider.base.bean.ResultInfo;
 import xs.spider.base.util.ApplicationContextHandle;
 import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.RedisConnector;
@@ -65,7 +62,7 @@ public class CurrentUserHelper {
             if (roleSet == null || roleSet.isEmpty()) {
                 AuthorizationInfo info = getUserRealm().doGetAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
                 roleSet = (Set<String>) info.getStringPermissions();
-                setCacheRole(roleSet);
+//                setCacheRole(roleSet);
                 return (Set<String>) info.getRoles();
             }
         } catch(Exception e) {

@@ -40,8 +40,8 @@
         var modelTypeLiger;
         var createTime;
         $(function() {
-            modelTypeLiger = liger.get('q_modelType');
-            modelTypeLiger.set("data", modelTypes);
+            modelTypeLiger = liger.get("q_modelType");
+//            modelTypeLiger.set("data", modelTypes);
             createTime = liger.get("q_createTime");
             $.ajax({
                 url: baseUrl + "modelAll/getAllType",
