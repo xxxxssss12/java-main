@@ -16,6 +16,7 @@ import xs.spider.work.bean.ModelType;
 import xs.spider.work.service.ModelAllServiceImpl;
 import xs.spider.work.service.ModelDetailServiceImpl;
 import xs.spider.work.service.ModelTypeServiceImpl;
+import xs.spider.work.shiro.CurrentUserHelper;
 
 import java.util.Date;
 import java.util.List;
@@ -95,6 +96,7 @@ public class ModelAllController {
         modelAll.setModelTypeId(modelTypeId);
         modelAll.setRemark(remark);
         modelAll.setAddtime(new Date());
+        modelAll.setCreateUser(CurrentUserHelper.getCurrentUsername());
         Integer id = modelAllService.save(modelAll);
         if (!Util.isBlank(detail)) {
             String[] detailArr = detail.split("\\|");

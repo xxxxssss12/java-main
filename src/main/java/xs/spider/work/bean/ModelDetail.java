@@ -4,6 +4,8 @@ import xs.spider.base.anno.Id;
 import xs.spider.base.anno.Table;
 import xs.spider.base.bean.BaseEntity;
 
+import java.util.Date;
+
 /**
  * 磨具明细表
  * Created by xs on 2017/8/7.
@@ -17,6 +19,8 @@ public class ModelDetail extends BaseEntity {
     private Integer modelAllId;
     private Integer num;
     private String partName;
+    private Date createTime;
+    private String createUser;
 
     public Integer getId() {
         return id;
@@ -64,5 +68,21 @@ public class ModelDetail extends BaseEntity {
 
     public void setPartName(String partName) {
         this.partName = partName;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
     }
 }

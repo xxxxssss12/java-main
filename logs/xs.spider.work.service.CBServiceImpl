@@ -1,0 +1,85 @@
+[ERROR] 2017-10-13 22:24:21,944 - java.io.FileNotFoundException: /Users/xs/Documents/xs/长沙水泵厂 (Is a directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:39)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+
+[ERROR] 2017-10-13 23:09:21,231 - java.lang.IllegalStateException: Cannot get a STRING value from a NUMERIC cell
+	at org.apache.poi.hssf.usermodel.HSSFCell.typeMismatch(HSSFCell.java:654)
+	at org.apache.poi.hssf.usermodel.HSSFCell.getRichStringCellValue(HSSFCell.java:731)
+	at org.apache.poi.hssf.usermodel.HSSFCell.getStringCellValue(HSSFCell.java:714)
+	at xs.spider.work.service.CBServiceImpl.dealDate(CBServiceImpl.java:125)
+	at xs.spider.work.service.CBServiceImpl.buildBean(CBServiceImpl.java:100)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:53)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+
+[ERROR] 2017-10-13 23:10:46,344 - 2008/:java.lang.NumberFormatException
+	at java.math.BigDecimal.<init>(BigDecimal.java:494)
+	at java.math.BigDecimal.<init>(BigDecimal.java:383)
+	at java.math.BigDecimal.<init>(BigDecimal.java:806)
+	at xs.spider.work.service.CBServiceImpl.dealDate(CBServiceImpl.java:139)
+	at xs.spider.work.service.CBServiceImpl.buildBean(CBServiceImpl.java:100)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:53)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+
+[ERROR] 2017-10-13 23:10:46,349 - 2010/2/20杭州虹权:java.lang.NumberFormatException
+	at java.math.BigDecimal.<init>(BigDecimal.java:494)
+	at java.math.BigDecimal.<init>(BigDecimal.java:383)
+	at java.math.BigDecimal.<init>(BigDecimal.java:806)
+	at xs.spider.work.service.CBServiceImpl.dealDate(CBServiceImpl.java:139)
+	at xs.spider.work.service.CBServiceImpl.buildBean(CBServiceImpl.java:100)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:53)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+
+[ERROR] 2017-10-13 23:10:46,353 - 上海2011-9-20:java.lang.NumberFormatException
+	at java.math.BigDecimal.<init>(BigDecimal.java:494)
+	at java.math.BigDecimal.<init>(BigDecimal.java:383)
+	at java.math.BigDecimal.<init>(BigDecimal.java:806)
+	at xs.spider.work.service.CBServiceImpl.dealDate(CBServiceImpl.java:139)
+	at xs.spider.work.service.CBServiceImpl.buildBean(CBServiceImpl.java:100)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:53)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+
+[ERROR] 2017-10-13 23:10:46,366 - 2009/8/11本厂:java.lang.NumberFormatException
+	at java.math.BigDecimal.<init>(BigDecimal.java:494)
+	at java.math.BigDecimal.<init>(BigDecimal.java:383)
+	at java.math.BigDecimal.<init>(BigDecimal.java:806)
+	at xs.spider.work.service.CBServiceImpl.dealDate(CBServiceImpl.java:139)
+	at xs.spider.work.service.CBServiceImpl.buildBean(CBServiceImpl.java:100)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:53)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+
+[ERROR] 2017-10-13 23:10:46,367 - 2009/8/18本厂:java.lang.NumberFormatException
+	at java.math.BigDecimal.<init>(BigDecimal.java:494)
+	at java.math.BigDecimal.<init>(BigDecimal.java:383)
+	at java.math.BigDecimal.<init>(BigDecimal.java:806)
+	at xs.spider.work.service.CBServiceImpl.dealDate(CBServiceImpl.java:139)
+	at xs.spider.work.service.CBServiceImpl.buildBean(CBServiceImpl.java:100)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:53)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+
+[ERROR] 2017-10-13 23:10:46,371 - 2009/8/18本厂:java.lang.NumberFormatException
+	at java.math.BigDecimal.<init>(BigDecimal.java:494)
+	at java.math.BigDecimal.<init>(BigDecimal.java:383)
+	at java.math.BigDecimal.<init>(BigDecimal.java:806)
+	at xs.spider.work.service.CBServiceImpl.dealDate(CBServiceImpl.java:139)
+	at xs.spider.work.service.CBServiceImpl.buildBean(CBServiceImpl.java:100)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:53)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+
+[ERROR] 2017-10-13 23:10:46,380 - java.lang.NullPointerException
+	at xs.spider.work.service.CBServiceImpl.dealDate(CBServiceImpl.java:126)
+	at xs.spider.work.service.CBServiceImpl.buildBean(CBServiceImpl.java:100)
+	at xs.spider.work.service.CBServiceImpl.importOnXls(CBServiceImpl.java:53)
+	at xs.spider.main.Start.testImport(Start.java:30)
+	at xs.spider.main.Start.main(Start.java:25)
+

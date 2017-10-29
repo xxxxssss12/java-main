@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>添加模具</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>添加模具</title>
-    <link href="tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
-    <link href="tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         .font-yahei {
             font-family: "Microsoft YaHei UI";
@@ -31,9 +31,9 @@
         </div>
     </div>
     <button type="button" id="add" class="l-button l-button-submit">保存</button>
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
-    <script src="js/common.js"></script>
+    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+    <script src="../js/common.js"></script>
     <script>
         var addFlag = false;
         var modelTypes = [{"id":1,"name":"中开泵"},{"id":2,"name":"中开泵RS"},{"id":3,"name":"中开泵sa"},{"id":4,"name":"中开泵sap"},{"id":5,"name":"中开泵slaz"},{"id":6,"name":"军工泵"},{"id":7,"name":"冷凝泵"},{"id":8,"name":"挖泥泵"},{"id":9,"name":"斜流泵"},{"id":10,"name":"杂泵老泵"},{"id":11,"name":"标准件"},{"id":12,"name":"核泵"},{"id":13,"name":"沅江泵YJ"},{"id":14,"name":"沅江泵YJG"},{"id":15,"name":"湘江泵"},{"id":16,"name":"湘阴泵"},{"id":17,"name":"美国泵"},{"id":18,"name":"老泵杂泵"},{"id":19,"name":"脱硫泵"},{"id":20,"name":"风能"}];
@@ -90,6 +90,7 @@
                     },
                     dataType: "json",
                     success: function(ri) {
+                        addFlag = false;
                         if (ri && ri.code > 0) {
                             $.ligerDialog.success("保存成功");
 
@@ -102,10 +103,10 @@
                             $("input[ligeruiid=q_createLocation]").val("");
                             $("input[ligeruiid=q_remark]").val("");
                             $("input[ligeruiid=q_detail]").val("");
+                            parent.refresh();
                         } else {
                             $.ligerDialog.error(ri.message);
                         }
-                        addFlag = false;
                     },
                     error: function() {
                         $.ligerDialog.error("系统发生异常");

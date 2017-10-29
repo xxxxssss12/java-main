@@ -29,6 +29,7 @@ public class ModelAll extends BaseEntity {
     private String remark;      // 备注
     private Integer isDel;
     private Date addtime;
+    private String createUser;
 
     public Integer getId() {
         return id;
@@ -156,5 +157,13 @@ public class ModelAll extends BaseEntity {
 
     public void setAddtime(Date addtime) {
         this.addtime = addtime;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
     }
 }

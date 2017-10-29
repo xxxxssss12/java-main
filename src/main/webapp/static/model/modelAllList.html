@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
-    <link href="tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
-    <script src="js/common.js"></script>
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+    <script src="../js/common.js"></script>
     <style type="text/css">
         .font-yahei {
             font-family: "Microsoft YaHei UI";
@@ -32,7 +32,6 @@
         var modelTypes = [{"id":1,"name":"中开泵"},{"id":2,"name":"中开泵RS"},{"id":3,"name":"中开泵sa"},{"id":4,"name":"中开泵sap"},{"id":5,"name":"中开泵slaz"},{"id":6,"name":"军工泵"},{"id":7,"name":"冷凝泵"},{"id":8,"name":"挖泥泵"},{"id":9,"name":"斜流泵"},{"id":10,"name":"杂泵老泵"},{"id":11,"name":"标准件"},{"id":12,"name":"核泵"},{"id":13,"name":"沅江泵YJ"},{"id":14,"name":"沅江泵YJG"},{"id":15,"name":"湘江泵"},{"id":16,"name":"湘阴泵"},{"id":17,"name":"美国泵"},{"id":18,"name":"老泵杂泵"},{"id":19,"name":"脱硫泵"},{"id":20,"name":"风能"}];
         var modelTypeLiger;
         var saveFlag = false;
-        var addFlag = false;
         $(function() {
             modelTypeLiger = liger.get('q_modelType');
             modelAllGrid = $("#modelAllGrid").ligerGrid({
@@ -121,7 +120,14 @@
             })
         });
         var add = function () {
-            $.ligerDialog.open({title:"新增模具",url:"addModel.html",width:700,height:500,showMax:true});
+            $.ligerDialog.open({title:"新增模具",url:"addModel.html",width:700,height:500,showMax:true,
+                onClose: function() {
+                    detailGrid.loadData(true);
+                }
+            });
+        }
+        var refresh= function() {
+            modelAllGrid.loadData(true);
         }
         var save = function() {
             if (saveFlag) {
@@ -158,7 +164,7 @@
         }
         var showDetail = function(modelId) {
 //            tab.addTabItem({"tabid": id, "text": text, "url": "modelDetailList.html?modelId=" + modelId})
-            parent.f_addTab("添加模具", "添加模具", "modelDetailList.html?modelId=" + modelId);
+            parent.f_addTab("模具明细", "模具明细", "model/modelDetailList.html?modelId=" + modelId);
         }
         var del = function(modelId) {
             if (!modelId || modelId <= 0) {

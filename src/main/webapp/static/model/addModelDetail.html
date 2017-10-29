@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加模具明细</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div id="form1" class="liger-form">
+    <div class="fields">
+        <input data-type="text" data-label="明细" data-name="q_detail" id="q_detail"/>
+    </div>
+</div>
+<button type="button" id="add" class="l-button l-button-submit">保存</button>
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+    var modelAllId;
+    var addFlag = false;
+    $(function () {
+        modelAllId = getRequestParams().modelId;
+        if (!modelAllId) {
+            $.ligerDialog.error("页面加载失败，请关闭重试");
+            return;
+        }
+        $("#add").click(function () {
+            var detail = $("input[ligeruiid=q_detail]").val();
+            if (!detail) {
+                $.ligerDialog.error("明细不能为空");
+                return;
+            }
+            if (addFlag) {
+                $.ligerDialog.error("操作太频繁，请稍后重试");
+                return;
+            }
+            addFlag=true;
+            $.ajax({
+                url : baseUrl + "modelDetail/add",
+                type: 'post',
+                data: { modelAllId: modelAllId, detail:detail},
+                dataType: "json",
+                success: function(ri) {
+                    addFlag = false;
+                    if (ri && ri.code == 1) {
+                        $.ligerDialog.success("保存成功");
+                        $("input[ligeruiid=q_detail]").val("");
+                        parent.refresh();
+                    } else {
+                        $.ligerDialog.error(ri.message);
+                    }
+                },
+                error: function() {
+                    $.ligerDialog.error("网络异常");
+                    addFlag = false;
+                }
+            })
+        });
+    })
+</script>
+</body>
+</html>
