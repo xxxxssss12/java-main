@@ -136,7 +136,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         return where;
     }
     @Override
-    public PageBean getPage(T t) {
+    public PageBean<T> getPage(T t) {
         return getPage(t, null);
     }
     @Override

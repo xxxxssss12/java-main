@@ -95,6 +95,15 @@
                 <prop key="/*/*insert*">permissionFilter</prop>
                 <prop key="/*/*save*">permissionFilter</prop>
                 <prop key="/*/*find*">permissionFilter</prop>
+
+                <prop key="/*/*/*get*">permissionFilter</prop>
+                <prop key="/*/*/*update*">permissionFilter</prop>
+                <prop key="/*/*/*add*">permissionFilter</prop>
+                <prop key="/*/*/*Update*">permissionFilter</prop>
+                <prop key="/*/*/*delete*">permissionFilter</prop>
+                <prop key="/*/*/*insert*">permissionFilter</prop>
+                <prop key="/*/*/*save*">permissionFilter</prop>
+                <prop key="/*/*/*find*">permissionFilter</prop>
             </props>
         </property>
         <property name="filters">

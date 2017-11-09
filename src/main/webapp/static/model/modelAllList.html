@@ -83,9 +83,10 @@
                     },
                     {type:'lable', name:"operator", display:"操作",
                         render: function (row) {
+                            var updownRecord = "<a href='javascript:showUpdownRecord(" + row.id + ")'>上下场记录</a>";
                             var showDetail = "<a href='javascript:showDetail(" + row.id + ")'>查看明细</a>";
                             var del = "<a href='javascript:del(" + row.id + ")'>删除</a>";
-                            return showDetail + "&nbsp;" + del;
+                            return updownRecord + "&nbsp" + showDetail + "&nbsp;" + del;
                         }
                     }
                 ],
@@ -163,8 +164,10 @@
             })
         }
         var showDetail = function(modelId) {
-//            tab.addTabItem({"tabid": id, "text": text, "url": "modelDetailList.html?modelId=" + modelId})
             parent.f_addTab("模具明细", "模具明细", "model/modelDetailList.html?modelId=" + modelId);
+        }
+        var showUpdownRecord = function(modelId) {
+            parent.f_addTab("上下场记录", "上下场记录", "model/modelUpdownList.html?modelId=" + modelId);
         }
         var del = function(modelId) {
             if (!modelId || modelId <= 0) {

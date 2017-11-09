@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>模具明细</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div id="updownRecordGrid">
+
+</div>
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+    var updownRecordGrid;
+    var modelId;
+    var saveFlag = false;
+    var updownType = [{type:0, name: '下场'}, {type:1, name:"上场"}]
+    $(function() {
+        modelId = getRequestParams().modelId;
+        updownRecordGrid = $("#updownRecordGrid").ligerGrid({
+            url : baseUrl + "modelUpdown/getByModelId?modelId=" + modelId,
+            columns : [
+                {type:'lable',name:"actionTime", display:"上/下场时间", width:"200"},
+                {type:'lable',name:"type", display:"类型", width:"200",
+                    render: function(row) {
+                        var type = row.type;
+                        if (type) {
+                            return "上场";
+                        } else {
+                            return "下场";
+                        }
+                    },
+                    editor:  {
+                        type:"select", data:updownType, valueField: "type", textField: "name"
+                    }
+                },
+                {type:'lable',name:"nowLocation", display:"当前位置", width:"200",
+                    editor : {
+                        type:"text"
+                    }
+                },
+                {type:'lable',name:"remark", display:"备注", width:"200",
+                    editor : {
+                        type:"text"
+                    }
+                },
+                {type:'lable',name:"operator", width:'200', display:"操作",
+                    render: function(row) {
+                        return "<a href='javascript:del(" +row.id+ ")'>删除</a>"
+                    }
+                }
+            ],
+            toolbar:{
+                items:[
+                    {text: '新增', click: add, icon: 'add' },
+                    {line: true },
+                    {text: '批量保存', click: save, icon: 'edit' },
+                    {line: true }
+                ]
+            },
+            enabledEdit: true,clickToeditor: true, isScroll: false,rowHeight:'200px'
+        })
+    })
+    var del = function(id) {
+        if (!id || id <= 0) {
+            $.ligerDialog.warn("id不对");
+            return;
+        }
+        $.ligerDialog.confirm("确定删除？", function(yes) {
+            if (yes) {
+                $.ajax({
+                    url: baseUrl + "modelUpdown/delete",
+                    type: "post",
+                    data: {
+                        "id": id
+                    },
+                    dataType: "json",
+                    success: function(ri) {
+                        if (ri && ri.code > 0) {
+                            $.ligerDialog.success("删除成功");
+                            updownRecordGrid.loadData(true);
+                        } else {
+                            $.ligerDialog.error(ri.message);
+                        }
+                    },
+                    error: function() {
+                        $.ligerDialog.error("系统发生异常");
+                    }
+                });
+            }
+        })
+    }
+    var add = function() {
+        $.ligerDialog.open({title:"新增上下场记录",url:"addModelUpdateRecord.html?modelId=" + modelId,width:700,height:500,showMax:true,
+            onClose: function() {
+                updownRecordGrid.loadData(true);
+            }
+        });
+    }
+    var refresh= function() {
+        updownRecordGrid.loadData(true);
+    }
+    var save = function() {
+        if (saveFlag) {
+            $.ligerDialog.warn("已经有保存在进行中，请稍后再试");
+            return;
+        }
+        var changes = updownRecordGrid.getUpdated();
+        if (!changes || changes.length <= 0) {
+            $.ligerDialog.warn("没有数据需要更新");
+            return;
+        }
+        saveFlag = true;
+        $.ajax({
+            url : baseUrl + "modelUpdown/batchUpdate",
+            type: "post",
+            data: {
+                "modelDetailListJson": JSON.stringify(changes)
+            },
+            dataType: "json",
+            success: function(ri) {
+                if (ri && ri.code > 0) {
+                    $.ligerDialog.success("保存成功");
+                    updownRecordGrid.loadData(true);
+                } else {
+                    $.ligerDialog.error(ri.message);
+                }
+                saveFlag = false;
+            },
+            error: function() {
+                $.ligerDialog.error("系统发生异常");
+                saveFlag = false;
+            }
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加上下场记录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div id="addForm">
+
+</div>
+<button type="button" id="add" class="l-button l-button-submit">保存</button>
+
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+    var modelAllId = getRequestParams().modelId;
+    var updownType = [{type:0, name: '下场'}, {type:1, name:"上场"}]
+    var addFlag = false;
+    var updownTypeLiger;
+    if (!modelAllId) {
+        $.ligerDialog.error("页面加载失败，请关闭重试");
+    }
+    $("#addForm").ligerForm({
+        inputWidth: 200, labelWidth: 90, space: 40,
+        fields: [
+            { display: "上/下场", name: "type", newline: true, type: "select",
+                options: {data:updownType, valueField: "type", textField: "name" }
+            },
+            { display: "当前位置", name: "nowLocation", newline: true, type: "text"},
+            { display: "上/下场时间", name: "actionTime", newline: true, type: "date",
+                options: {format:"yyyy-MM-dd hh:mm:ss", showTime:true }
+            },
+            { display: "备注", name: "remark", newline: true}
+        ]
+    });
+    $("#add").click(function () {
+        var type = liger.get('type').selectedValue;
+        var nowLocation = $("input[ligeruiid=nowLocation]").val();
+        var actionTime = $("input[ligeruiid=actionTime]").val();
+        var remark = $("input[ligeruiid=remark]").val();
+        if (!$("input[ligeruiid=type]").val()) {
+            $.ligerDialog.error("类型不能为空");
+            return;
+        }
+        if (!actionTime) {
+            $.ligerDialog.error("时间不能为空");
+            return;
+        }
+        if (addFlag) {
+            $.ligerDialog.error("操作太频繁，请稍后重试");
+            return;
+        }
+        addFlag=true;
+        $.ajax({
+            url: baseUrl + "modelUpdown/add",
+            type: 'post',
+            data: {
+                modelAllId: modelAllId,
+                type: type,
+                nowLocation: nowLocation,
+                remark: remark,
+                actionTime: actionTime
+            },
+            dataType: "json",
+            success: function (ri) {
+                addFlag = false;
+                if (ri && ri.code == 1) {
+                    $.ligerDialog.success("保存成功");
+                    $("input[ligeruiid=type]").val("");
+                    $("input[ligeruiid=nowLocation]").val("");
+                    $("input[ligeruiid=actionTime]").val("");
+                    $("input[ligeruiid=remark]").val("");
+                    parent.refresh();
+
+                } else {
+                    $.ligerDialog.error(ri.message);
+                }
+            },
+            error: function () {
+                $.ligerDialog.error("网络异常");
+                addFlag = false;
+            }
+        });
+    })
+</script>
+</body>
+</html>
