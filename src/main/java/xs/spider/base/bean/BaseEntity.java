@@ -3,7 +3,7 @@ package xs.spider.base.bean;
 import com.alibaba.fastjson.annotation.JSONField;
 import xs.spider.base.anno.Id;
 import xs.spider.base.anno.Table;
-import xs.spider.base.anno.UserDefined;
+import xs.spider.base.anno.InsertIgnore;
 import xs.spider.base.util.BeanUtil;
 
 import java.io.Serializable;
@@ -20,19 +20,22 @@ public abstract class BaseEntity implements Serializable {
     /** 排除的属性，该属性是用于序列化 */
     private final String SERIAL_VERSION_UID = "serialVersionUID";
     /** 用户自定义注解 */
-    private final Class<? extends Annotation> USERDEFINED_ANNOTATION = UserDefined.class;
+    private final Class<? extends Annotation> USERDEFINED_ANNOTATION = InsertIgnore.class;
     /**
      * 获取所有属性名和属性类型（通过注解进行排除）
      */
-    public List<String> gotAttrNames() {
+    public List<String> gotAttrNames(int isInsert) {
         Class<? extends BaseEntity> clazz = this.getClass();
         Field[] fs = clazz.getDeclaredFields();
         List<String> paramList = new ArrayList<String>();
         for (int i=0; i<fs.length; i++) {
             Field f = fs[i];
             f.setAccessible(true);
-            if (!f.isAnnotationPresent(USERDEFINED_ANNOTATION)
-                    && !SERIAL_VERSION_UID.equalsIgnoreCase(f.getName())) {
+            if (!SERIAL_VERSION_UID.equalsIgnoreCase(f.getName())) {
+                if (f.isAnnotationPresent(USERDEFINED_ANNOTATION)
+                        && isInsert == 1) {
+                    continue;
+                }
                 paramList.add(f.getName());
             }
         }
@@ -40,7 +43,7 @@ public abstract class BaseEntity implements Serializable {
             try {
                 BaseEntity baseEntity = (BaseEntity) this.getClass().getSuperclass()
                         .newInstance();
-                paramList.addAll(baseEntity.gotAttrNames());
+                paramList.addAll(baseEntity.gotAttrNames(isInsert));
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加借出／归还记录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div id="addForm">
+
+</div>
+<button type="button" id="add" class="l-button l-button-submit">保存</button>
+
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+    var userLevel = [{"id":1,"name":"查"},{"id":2,"name":"增查"},{"id":3,"name":"增改查"},{"id":4,"name":"增删改查"}];
+    var addFlag = false;
+    var roleList = [];
+    $.ajax({
+        url : baseUrl + "role/getAllRole",
+        dataType: 'json',
+        success: function(ri) {
+            if (ri && ri.code == 1) {
+                roleList = ri.data;
+                initForm();
+            } else {
+                $.ligerDialog.error(ri.message);
+            }
+        },
+        error: function() {
+            $.ligerDialog.error("请网络异常，刷新页面重试");
+        }
+    })
+    var initForm = function () {
+        $("#addForm").ligerForm({
+            inputWidth: 200, labelWidth: 90, space: 40,
+            fields: [
+                { display: "用户角色", name: "roleId", newline: true, type: "select",
+                    options: {data:roleList, valueField: "id", textField: "name" }
+                },
+                { display: "用户等级", name: "userLevel", newline: true, type: "select",
+                    options: {data:userLevel, valueField: "id", textField: "name" }
+                },
+                { display:"用户名",name:"username", newline: true, type:'text'},
+                { display:"密码",name:"password", newline: true, type:'text'},
+                { display:"真实姓名",name:"realName", newline: true, type:'text'},
+                { display:"电话",name:"phone", newline: true, type:'text'},
+                { display:"邮箱",name:"email", newline: true, type:'text'}
+            ]
+        });
+    }
+    $("#add").click(function () {
+        var roleId = liger.get('roleId').selectedValue;
+        var userLevel = liger.get('userLevel').selectedValue;
+        var username = $("input[ligeruiid=username]").val();
+        var password = $("input[ligeruiid=password]").val();
+        var realName = $("input[ligeruiid=realName]").val();
+
+        var phone = $("input[ligeruiid=phone]").val();
+        var email = $("input[ligeruiid=email]").val();
+
+        if (!$("input[ligeruiid=roleId]").val()) {
+            $.ligerDialog.error("用户角色不能为空");
+            return;
+        }
+        if (!$("input[ligeruiid=userLevel]").val()) {
+            $.ligerDialog.error("用户等级不能为空");
+            return;
+        }
+        if (!username || username.length < 4) {
+            $.ligerDialog.error("用户名不能小于4个字符");
+            return;
+        }
+        if (!password || password.length < 6) {
+            $.ligerDialog.error("密码不能小于6个字符");
+            return;
+        }
+        if (addFlag) {
+            $.ligerDialog.error("操作太频繁，请稍后重试");
+            return;
+        }
+        addFlag=true;
+        $.ajax({
+            url: baseUrl + "user/add",
+            type: 'post',
+            data: {
+                roleId: roleId,
+                userLevel: userLevel,
+                username: username,
+                password: password,
+                realName: realName,
+                phone: phone,
+                email: email
+            },
+            dataType: "json",
+            success: function (ri) {
+                addFlag = false;
+                if (ri && ri.code == 1) {
+                    $.ligerDialog.success("保存成功");
+                    $("input[ligeruiid=roleId]").val("");
+                    $("input[ligeruiid=userLevel]").val("");
+                    $("input[ligeruiid=username]").val("");
+                    $("input[ligeruiid=password]").val("");
+                    $("input[ligeruiid=realName]").val("");
+                    $("input[ligeruiid=phone]").val("");
+                    $("input[ligeruiid=email]").val("");
+                    parent.refresh();
+                } else {
+                    $.ligerDialog.error(ri.message);
+                }
+            },
+            error: function () {
+                $.ligerDialog.error("网络异常");
+                addFlag = false;
+            }
+        });
+    })
+</script>
+</body>
+</html>

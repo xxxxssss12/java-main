@@ -3,7 +3,7 @@ package xs.spider.base.util;
 import org.apache.log4j.Logger;
 import xs.spider.base.anno.Column;
 import xs.spider.base.anno.Table;
-import xs.spider.base.anno.UserDefined;
+import xs.spider.base.anno.InsertIgnore;
 import xs.spider.base.bean.BaseEntity;
 
 import java.lang.reflect.Field;
@@ -142,7 +142,7 @@ public class BeanUtil {
 				return false;
 			}
 			Field field = clazz.getDeclaredField(name);
-			UserDefined userDefineAnno = field.getAnnotation(UserDefined.class);
+			InsertIgnore userDefineAnno = field.getAnnotation(InsertIgnore.class);
 			if (userDefineAnno == null)
 				return false;
 			else

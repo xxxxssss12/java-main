@@ -7,6 +7,7 @@ import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import xs.spider.base.bean.ResultInfo;
+import xs.spider.base.util.ExceptionWrite;
 import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.Util;
 
@@ -66,11 +67,16 @@ public class PermissionFilter implements Filter {
                 chain.doFilter(servletRequest, servletResponse);
             } else {
                 log.info("用户:" + CurrentUserHelper.getCurrentUsername() + "..登录超时");
-                response.sendRedirect(AuthUtil.commonUrl + AuthUtil.loginUrl + "?redirect=" + URLEncoder.encode(url, "utf-8"));
+                response.setHeader("session-timeout", "true");
+                response.setStatus(403);
+                response.setContentType("application/json;charset=UTF-8");
+                out.write(JSON.toJSONString(ResultInfo.buildFail("登陆超时")).getBytes("utf-8"));
+
+//                response.sendRedirect(AuthUtil.commonUrl + AuthUtil.loginUrl + "?redirect=" + URLEncoder.encode(url, "utf-8"));
                 return;
             }
         } catch (Exception e) {
-            log.error("系统异常");
+            log.error("系统异常:" + ExceptionWrite.get(e));
             servletResponse.setContentType("application/json;charset=UTF-8");
             out.write(JSON.toJSONString(ResultInfo.buildFail("系统异常")).getBytes("utf-8"));
         }

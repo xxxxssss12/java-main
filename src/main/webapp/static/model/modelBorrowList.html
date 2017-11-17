@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>模具借出／归还记录</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div id="borrowRecordGrid">
+
+</div>
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+    var borrowRecordGrid;
+    var modelId;
+    var saveFlag = false;
+    var isReturnType = [{isReturn:0, name: '未归还'}, {isReturn:1, name:"已归还"}]
+    $(function() {
+        modelId = getRequestParams().modelId;
+        borrowRecordGrid = $("#borrowRecordGrid").ligerGrid({
+            url : baseUrl + "modelBorrow/getByModelId?modelId=" + modelId,
+            columns : [
+                {type:'lable',name:"isReturn", display:"是否归还",
+                    render: function(row) {
+                        var isReturn = row.isReturn;
+                        if (isReturn) {
+                            return "已归还";
+                        } else {
+                            return "未归还";
+                        }
+                    },
+                    editor:  {
+                        type:"select", data:isReturnType, valueField: "isReturn", textField: "name"
+                    }
+                },
+                {type:'lable',name:"borrowCustomer", display:"借给谁",
+                    editor : {
+                        type:"text"
+                    }
+                },
+                {type:'lable',name:"borrowCompany", display:"借出公司",
+                    editor : {
+                        type:"text"
+                    }
+                },
+                {type:'lable',name:"approvalPerson", display:"执行人",
+                    editor : {
+                        type:"text"
+                    }
+                },
+                {type:'lable',name:"managePerson", display:"审批人（领导）",
+                    editor : {
+                        type:"text"
+                    }
+                },
+                {type:'lable',name:"borrowTime", display:"借出时间"},
+                {type:'lable',name:"returnTime", display:"归还时间",
+                    editor:  {
+                        type:"date"
+                    }
+                },
+                {type:'lable',name:"remark", display:"备注", width:"200",
+                    editor : {
+                        type:"text"
+                    }
+                },
+                {type:'lable',name:"operator", width:'200', display:"操作",
+                    render: function(row) {
+                        return "<a href='javascript:del(" +row.id+ ")'>删除</a>"
+                    }
+                }
+            ],
+            toolbar:{
+                items:[
+                    {text: '新增', click: add, icon: 'add' },
+                    {line: true },
+                    {text: '批量保存', click: save, icon: 'edit' },
+                    {line: true }
+                ]
+            },
+            enabledEdit: true,clickToeditor: true, isScroll: false,rowHeight:'200px'
+        })
+    })
+    var del = function(id) {
+        if (!id || id <= 0) {
+            $.ligerDialog.warn("id不对");
+            return;
+        }
+        $.ligerDialog.confirm("确定删除？", function(yes) {
+            if (yes) {
+                $.ajax({
+                    url: baseUrl + "modelBorrow/delete",
+                    type: "post",
+                    data: {
+                        "id": id
+                    },
+                    dataType: "json",
+                    success: function(ri) {
+                        if (ri && ri.code > 0) {
+                            $.ligerDialog.success("删除成功");
+                            borrowRecordGrid.loadData(true);
+                        } else {
+                            $.ligerDialog.error(ri.message);
+                        }
+                    },
+                    error: function() {
+                        $.ligerDialog.error("系统发生异常");
+                    }
+                });
+            }
+        })
+    }
+    var add = function() {
+        $.ligerDialog.open({title:"新增借出记录",url:"addModelBorrowRecord.html?modelId=" + modelId,width:700,height:500,showMax:true,
+            onClose: function() {
+                borrowRecordGrid.loadData(true);
+            }
+        });
+    }
+    var refresh= function() {
+        borrowRecordGrid.loadData(true);
+    }
+    var save = function() {
+        if (saveFlag) {
+            $.ligerDialog.warn("已经有保存在进行中，请稍后再试");
+            return;
+        }
+        var changes = borrowRecordGrid.getUpdated();
+        if (!changes || changes.length <= 0) {
+            $.ligerDialog.warn("没有数据需要更新");
+            return;
+        }
+        saveFlag = true;
+        $.ajax({
+            url : baseUrl + "modelBorrow/batchUpdate",
+            type: "post",
+            data: {
+                "modelBorrowListJson": JSON.stringify(changes)
+            },
+            dataType: "json",
+            success: function(ri) {
+                if (ri && ri.code > 0) {
+                    $.ligerDialog.success("保存成功");
+                    borrowRecordGrid.loadData(true);
+                } else {
+                    $.ligerDialog.error(ri.message);
+                }
+                saveFlag = false;
+            },
+            error: function() {
+                $.ligerDialog.error("系统发生异常");
+                saveFlag = false;
+            }
+        })
+    }
+</script>
+</body>
+</html>

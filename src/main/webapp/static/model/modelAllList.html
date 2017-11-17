@@ -81,12 +81,13 @@
                             type:"text"
                         }
                     },
-                    {type:'lable', name:"operator", display:"操作",
+                    {type:'lable', name:"operator", display:"操作", width: '300px',
                         render: function (row) {
                             var updownRecord = "<a href='javascript:showUpdownRecord(" + row.id + ")'>上下场记录</a>";
+                            var borrowRecord = "<a href='javascript:showBorrowRecord(" + row.id + ")'>借出记录</a>";
                             var showDetail = "<a href='javascript:showDetail(" + row.id + ")'>查看明细</a>";
                             var del = "<a href='javascript:del(" + row.id + ")'>删除</a>";
-                            return updownRecord + "&nbsp" + showDetail + "&nbsp;" + del;
+                            return updownRecord + "&nbsp" + borrowRecord + "&nbsp" + showDetail + "&nbsp;" + del;
                         }
                     }
                 ],
@@ -168,6 +169,9 @@
         }
         var showUpdownRecord = function(modelId) {
             parent.f_addTab("上下场记录", "上下场记录", "model/modelUpdownList.html?modelId=" + modelId);
+        }
+        var showBorrowRecord = function(modelId) {
+            parent.f_addTab("借出记录", "借出记录", "model/modelBorrowList.html?modelId=" + modelId);
         }
         var del = function(modelId) {
             if (!modelId || modelId <= 0) {

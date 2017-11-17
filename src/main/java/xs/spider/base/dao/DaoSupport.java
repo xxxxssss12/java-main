@@ -34,4 +34,8 @@ public interface DaoSupport<T extends BaseEntity, PK extends Serializable> {
     void delete(PK id);
 
     int update(T entity, boolean isEmptyUp) throws Exception ;
+
+    List<T> getList(String sql, List paramList);
+
+    PageBean findByMapPage(String sql, List paramList, Integer num, Integer size);
 }

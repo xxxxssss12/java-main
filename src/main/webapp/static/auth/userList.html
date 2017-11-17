@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>用户列表</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="form1" class="liger-form">
+        <div class="fields">
+            <input data-type="text" data-label="用户名" data-name="q_username" />
+            <input data-type="text" data-label="真实姓名" data-name="q_realName" data-newline="false" />
+        </div>
+    </div>
+    <button type="button" id="query" class="l-button l-button-submit">查询</button>
+</div>
+<div id="userGrid"></div>
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+var userGrid;
+var userLevel = [{"id":1,"name":"查"},{"id":2,"name":"增查"},{"id":3,"name":"增改查"},{"id":4,"name":"增删改查"}];
+//var updateFlag = false;
+var saveFlag = false;
+var roleList;
+$.ajax({
+    url : baseUrl + "role/getAllRole",
+    dataType: 'json',
+    success: function(ri) {
+        if (ri && ri.code == 1) {
+            roleList = ri.data;
+            initGrid();
+        } else {
+            $.ligerDialog.error(ri.message);
+        }
+    },
+    error: function() {
+        $.ligerDialog.error("请网络异常，刷新页面重试");
+    }
+})
+$(function() {
+    $("#query").click(function() {
+        userGrid.set({url : baseUrl + "user/getByPage?username="
+            + $("input[ligeruiid=q_username]").val() + "&realName=" + $("input[ligeruiid=q_realName]").val()});
+        userGrid.changePage('first');
+    })
+});
+var initGrid = function () {
+    userGrid = $("#userGrid").ligerGrid({
+        columns: [
+            {type: 'lable', name: "username", display: "用户名", width: "100"},
+            {
+                type: 'lable', name: "realName", display: "真实姓名", width: "100",
+                editor: {type: "text"}
+            },
+            {
+                type: 'lable', name: "phone", display: "电话", width: "100",
+                editor: {type: "text"}
+            },
+            {
+                type: 'lable', name: "email", display: "邮箱", width: "100",
+                editor: {type: "text"}
+            },
+            {type: 'lable', name: "createTime", display: "创建时间", width: "100"},
+            {type: 'lable', name: "roleId", display: "角色", width: "100",
+                render: function(row) {
+                    var roleId = row.roleId;
+                    for (var i=0; i < roleList.length; i++ ) {
+                        if (roleList[i].id == roleId) return roleList[i].name;
+                    }
+                },
+                editor: {
+                    type: "select", data: roleList, valueField: "id", textField: "name"
+                }
+            },
+            {
+                type: 'lable', name: "userLevel", display: "用户等级(权限)", width: "100",
+                render: function (row) {
+                    return userLevel[row.userLevel - 1].name;
+                },
+                editor: {
+                    type: "select", data: userLevel, valueField: "id", textField: "name"
+                }
+            },
+            {
+                type: 'lable', name: "operator", display: "操作", width: "100",
+                render: function (row) {
+                    var delStr = "<a href='javascript:del(" + row.id + ")'>删除</a>"
+                    var changePwdStr = "<a href='javascript:changePwd(" + row.id + ")'>修改密码</a>"
+                    return delStr + "&nbsp;" + changePwdStr;
+                }
+            },
+        ],
+        toolbar: {
+            items: [
+                {text: '新增', click: add, icon: 'add'},
+                {line: true},
+                {text: '批量保存', click: save, icon: 'edit'},
+                {line: true},
+            ]
+        },
+        url: baseUrl + "user/getByPage",
+        enabledEdit: true, clickToeditor: true, isScroll: false,
+        width: '100%'
+    });
+}
+var add = function () {
+    $.ligerDialog.open({title:"新增用户",url:"addUser.html",width:700,height:500,showMax:true,
+        onClose: function() {
+            detailGrid.loadData(true);
+        }
+    });
+}
+var save = function() {
+    if (saveFlag) {
+        $.ligerDialog.warn("已经有保存在进行中，请稍后再试");
+        return;
+    }
+    var changes = userGrid.getUpdated();
+    if (!changes || changes.length <= 0) {
+        $.ligerDialog.warn("没有数据需要更新");
+        return;
+    }
+    saveFlag = true;
+    $.ajax({
+        url : baseUrl + "user/batchUpdate",
+        type: "post",
+        data: {
+            "userDetailList": JSON.stringify(changes)
+        },
+        dataType: "json",
+        success: function(ri) {
+            if (ri && ri.code > 0) {
+                $.ligerDialog.success("保存成功");
+                userGrid.loadData(true);
+            } else {
+                $.ligerDialog.error(ri.message);
+            }
+            saveFlag = false;
+        },
+        error: function() {
+            $.ligerDialog.error("系统发生异常");
+            saveFlag = false;
+        }
+    })
+}
+var del = function(id) {
+    if (!id || id <= 0) {
+        $.ligerDialog.warn("id不对");
+        return;
+    }
+    $.ligerDialog.confirm("确定删除？", function(yes) {
+        if (yes) {
+            $.ajax({
+                url: baseUrl + "user/delete",
+                type: "post",
+                data: {
+                    "id": id
+                },
+                dataType: "json",
+                success: function(ri) {
+                    if (ri && ri.code > 0) {
+                        $.ligerDialog.success("删除成功");
+                        userGrid.loadData(true);
+                    } else {
+                        $.ligerDialog.error(ri.message);
+                    }
+                },
+                error: function() {
+                    $.ligerDialog.error("系统发生异常");
+                }
+            });
+        }
+    })
+}
+var refresh= function() {
+    userGrid.loadData(true);
+}
+</script>
+</body>
+</html>

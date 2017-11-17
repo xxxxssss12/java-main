@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import xs.spider.base.bean.BaseEntity;
 import xs.spider.base.bean.PageBean;
+import xs.spider.base.bean.ResultInfo;
 import xs.spider.base.dao.DaoSupport;
 import xs.spider.base.pager.PageContext;
 import xs.spider.base.util.BeanUtil;
@@ -112,7 +113,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         if (null == paramlist) return null;
         StringBuffer sql = new StringBuffer(" SELECT * from " + t.getTableName() + " dtb  where 1=1 ");
         StringBuffer where = null;
-        List<String> attrNames = t.gotAttrNames();
+        List<String> attrNames = t.gotAttrNames(0);
         where = getWhereCondition(t, attrNames, paramlist);
         if (Util.isBlank(where)) {
 //            return null;
@@ -272,7 +273,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
         StringBuffer finalsb = new StringBuffer("INSERT INTO " + entity.getTableName() + " (");
         StringBuffer paramsb = new StringBuffer();
         StringBuffer valuesb = new StringBuffer("(");
-        List<String> attrNames = entity.gotAttrNames();
+        List<String> attrNames = entity.gotAttrNames(1);
         List<Object> setValueList = new ArrayList<>();
         Map<String, Object> parammap = new HashMap<>();
         for (String name : attrNames) {
@@ -322,7 +323,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
             StringBuffer sb = new StringBuffer(" update ");
             sb.append(entity.getTableName()).append(" dtb set ");
             String where = null;
-            List<String> attrNames = entity.gotAttrNames();
+            List<String> attrNames = entity.gotAttrNames(1);
             List<Object> setValueList = new ArrayList<>();
             for (String name : attrNames) {
                 Object value = entity.getAttributeValue(name);
@@ -354,7 +355,18 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
             return -1;
         }
     }
-
+    @Override
+    public List<T> getList(String sql, List paramList) {
+        List<T> result = null;
+        if (Util.isBlank(sql)) return null;
+        if (paramList == null) {
+            result = jdbcTemplate.query(sql, new BeanPropertyRowMapper<T>(clazz));
+        } else {
+            result = jdbcTemplate.query(sql, paramList.toArray(), new BeanPropertyRowMapper<T>(clazz));
+        }
+        return result;
+    }
+    @Override
     public PageBean findByMapPage(String sql, List paramList, Integer num, Integer size) {
         PageBean page = new PageBean();
         page.setPageNum(num);

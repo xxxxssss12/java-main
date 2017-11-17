@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加借出／归还记录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .font-yahei {
+            font-family: "Microsoft YaHei UI";
+        }
+    </style>
+</head>
+<body>
+<div id="addForm">
+
+</div>
+<button type="button" id="add" class="l-button l-button-submit">保存</button>
+
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+    var modelAllId = getRequestParams().modelId;
+    var isReturnType = [{isReturn:0, name: '未归还'}, {isReturn:1, name:"已归还"}]
+    var addFlag = false;
+    if (!modelAllId) {
+        $.ligerDialog.error("页面加载失败，请关闭重试");
+    }
+    $("#addForm").ligerForm({
+        inputWidth: 200, labelWidth: 90, space: 40,
+        fields: [
+            { display: "是否归还", name: "isReturn", newline: true, type: "select",
+                options: {data:isReturnType, valueField: "isReturn", textField: "name" }
+            },
+            { display:"借给谁",name:"borrowCustomer", newline: true, type:'text'},
+            { display:"借出公司",name:"borrowCompany", newline: true, type:'text'},
+            { display:"执行人",name:"approvalPerson", newline: true, type:'text'},
+            { display:"审批人（领导）",name:"managePerson", newline: true, type:'text'},
+            { display: "借出时间", name: "borrowTime", newline: true, type: "date",
+                options: {format:"yyyy-MM-dd hh:mm:ss", showTime:true }
+            },
+            { display: "归还时间", name: "returnTime", newline: true, type: "date",
+                options: {format:"yyyy-MM-dd hh:mm:ss", showTime:true }
+            },
+            { display: "备注", name: "remark", newline: true}
+        ]
+    });
+    $("#add").click(function () {
+        var isReturn = liger.get('isReturn').selectedValue;
+        var borrowCustomer = $("input[ligeruiid=borrowCustomer]").val();
+        var borrowCompany = $("input[ligeruiid=borrowCompany]").val();
+        var approvalPerson = $("input[ligeruiid=approvalPerson]").val();
+        var managePerson = $("input[ligeruiid=managePerson]").val();
+
+        var borrowTime = $("input[ligeruiid=borrowTime]").val();
+        var returnTime = $("input[ligeruiid=returnTime]").val();
+
+        var remark = $("input[ligeruiid=remark]").val();
+        if (!$("input[ligeruiid=isReturn]").val()) {
+            $.ligerDialog.error("是否归还不能为空");
+            return;
+        }
+        if (!borrowTime) {
+            $.ligerDialog.error("借出时间不能为空");
+            return;
+        }
+        if (addFlag) {
+            $.ligerDialog.error("操作太频繁，请稍后重试");
+            return;
+        }
+        addFlag=true;
+        $.ajax({
+            url: baseUrl + "modelBorrow/add",
+            type: 'post',
+            data: {
+                modelAllId: modelAllId,
+                isReturn: isReturn,
+                borrowCustomer: borrowCustomer,
+                borrowCompany: borrowCompany,
+                approvalPerson: approvalPerson,
+                managePerson: managePerson,
+                borrowTime: borrowTime,
+                returnTime: returnTime,
+                remark: remark
+            },
+            dataType: "json",
+            success: function (ri) {
+                addFlag = false;
+                if (ri && ri.code == 1) {
+                    $.ligerDialog.success("保存成功");
+                    $("input[ligeruiid=isReturn]").val("");
+                    $("input[ligeruiid=borrowCustomer]").val("");
+                    $("input[ligeruiid=borrowCompany]").val("");
+                    $("input[ligeruiid=approvalPerson]").val("");
+                    $("input[ligeruiid=managePerson]").val("");
+                    $("input[ligeruiid=borrowTime]").val("");
+                    $("input[ligeruiid=returnTime]").val("");
+                    $("input[ligeruiid=remark]").val("");
+                    parent.refresh();
+
+                } else {
+                    $.ligerDialog.error(ri.message);
+                }
+            },
+            error: function () {
+                $.ligerDialog.error("网络异常");
+                addFlag = false;
+            }
+        });
+    })
+</script>
+</body>
+</html>
