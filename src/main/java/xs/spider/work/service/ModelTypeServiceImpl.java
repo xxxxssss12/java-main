@@ -1,6 +1,7 @@
 package xs.spider.work.service;
 
 import org.springframework.stereotype.Service;
+import xs.spider.base.dao.impl.DaoSupportImpl;
 import xs.spider.work.bean.ModelType;
 import xs.spider.work.dao.ModelTypeDao;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by xs on 2017/10/22
  */
 @Service
-public class ModelTypeServiceImpl {
+public class ModelTypeServiceImpl extends DaoSupportImpl<ModelType, Integer> {
     @Resource
     private ModelTypeDao modelTypeDao;
 

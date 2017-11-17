@@ -15,6 +15,7 @@ import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.Util;
 import xs.spider.work.bean.ModelAll;
 import xs.spider.work.bean.ModelDetail;
+import xs.spider.work.bean.ModelType;
 import xs.spider.work.dao.ModelAllDao;
 import xs.spider.work.dao.ModelDetailDao;
 
@@ -36,6 +37,8 @@ public class CBServiceImpl {
     private ModelAllDao modelAllDao;
     @Autowired
     private ModelDetailDao modelDetailDao;
+    @Autowired
+    private ModelTypeServiceImpl modelTypeService;
     public void importOnXls(String fileName) {
         File file = new File(fileName);
         if (!file.exists()) {
@@ -118,6 +121,16 @@ public class CBServiceImpl {
 
         String createLocal = getCellFormatValue(row.getCell(8)).trim();
         modelAll.setCreateLocation(Util.isBlank(createLocal) ? null : createLocal);
+
+        ModelType type = new ModelType();
+        type.setName(modelTypeName);
+        ModelType type_ = modelTypeService.get(type);
+        if (type_ == null) {
+            type.setCreateTime(new Date());
+            modelAll.setModelTypeId(modelTypeService.save(type));
+        } else {
+            modelAll.setModelTypeId(type_.getId());
+        }
         return ResultInfo.build(obj);
     }
 
