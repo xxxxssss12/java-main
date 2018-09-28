@@ -30,7 +30,7 @@ public class ModelAllServiceImpl extends DaoSupportImpl<ModelAll, Integer> imple
     private ModelUpdownRecordDao modelUpdownRecordDao;
     @Resource
     private ModelAllDao modelAllDao;
-    public PageBean<ModelAll> getPage(String modelNo, Integer modelTypeId) {
+    public PageBean<ModelAll> getPage(String modelNo, Integer modelTypeId, String remark, String storeLocation) {
         StringBuilder sql = new StringBuilder("SELECT t.* FROM tb_model_all t WHERE isDel=0 ");
         List<Object> list = new ArrayList<>();
         if (!Util.isBlank(modelNo)) {
@@ -39,6 +39,12 @@ public class ModelAllServiceImpl extends DaoSupportImpl<ModelAll, Integer> imple
         if (!Util.isBlank(modelTypeId)) {
             sql.append(" AND modelTypeId=? ");
             list.add(modelTypeId);
+        }
+        if (!Util.isBlank(remark)) {
+            sql.append(" AND remark like '%").append(remark).append("%'");
+        }
+        if (!Util.isBlank(storeLocation)) {
+            sql.append(" AND storeLocation like '%").append(storeLocation).append("%'");
         }
         return getPage(sql.toString(), list);
     }

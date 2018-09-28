@@ -19,7 +19,7 @@
 </div>
 <button type="button" id="add" class="l-button l-button-submit">保存</button>
 
-<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../js/jquery-1.7.2.min.js"></script>
 <script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
 <script src="../js/common.js"></script>
 <script>
@@ -35,9 +35,9 @@
             { display: "是否归还", name: "isReturn", newline: true, type: "select",
                 options: {data:isReturnType, valueField: "isReturn", textField: "name" }
             },
-            { display:"借给谁",name:"borrowCustomer", newline: true, type:'text'},
+            { display:"谁来借",name:"borrowCustomer", newline: true, type:'text'},
             { display:"借出公司",name:"borrowCompany", newline: true, type:'text'},
-            { display:"执行人",name:"approvalPerson", newline: true, type:'text'},
+            { display:"借出人",name:"approvalPerson", newline: true, type:'text'},
             { display:"审批人（领导）",name:"managePerson", newline: true, type:'text'},
             { display: "借出时间", name: "borrowTime", newline: true, type: "date",
                 options: {format:"yyyy-MM-dd hh:mm:ss", showTime:true }

@@ -34,8 +34,8 @@ public class ModelAllController {
     @Autowired
     private ModelDetailServiceImpl modelDetailService;
     @RequestMapping("/getByPage")
-    public JSONObject getByPage(String modelNo, Integer modelTypeId) {
-        PageBean<ModelAll> page = modelAllService.getPage(modelNo, modelTypeId);
+    public JSONObject getByPage(String modelNo, Integer modelTypeId, String remark, String storeLocation) {
+        PageBean<ModelAll> page = modelAllService.getPage(modelNo, modelTypeId, remark, storeLocation);
         return TypeConvUtil.convertPageToLiger(page);
     }
 

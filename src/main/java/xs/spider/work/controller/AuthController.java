@@ -1,5 +1,6 @@
 package xs.spider.work.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -11,11 +12,12 @@ import xs.spider.base.bean.ResultInfo;
 import xs.spider.base.config.ConfigProvider;
 import xs.spider.base.util.ExceptionWrite;
 import xs.spider.base.util.LogUtil;
-import xs.spider.base.util.RedisConnector;
 import xs.spider.base.util.Util;
 import xs.spider.work.bean.User;
 import xs.spider.work.service.UserServiceImpl;
 import xs.spider.work.shiro.CurrentUserHelper;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by xs on 2017/10/13
@@ -28,7 +30,7 @@ public class AuthController {
 
     private static Integer timeOut = ConfigProvider.getInt("session.invalidate.time", 1000*60*60*24);
     private static String failKey = "auth:dologin:ldap:auth:fail:";
-
+    private static ConcurrentHashMap<String, JSONObject> failCntMap = new ConcurrentHashMap<>();
     @RequestMapping("/doLogin")
     public ResultInfo doLogin(String username, String password) {
         ResultInfo ri = checkUser(username, password);
@@ -63,8 +65,8 @@ public class AuthController {
             LogUtil.error(getClass(), "username=" + username + ";password=" + password + ExceptionWrite.get(e));
             ri =  ResultInfo.buildFail("系统发生异常");
         }
-        if (ri.getCode() == 1) RedisConnector.del(failKey+username);
-        else if (user != null) RedisConnector.incr(failKey + user.getUsername());
+        if (ri.getCode() == 1) failCntMap.remove(user.getUsername());
+        else if (user != null) incrFailTime(user.getUsername());
         return ri;
     }
     @RequestMapping("/doLogout")
@@ -81,7 +83,7 @@ public class AuthController {
     private ResultInfo checkUser(String username, String password) {
         if (Util.isBlank(username) || Util.isBlank(password))
             return ResultInfo.buildFail("参数缺失");
-        String failTime = RedisConnector.get(failKey+username);
+        String failTime = getFailTime(username);
         if (!Util.isBlank(failTime) && Integer.parseInt(failTime) > 5)
             return ResultInfo.buildFail("失败次数过多");
         User user = userService.getUserByUsername(username);
@@ -89,13 +91,33 @@ public class AuthController {
             return ResultInfo.buildFail("用户名或密码错误");
         return ResultInfo.build(user);
     }
+    private String getFailTime(String username) {
+        JSONObject obj = failCntMap.get(username);
+        if (obj == null || obj.getLong("expireTime") < System.currentTimeMillis()) {
+            failCntMap.remove(username);
+            return "0";
+        }
+        return obj.getString("cnt");
+    }
 
+    private void incrFailTime(String username) {
+        JSONObject obj = failCntMap.get(username);
+        if (obj == null || obj.getLong("expireTime") < System.currentTimeMillis()) {
+            obj = new JSONObject();
+            obj.put("cnt", "1");
+            obj.put("expireTime", System.currentTimeMillis() + 1000 * 60 * 60 * 2);
+            failCntMap.put(username, obj);
+        } else {
+            obj.put("cnt", obj.getIntValue("cnt") + 1);
+        }
+
+    }
     @RequestMapping("/refreshFailCnt")
     public ResultInfo refreshFailCnt(String username) {
         if (Util.isBlank(username)) return ResultInfo.buildFail("缺少参数");
         String name = CurrentUserHelper.getCurrentUsername();
         if ("xiongshun".equals(name) || "xiongguangyue".equals(name)) {
-            RedisConnector.del(failKey+username);
+            failCntMap.remove(username);
             return ResultInfo.build();
         } else {
             return ResultInfo.buildFail("fail");

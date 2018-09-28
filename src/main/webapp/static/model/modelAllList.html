@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href="../tools/ligerUI/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
     <link href="../tools/ligerUI/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
-    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../js/jquery-1.7.2.min.js"></script>
     <script src="../tools/ligerUI/ligerUI/js/ligerui.all.min.js"></script>
     <script src="../js/common.js"></script>
     <style type="text/css">
@@ -19,10 +19,14 @@
 <body>
 <div id="form1" class="liger-form">
     <div class="fields">
-        <input data-type="text" data-label="标题" data-name="q_modelNo" />
-        <div data-type="select" data-label="分类" data-name="q_modelType" data-newline="false">
+        <input data-type="text" data-label="图号" data-name="q_modelNo" />
+        <div data-type="select" data-label="类型" data-name="q_modelType" data-newline="false">
             <input class="editor"  data-textField="name" data-valueField="id"/>
         </div>
+        <input data-type="text" data-label="存放位置" data-name="q_storeLocation" data-newline="true" />
+
+        <input data-type="text" data-label="备注" data-name="q_remark" data-newline="false" />
+
     </div>
 </div>
 <button type="button" id="query" class="l-button l-button-submit">查询</button>
@@ -36,8 +40,8 @@
             modelTypeLiger = liger.get('q_modelType');
             modelAllGrid = $("#modelAllGrid").ligerGrid({
                 columns:[
-                    {type:'lable',name:"modelNo", display:"编号", width:"200"},
-                    {type:'lable',name:"name", display:"名字", width:"90",
+                    {type:'lable',name:"modelNo", display:"图号", width:"200"},
+                    {type:'lable',name:"name", display:"名称", width:"90",
                         editor:  {
                             type:"text"
                         }
@@ -62,7 +66,7 @@
                             type:"text"
                         }
                     },
-                    {type:'lable', name:"createTime", display:"创建时间",
+                    {type:'lable', name:"createTime", display:"制造时间",
                         render:function(row) {
                             if (row.createTime) {
                                 return row.createTime.substr(0, 10);
@@ -71,7 +75,7 @@
                             }
                         }
                     },
-                    {type:'lable', name:"createLocation", display:"创建地点",
+                    {type:'lable', name:"createLocation", display:"制造地点",
                         editor:  {
                             type:"text"
                         }
@@ -106,7 +110,10 @@
             $("#query").click(function() {
                 modelAllGrid.set({
                     url:baseUrl + "modelAll/getByPage?modelNo=" + $("input[ligeruiid=q_modelNo]").val()
-                                + "&modelTypeId=" + modelTypeLiger.selectedValue});
+                                + "&modelTypeId=" + modelTypeLiger.selectedValue
+                                + "&remark=" + $("input[ligeruiid=q_remark]").val()
+                                + "&storeLocation=" + $("input[ligeruiid=q_storeLocation]").val()
+                });
                 modelAllGrid.changePage('first');
             })
             $.ajax({

@@ -41,37 +41,37 @@ public class PermissionFilter implements Filter {
                 return;
             }
             HttpServletResponse response = (HttpServletResponse) servletResponse;
-            String url = Util.null2string(request.getRequestURL());
+//            String url = Util.null2string(request.getRequestURL());
+            String url = request.getServletPath().substring(1);
             log.info(servletRequest.getRemoteAddr() + ":" + CurrentUserHelper.getCurrentUsername() + "请求进入：" + url);
 
             if (CurrentUserHelper.isLogin() && !Util.isBlank(CurrentUserHelper.getCurrentUsername())) {
-                if (url.indexOf(AuthUtil.commonUrl) != -1) {
-                    url = url.replaceAll(AuthUtil.commonUrl, "");
-                    if (AuthUtil.nocheckUrls.contains(url)) {
-                        //放行
+//                if (url.indexOf(AuthUtil.commonUrl) != -1) {
+//                    url = url.replaceAll(AuthUtil.commonUrl, "");
+                if (AuthUtil.nocheckUrls.contains(url)) {
+                    //放行
+                    chain.doFilter(servletRequest,servletResponse);
+                    return;
+                } else {
+                    ResultInfo authRes = checkUrl(url);
+                    if (1 == authRes.getCode()) {
+                        //鉴权通过
                         chain.doFilter(servletRequest,servletResponse);
                         return;
                     } else {
-                        ResultInfo authRes = checkUrl(url);
-                        if (1 == authRes.getCode()) {
-                            //鉴权通过
-                            chain.doFilter(servletRequest,servletResponse);
-                            return;
-                        } else {
-                            servletResponse.setContentType("application/json;charset=UTF-8");
-                            out.write(JSON.toJSONString(authRes).getBytes("utf-8"));
-                            return;
-                        }
+                        servletResponse.setContentType("application/json;charset=UTF-8");
+                        out.write(JSON.toJSONString(authRes).getBytes("utf-8"));
+                        return;
                     }
                 }
-                chain.doFilter(servletRequest, servletResponse);
+//                }
+//                chain.doFilter(servletRequest, servletResponse);
             } else {
                 log.info("用户:" + CurrentUserHelper.getCurrentUsername() + "..登录超时");
                 response.setHeader("session-timeout", "true");
                 response.setStatus(403);
                 response.setContentType("application/json;charset=UTF-8");
                 out.write(JSON.toJSONString(ResultInfo.buildFail("登陆超时")).getBytes("utf-8"));
-
 //                response.sendRedirect(AuthUtil.commonUrl + AuthUtil.loginUrl + "?redirect=" + URLEncoder.encode(url, "utf-8"));
                 return;
             }
@@ -110,6 +110,7 @@ public class PermissionFilter implements Filter {
         if (permissions == null) return -3;
         for (String permission : permissions) {
             if (!Util.isBlank(permission) && url.toLowerCase().contains(permission.toLowerCase())) {
+                log.info("用户有权限：permission=" + permission + ";url=" + url);
                 return 1;
             }
         }
