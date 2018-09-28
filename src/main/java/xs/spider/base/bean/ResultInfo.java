@@ -30,6 +30,10 @@ public class ResultInfo implements Serializable {
         this.message = message;
         this.data = null;
     }
+
+    public static ResultInfo buildSucc(Object data) {
+        return new ResultInfo(1, "success", data);
+    }
     public Integer getCode() {
         return code;
     }

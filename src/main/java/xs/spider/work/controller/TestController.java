@@ -26,4 +26,19 @@ public class TestController {
         testService.save(bean);
         return new ResultInfo(1, "success", bean);
     }
+
+    /**
+     * draw=pagenum
+     * length=pagesize
+     * @param pagenum
+     * @param pagesize
+     * @return
+     */
+    @RequestMapping("/getByPage")
+    public ResultInfo getByPage(Integer pagenum, Integer pagesize) {
+        if (pagenum == null) pagenum = 1;
+        if (pagesize == null) pagesize = 20;
+        TestBean bean = new TestBean();
+        return ResultInfo.buildSucc(testService.getPage(bean, "id desc", pagenum, pagesize));
+    }
 }

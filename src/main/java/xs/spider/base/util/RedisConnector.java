@@ -23,24 +23,28 @@ public class RedisConnector {
     private static JedisPool pool;
 
     static {
-        JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(Integer.valueOf(ConfigProvider.get("redis.pool.maxTotal")));
-        config.setMaxIdle(Integer.valueOf(ConfigProvider.get("redis.pool.maxIdle")));
-        config.setTestOnBorrow(Boolean.valueOf(ConfigProvider.get("redis.pool.testOnBorrow")));
-        config.setTestOnReturn(Boolean.valueOf(ConfigProvider.get("redis.pool.testOnReturn")));
+        try {
+            JedisPoolConfig config = new JedisPoolConfig();
+            config.setMaxTotal(Integer.valueOf(ConfigProvider.get("redis.pool.maxTotal")));
+            config.setMaxIdle(Integer.valueOf(ConfigProvider.get("redis.pool.maxIdle")));
+            config.setTestOnBorrow(Boolean.valueOf(ConfigProvider.get("redis.pool.testOnBorrow")));
+            config.setTestOnReturn(Boolean.valueOf(ConfigProvider.get("redis.pool.testOnReturn")));
 
-        if (ConfigProvider.get("redis.pool.timeout") != null) {
-            pool = new JedisPool(config,
-                    ConfigProvider.get("redis.host"),
-                    Integer.valueOf(ConfigProvider.get("redis.port")),
-                    Integer.valueOf(ConfigProvider.get("redis.pool.timeout")));
-        } else {
-            pool = new JedisPool(config,
-                    ConfigProvider.get("redis.host"),
-                    Integer.valueOf(ConfigProvider.get("redis.port")));
+            if (ConfigProvider.get("redis.pool.timeout") != null) {
+                pool = new JedisPool(config,
+                        ConfigProvider.get("redis.host"),
+                        Integer.valueOf(ConfigProvider.get("redis.port")),
+                        Integer.valueOf(ConfigProvider.get("redis.pool.timeout")));
+            } else {
+                pool = new JedisPool(config,
+                        ConfigProvider.get("redis.host"),
+                        Integer.valueOf(ConfigProvider.get("redis.port")));
+            }
+            logger.info("redis.host: " + ConfigProvider.get("redis.host"));
+            expire = Integer.valueOf(ConfigProvider.get("redis.expire"));
+        } catch (Exception e) {
+            logger.error("redis初始化失败", e);
         }
-        logger.info("redis.host: " + ConfigProvider.get("redis.host"));
-        expire = Integer.valueOf(ConfigProvider.get("redis.expire"));
     }
 
     public RedisConnector() {

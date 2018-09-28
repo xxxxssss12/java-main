@@ -215,7 +215,7 @@ public class DaoSupportImpl<T extends BaseEntity, PK extends Serializable> imple
     }
 
     @Override
-    public PageBean<T> getPage(T t, String orderStr, Integer num, Integer size) throws Exception {
+    public PageBean<T> getPage(T t, String orderStr, Integer num, Integer size) {
 //        Integer pageNum = PageContext.getPageNum();
 //        Integer pageSize = PageContext.getPageSize();
         Integer pageNum = num;
