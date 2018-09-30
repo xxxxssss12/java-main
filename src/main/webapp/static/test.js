@@ -80,4 +80,5 @@ $(function() {
             }
         }
     })
+    $("#example").DataTable();
 })
