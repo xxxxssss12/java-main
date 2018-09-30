@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 引入配置文件 -->
+    <bean id="propertyConfigurer"
+          class="xs.spider.base.config.SimplePropertyPlaceholderConfigurer">
+    </bean>
+
+    <!-- 邮件bean -->
+    <!-- 申明JavaMailSenderImpl对象 -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="host" value="${mail.host}" />
+        <property name="username" value="${mail.username}" />
+        <property name="password" value="${mail.password}" />
+        <property name="port" value="465"/>
+        <property name="javaMailProperties">
+            <props>
+                <!-- 设置认证开关 -->
+                <prop key="mail.smtp.auth">true</prop>
+                <!-- 启动调试开关 -->
+                <!--<prop key="mail.debug">true</prop>-->
+                <!-- 设置发送超时时间 -->
+                <prop key="mail.smtp.timeout">${mail.timeout}</prop>
+                <!-- -->
+                <prop key="mail.transport.protocol">smtps</prop>
+                <!-- ssl开关 -->
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="dataSourceAdmin" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <property name="dbType" value="mysql"/>
+        <property name="url" value="${db.url}"/>
+
+        <property name="driverClassName" value="${db.driver}"/>
+
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+
+        <property name="initialSize" value="${db.initialSize}"/>
+        <property name="maxActive" value="${db.maxActive}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false"/>
+        <!-- <property name="maxPoolPreparedStatementPerConnectionSize" value="20" /> -->
+        <property name="proxyFilters">
+            <list>
+                <ref bean="wall-filter"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <property name="config" ref="wall-config"/>
+    </bean>
+    <bean id="wall-config" class="com.alibaba.druid.wall.WallConfig">
+        <property name="multiStatementAllow" value="true"/>
+    </bean>
+    <!-- 配置jdbcTemplate -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSourceAdmin"></property>
+    </bean>
+    <!-- 事务配置 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceAdmin" />
+        <qualifier value="transactionManager" />
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    <!-- 扫描service,dao自动注入为bean -->
+    <context:component-scan base-package="xs.spider" annotation-config="true"/>
+    <tx:annotation-driven/>
+
+</beans>
