@@ -25,3 +25,6 @@ target
 /.gitignore
 *.gitignore
 /*.DS_Store
+
+logs/
+permission/
