@@ -121,6 +121,13 @@ var add = function () {
         }
     });
 }
+var changePwd = function(userid) {
+    $.ligerDialog.open({title:"修改密码",url:"changePassword.html?userid=" + userid,width:700,height:500,showMax:true,
+        onClose: function() {
+            detailGrid.loadData(true);
+        }
+    });
+}
 var save = function() {
     if (saveFlag) {
         $.ligerDialog.warn("已经有保存在进行中，请稍后再试");
