@@ -18,7 +18,6 @@ $(document).ajaxComplete(function(event, xhr, settings) {
     // var timeout = xhr.getResponseHeader("session-timeout");
     // if (timeout && timeout == 'true') {
     if (xhr.status == 403) {
-        alert("登录超时，请重新登录")
         top.location.href = urls.login;
     }
 });

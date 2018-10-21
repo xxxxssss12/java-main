@@ -45,4 +45,8 @@ public class MD5Util {
         }
         return md;
     }
+
+    public static void main(String[] args) {
+        System.out.println(MD5("hKE5*WQta4^KS41!"));
+    }
 }
