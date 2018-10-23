@@ -1,11 +1,10 @@
 package xs.spider.base.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -15,7 +14,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 public class Util {
-	private static final Logger log = Logger.getLogger(Util.class);
+	private static final Logger log = LogUtil.getLogger(Util.class);
 	public static int getIntVal(String str) {
 		return getIntVal(str, -1);
 	}
@@ -237,5 +236,18 @@ public class Util {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String stackTrace() {
+		StringBuilder sb = new StringBuilder();
+		StackTraceElement[] stackElements = Thread.currentThread().getStackTrace();
+		if (stackElements != null) {
+			for (int i = 0; i < stackElements.length; i++) {
+				sb.append(stackElements[i].getClassName()).append(".")
+						.append(stackElements[i].getMethodName())
+						.append(":").append(stackElements[i].getLineNumber()).append(System.getProperty("line.separator"));
+			}
+		}
+		return sb.toString();
 	}
 }

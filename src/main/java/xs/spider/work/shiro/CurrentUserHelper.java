@@ -1,7 +1,7 @@
 package xs.spider.work.shiro;
 
 import com.alibaba.fastjson.JSON;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.subject.Subject;

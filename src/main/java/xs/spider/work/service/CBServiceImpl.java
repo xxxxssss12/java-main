@@ -1,7 +1,7 @@
 package xs.spider.work.service;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;

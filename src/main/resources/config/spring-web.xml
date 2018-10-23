@@ -54,7 +54,7 @@
     <bean id="exceptionResolver"
           class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="warnLogCategory">
-            <value>WARN</value>
+            <value>error</value>
         </property>
     </bean>
 

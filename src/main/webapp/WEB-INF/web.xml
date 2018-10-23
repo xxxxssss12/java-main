@@ -50,7 +50,7 @@
     <!-- shiro过滤器，DelegatingFilterProxy通过代理模式将spring容器中的bean和filter关联起来 -->
     <filter>
         <filter-name>shiroFilter</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <filter-class>xs.spider.base.MyDelegateFilter</filter-class>
         <!-- 设置true由servlet容器控制filter的生命周期 -->
         <init-param>
             <param-name>targetFilterLifecycle</param-name>

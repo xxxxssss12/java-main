@@ -1,6 +1,6 @@
 package xs.spider.base.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.io.*;
 import java.util.*;

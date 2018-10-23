@@ -1,6 +1,6 @@
 package xs.spider.base.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -59,7 +59,7 @@ public class RedisConnector {
         try {
             return jedis.incrByFloat(key,value);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -71,7 +71,7 @@ public class RedisConnector {
         try {
             return jedis.incrBy(key,value);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -132,7 +132,7 @@ public class RedisConnector {
                 return true;
             }
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -146,7 +146,7 @@ public class RedisConnector {
         try {
             result = jedis.get(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -159,7 +159,7 @@ public class RedisConnector {
         try {
             result = jedis.get(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -172,7 +172,7 @@ public class RedisConnector {
         try {
             result = jedis.keys(pattern);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -185,7 +185,7 @@ public class RedisConnector {
         try {
             return jedis.del(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -197,7 +197,7 @@ public class RedisConnector {
         try {
             return jedis.del(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -210,7 +210,7 @@ public class RedisConnector {
         try {
             return jedis.exists(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -222,7 +222,7 @@ public class RedisConnector {
         try {
             return jedis.hexists(key,field);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -241,7 +241,7 @@ public class RedisConnector {
         try {
             return jedis.lpush(key, value);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -260,7 +260,7 @@ public class RedisConnector {
         try {
             return jedis.rpush(key, value);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -278,7 +278,7 @@ public class RedisConnector {
         try {
             return jedis.lpop(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -296,7 +296,7 @@ public class RedisConnector {
         try {
             return jedis.rpop(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -314,7 +314,7 @@ public class RedisConnector {
         try {
             return jedis.llen(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -334,7 +334,7 @@ public class RedisConnector {
             Long score = jedis.zcard(key);
             jedis.zadd(key, ++score, value);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -351,7 +351,7 @@ public class RedisConnector {
         try {
             jedis.zadd(key, score, value);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -369,7 +369,7 @@ public class RedisConnector {
             Set<String> sets = jedis.zrange(key, 0, -1);
             return sets;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -381,7 +381,7 @@ public class RedisConnector {
         try {
             return jedis.scriptLoad(script);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -401,7 +401,7 @@ public class RedisConnector {
             Set<String> sets = jedis.zrange(key, 0, size);
             return sets;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -420,7 +420,7 @@ public class RedisConnector {
             Set<String> sets = jedis.zrange(key, start, size);
             return sets;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -440,7 +440,7 @@ public class RedisConnector {
             Set<String> sets = jedis.zrevrange(key, start, size);
             return sets;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -459,7 +459,7 @@ public class RedisConnector {
             Set<String> sets = jedis.zrevrangeByScore(key, Double.MAX_VALUE, Double.MIN_VALUE, start, size);
             return sets;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -471,7 +471,7 @@ public class RedisConnector {
             Long total = jedis.zcard(key);
             return total;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return 0L;
         } finally {
             jedis.close();
@@ -490,7 +490,7 @@ public class RedisConnector {
             Double score = jedis.zscore(key, member);
             return score;
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
             return 0.0;
         }finally {
             if(jedis!=null)
@@ -510,7 +510,7 @@ public class RedisConnector {
             Long count = jedis.zrem(key, values);
             return count;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return 0l;
         } finally {
             jedis.close();
@@ -528,7 +528,7 @@ public class RedisConnector {
             Long cnt = jedis.zcount(key, min, max);
             return cnt;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         } finally {
             jedis.close();
@@ -542,7 +542,7 @@ public class RedisConnector {
         try {
             map = jedis.hgetAll(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -554,7 +554,7 @@ public class RedisConnector {
         try {
             jedis.hmset(key, values);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -572,7 +572,7 @@ public class RedisConnector {
             jedis.hmset(key, values);
             jedis.expire(key, expireSeconds);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -586,7 +586,7 @@ public class RedisConnector {
             jedis.hset(key, field, fieldVal);
             return true;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -601,7 +601,7 @@ public class RedisConnector {
             }
             return true;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -617,7 +617,7 @@ public class RedisConnector {
             jedis.expire(key, exprise);
             return true;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -645,7 +645,7 @@ public class RedisConnector {
             }
             return true;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             if (jedis != null) {
                 jedis.disconnect();
@@ -675,7 +675,7 @@ public class RedisConnector {
         try {
             return jedis.incr(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -687,7 +687,7 @@ public class RedisConnector {
         try {
             return jedis.hincrBy(key,field,1);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -699,7 +699,7 @@ public class RedisConnector {
         try {
             return jedis.hincrBy(key,field,num);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -711,7 +711,7 @@ public class RedisConnector {
         try {
             return jedis.decr(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -723,7 +723,7 @@ public class RedisConnector {
         try {
             return jedis.decrBy(key,value);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -735,7 +735,7 @@ public class RedisConnector {
         try {
             return jedis.setnx(key, "1");
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -747,7 +747,7 @@ public class RedisConnector {
         try {
             return jedis.setnx(key, value);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -776,7 +776,7 @@ public class RedisConnector {
         try {
             jedis.expire(key, second);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -787,7 +787,7 @@ public class RedisConnector {
         try {
             return jedis.sadd(key, members);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -799,7 +799,7 @@ public class RedisConnector {
         try {
             return jedis.scard(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -811,7 +811,7 @@ public class RedisConnector {
         try {
             return jedis.smembers(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -823,7 +823,7 @@ public class RedisConnector {
         try {
             return jedis.spop(key);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -841,7 +841,7 @@ public class RedisConnector {
         try {
             return jedis.spop(key,count);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -853,7 +853,7 @@ public class RedisConnector {
         try {
             return jedis.srem(redisKey, strings);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error!", e);
         } finally {
             jedis.close();
         }
@@ -865,7 +865,7 @@ public class RedisConnector {
         try{
             return jedis.hmget(key,fields);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         }finally {
             jedis.close();
@@ -877,7 +877,7 @@ public class RedisConnector {
         try{
             return jedis.hget(key,field);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         }finally {
             jedis.close();
@@ -888,7 +888,7 @@ public class RedisConnector {
         try{
             return jedis.ttl(key);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
             return -2L;
         }finally {
             jedis.close();
@@ -900,7 +900,7 @@ public class RedisConnector {
         try {
             return jedis.lrange(key,start,end);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
             return null;
         }finally {
             jedis.close();
@@ -913,7 +913,7 @@ public class RedisConnector {
         try{
             return jedis.lrem(key,0,value);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
             return 0L;
         }finally {
             jedis.close();
@@ -926,7 +926,7 @@ public class RedisConnector {
             jedis = pool.getResource();
             return jedis.eval(script,keys,args);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
         }finally {
             if(jedis != null){
                 jedis.close();
@@ -942,7 +942,7 @@ public class RedisConnector {
             jedis = pool.getResource();
             return jedis.hlen(mapKey);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
         }finally {
             if(jedis != null){
                 jedis.close();
@@ -962,7 +962,7 @@ public class RedisConnector {
             jedis = pool.getResource();
             return jedis.srandmember(key, count);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
         }finally {
             if(jedis != null){
                 jedis.close();
@@ -977,7 +977,7 @@ public class RedisConnector {
             jedis = pool.getResource();
             return jedis.evalsha(sha, keys, args);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
         }finally {
             if(jedis != null){
                 jedis.close();
@@ -996,7 +996,7 @@ public class RedisConnector {
             jedis = pool.getResource();
             return jedis.sismember(key,member);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
         }finally {
             if(jedis != null){
                 jedis.close();
@@ -1022,7 +1022,7 @@ public class RedisConnector {
             jedis = pool.getResource();
             return jedis.hdel(key,field);
         }catch (Exception e){
-            logger.error(e);
+            logger.error("error!", e);
         }finally {
             if(jedis != null){
                 jedis.close();

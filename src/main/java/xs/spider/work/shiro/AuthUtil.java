@@ -1,6 +1,6 @@
 package xs.spider.work.shiro;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;

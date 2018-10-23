@@ -1,6 +1,6 @@
 package xs.spider.base.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import xs.spider.base.anno.Column;
 import xs.spider.base.anno.Table;
 import xs.spider.base.anno.InsertIgnore;
@@ -16,7 +16,7 @@ import java.util.Map;
  *
  */
 public class BeanUtil {
-	private static final Logger log = Logger.getLogger(BeanUtil.class);
+	private static final Logger log = LogUtil.getLogger(BeanUtil.class);
 	private static BeanUtil bhelp = new BeanUtil();
 	protected static final Object NULL_ARGUMENTS[] = new Object[0];
 	/**

@@ -20,16 +20,30 @@
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
     </bean>
     <!-- Shiro安全管理器 -->
-    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+    <!--<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">-->
         <!--<property name="sessionManager" ref="sessionManager"/>-->
-        <property name="realms">
-            <list>
-                <ref bean="userRealm"/>
-            </list>
-        </property>
+        <!--<property name="realms">-->
+            <!--<list>/-->
+                <!--<ref bean="userRealm"/>-->
+            <!--</list>-->
+        <!--</property>-->
         <!--<property name="cacheManager" ref="cacheManager"/>-->
         <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
+    <!--</bean>-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="sessionManager" ref="defaultSessionManager" />
+        <property name="realms">
+            <list>
+                <ref bean="userRealm" />
+            </list>
+        </property>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>
+    <bean id="defaultSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionFactory" ref="redisSessionFactory"/>
+        <property name="sessionDAO" ref="redisSessionDao"/>
+    </bean>
+    <bean id="redisSessionDao" class="xs.spider.work.shiro.session.redis.RedisSessionDao"/>
     <!--<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">-->
         <!--&lt;!&ndash; 设置全局会话超时时间，默认30分钟(1800000) &ndash;&gt;-->
         <!--<property name="globalSessionTimeout" value="1800000"/>-->
@@ -54,7 +68,7 @@
         <!--</property>-->
     <!--</bean>-->
 
-    <bean id="redisSessionFactory" class="xs.spider.work.shiro.session.RedisSessionFactory"/>
+    <bean id="redisSessionFactory" class="xs.spider.work.shiro.session.redis.RedisSessionFactory"/>
     <!--<bean id="sessionDao" class="xs.spider.work.shiro.session.RedisSessionDao">-->
         <!--<property name="prefix" value="shiro:session:"/>-->
         <!--&lt;!&ndash; 注意中央缓存有效时间要比本地缓存有效时间长&ndash;&gt;-->
