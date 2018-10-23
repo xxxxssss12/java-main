@@ -68,7 +68,7 @@ debug:当此属性设置为true时，将打印出logback内部日志信息，实
     <!-- ******************** root：定义日志的level、appender，且最多只能配置一个 start ******************** -->
 
     <!--TRACE < DEBUG < INFO <  WARN < ERROR-->
-    <root level="DEBUG">
+    <root level="INFO">
         <!-- 定义了INFO及以上级别的日志，分别在文件和控制台输出 -->
         <appender-ref ref="file" />
         <appender-ref ref="console" />
