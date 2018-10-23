@@ -20,29 +20,29 @@
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
     </bean>
     <!-- Shiro安全管理器 -->
-    <!--<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">-->
-        <!--<property name="sessionManager" ref="sessionManager"/>-->
-        <!--<property name="realms">-->
-            <!--<list>/-->
-                <!--<ref bean="userRealm"/>-->
-            <!--</list>-->
-        <!--</property>-->
-        <!--<property name="cacheManager" ref="cacheManager"/>-->
-        <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
-    <!--</bean>-->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="sessionManager" ref="defaultSessionManager" />
+        <!--<property name="sessionManager" ref="sessionManager"/>-->
         <property name="realms">
             <list>
-                <ref bean="userRealm" />
+                <ref bean="userRealm"/>
             </list>
         </property>
+        <property name="cacheManager" ref="cacheManager"/>
         <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>
-    <bean id="defaultSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="sessionFactory" ref="redisSessionFactory"/>
-        <property name="sessionDAO" ref="redisSessionDao"/>
-    </bean>
+    <!--<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">-->
+        <!--<property name="sessionManager" ref="defaultSessionManager" />-->
+        <!--<property name="realms">-->
+            <!--<list>-->
+                <!--<ref bean="userRealm" />-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
+    <!--</bean>-->
+    <!--<bean id="defaultSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">-->
+        <!--<property name="sessionFactory" ref="redisSessionFactory"/>-->
+        <!--<property name="sessionDAO" ref="redisSessionDao"/>-->
+    <!--</bean>-->
     <bean id="redisSessionDao" class="xs.spider.work.shiro.session.redis.RedisSessionDao"/>
     <!--<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">-->
         <!--&lt;!&ndash; 设置全局会话超时时间，默认30分钟(1800000) &ndash;&gt;-->
