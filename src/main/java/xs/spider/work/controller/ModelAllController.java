@@ -83,6 +83,9 @@ public class ModelAllController {
             Integer modelTypeId,
             String remark,
             String detail) {
+        if (Util.isBlank(modelNo)) {
+            return ResultInfo.buildFail("图号不能为空！");
+        }
         ModelAll modelAll = new ModelAll();
         modelAll.setModelNo(modelNo);
         modelAll.setName(name);

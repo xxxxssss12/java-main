@@ -177,7 +177,7 @@ public class HttpClientUtil {
 	}
 	public static HttpRespBean doGet(HttpReqBean reqBean, CloseableHttpClient httpClient, CookieStore cookieStore) {
 		String url = reqBean.getUrl();
-		Map<String,Object> parammap = reqBean.getParams();
+		Map<String, ?> parammap = reqBean.getParams();
 		List<Cookie> cookies = reqBean.getCookies();
 		LogUtil.info(HttpClientUtil.class, "httpRequest url:" + url + ";param:" + JsonUtil.beanToJson(parammap));
 		StringBuffer url_final = new StringBuffer(url);
@@ -202,7 +202,7 @@ public class HttpClientUtil {
 	}
 	public static HttpRespBean doPost(HttpReqBean reqBean, CloseableHttpClient httpClient, CookieStore cookieStore) {
 		String url = reqBean.getUrl();
-		Map<String,Object> parammap = reqBean.getParams();
+		Map<String, ?> parammap = reqBean.getParams();
 		List<Cookie> cookies = reqBean.getCookies();
 		LogUtil.info(HttpClientUtil.class, "httpRequest url:" + url + ";param:" + JsonUtil.beanToJson(parammap));
 		HttpPost post = new HttpPost(url);

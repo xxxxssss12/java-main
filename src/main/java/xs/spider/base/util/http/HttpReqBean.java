@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class HttpReqBean {
     private String url;
-    private Map<String, Object> params;
+    private Map<String, ?> params;
     private Integer type; //0=get; 1=post;
     private List<Header> headers;
     private List<Cookie> cookies;
@@ -26,7 +26,7 @@ public class HttpReqBean {
         this.paramStr = "";
     }
 
-    public HttpReqBean(String url, Map<String, Object> params, Integer type, List<Header> headers, List<Cookie> cookies) {
+    public HttpReqBean(String url, Map<String, ?> params, Integer type, List<Header> headers, List<Cookie> cookies) {
         this.url = url;
         this.params = params;
         this.type = type;
@@ -78,7 +78,7 @@ public class HttpReqBean {
         this.cookies = cookies;
     }
 
-    public Map<String, Object> getParams() {
+    public Map<String, ?> getParams() {
         return params;
     }
     public Object transformParams() {
@@ -89,7 +89,7 @@ public class HttpReqBean {
             return paramList;
         }
     }
-    public void setParams(Map<String, Object> params) {
+    public void setParams(Map<String, ?> params) {
         this.params = params;
         if (null != params && !params.isEmpty()) {
             StringBuffer sb = new StringBuffer();

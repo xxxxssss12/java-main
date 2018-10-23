@@ -7,13 +7,16 @@ import xs.spider.base.init.Log4jInit;
 import xs.spider.base.util.LogUtil;
 import xs.spider.work.service.CBServiceImpl;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by xs on 2017/4/1.
  */
 public class Start {
     private static Logger logger = LogUtil.getLogger(Start.class);
     private static ClassPathXmlApplicationContext context;
-    public static void main(String[] args) {
+    private static void init() {
         logger.info("SpringContextContainer begin starting.....");
         Log4jInit.init();
         context = new ClassPathXmlApplicationContext(
@@ -23,7 +26,11 @@ public class Start {
         );
         context.start();
         logger.info("SpringContextContainer is starting.....");
-        testImport();
+    }
+    public static void main(String[] args) {
+        init();
+        AutoTest.doAutoTest();
+//        testImport();
     }
 
     private static void testImport() {
