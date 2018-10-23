@@ -43,7 +43,7 @@ public class PermissionFilter implements Filter {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
 //            String url = Util.null2string(request.getRequestURL());
             String url = request.getServletPath().substring(1);
-            log.info(servletRequest.getRemoteAddr() + ":" + CurrentUserHelper.getCurrentUsername() + "请求进入：" + url);
+            log.info(Util.getIpAddr(request) + ":" + CurrentUserHelper.getCurrentUsername() + "请求进入：" + url);
 
             if (CurrentUserHelper.isLogin() && !Util.isBlank(CurrentUserHelper.getCurrentUsername())) {
 //                if (url.indexOf(AuthUtil.commonUrl) != -1) {
