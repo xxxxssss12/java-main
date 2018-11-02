@@ -28,8 +28,16 @@ public class Start {
         logger.info("SpringContextContainer is starting.....");
     }
     public static void main(String[] args) {
-        init();
-        AutoTest.doAutoTest();
+        for (int i=0; i<20; i++) {
+            for (int j=0;j<=i;j++) {
+                if ((j % 2 ^ i % 2) == 0) {
+                    System.out.printf("*");
+                } else System.out.printf(" ");
+            }
+            System.out.println();
+        }
+//        init();
+//        AutoTest.doAutoTest();
 //        testImport();
     }
 

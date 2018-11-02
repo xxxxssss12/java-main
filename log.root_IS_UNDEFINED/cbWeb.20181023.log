@@ -1,0 +1,68 @@
+2018-10-23 22:10:50.468 [main] INFO  xs.spider.main.Start - SpringContextContainer begin starting.....
+2018-10-23 22:10:50.473 [main] INFO  xs.spider.base.config.ConfigProvider - init FundamentalConfigProvider.prop.
+2018-10-23 22:10:50.474 [main] INFO  xs.spider.base.config.ConfigProvider - can't load config from:System.getProperty(Constants.CONFIG_PATH)
+2018-10-23 22:10:50.474 [main] INFO  xs.spider.base.config.ConfigProvider - can't load config from:System.getenv(Constants.CONFIG_PATH)
+2018-10-23 22:10:50.474 [main] INFO  xs.spider.base.config.ConfigProvider - config.path is null，now we use default config.if the environment is not dev,please check you startup param: -Dconfig.path=xxx
+2018-10-23 22:10:50.474 [main] INFO  xs.spider.base.config.ConfigProvider - config.path:classpath:/config/config.properties
+2018-10-23 22:10:50.478 [main] INFO  xs.spider.base.config.ConfigProvider - FundamentalConfigProvider.size:44
+2018-10-23 22:10:50.539 [main] INFO  org.springframework.context.support.ClassPathXmlApplicationContext - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7cd62f43: startup date [Tue Oct 23 22:10:50 CST 2018]; root of context hierarchy
+2018-10-23 22:10:50.561 [main] INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from file [D:\Workspaces\IdeaProject\java-main\target\classes\config\applicationContext.xml]
+2018-10-23 22:10:51.662 [main] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2018-10-23 22:10:51.757 [main] INFO  xs.spider.main.Start - SpringContextContainer is starting.....
+2018-10-23 22:10:52.074 [main] INFO  xs.spider.base.util.http.HttpClientUtil - httpRequest url:http://118.31.75.61/cbWeb/auth/doLogin?username=xiongshun&password=hKE5*WQta4^KS41!;param:
+2018-10-23 22:11:29.074 [main] INFO  xs.spider.main.Start - SpringContextContainer begin starting.....
+2018-10-23 22:11:29.087 [main] INFO  xs.spider.base.config.ConfigProvider - init FundamentalConfigProvider.prop.
+2018-10-23 22:11:29.088 [main] INFO  xs.spider.base.config.ConfigProvider - can't load config from:System.getProperty(Constants.CONFIG_PATH)
+2018-10-23 22:11:29.088 [main] INFO  xs.spider.base.config.ConfigProvider - can't load config from:System.getenv(Constants.CONFIG_PATH)
+2018-10-23 22:11:29.088 [main] INFO  xs.spider.base.config.ConfigProvider - config.path is null，now we use default config.if the environment is not dev,please check you startup param: -Dconfig.path=xxx
+2018-10-23 22:11:29.088 [main] INFO  xs.spider.base.config.ConfigProvider - config.path:classpath:/config/config.properties
+2018-10-23 22:11:29.095 [main] INFO  xs.spider.base.config.ConfigProvider - FundamentalConfigProvider.size:44
+2018-10-23 22:11:29.226 [main] INFO  org.springframework.context.support.ClassPathXmlApplicationContext - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@5f058f00: startup date [Tue Oct 23 22:11:29 CST 2018]; root of context hierarchy
+2018-10-23 22:11:29.267 [main] INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from file [D:\Workspaces\IdeaProject\java-main\target\classes\config\applicationContext.xml]
+2018-10-23 22:11:30.223 [main] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2018-10-23 22:11:30.368 [main] INFO  xs.spider.main.Start - SpringContextContainer is starting.....
+2018-10-23 22:11:30.688 [main] INFO  xs.spider.base.util.http.HttpClientUtil - httpRequest url:http://118.31.75.61/cbWeb/auth/doLogin?username=xiongshun&password=hKE5*WQta4^KS41!;param:
+2018-10-23 22:11:30.692 [main] ERROR xs.spider.main.AutoTest - error!
+java.lang.IllegalArgumentException: Illegal character in query at index 77: http://118.31.75.61/cbWeb/auth/doLogin?username=xiongshun&password=hKE5*WQta4^KS41!
+	at java.net.URI.create(URI.java:852) ~[na:1.8.0_181]
+	at org.apache.http.client.methods.HttpPost.<init>(HttpPost.java:76) ~[httpclient-4.5.2.jar:4.5.2]
+	at xs.spider.base.util.http.HttpClientUtil.doPost(HttpClientUtil.java:208) ~[classes/:na]
+	at xs.spider.main.AutoTest.login(AutoTest.java:56) ~[classes/:na]
+	at xs.spider.main.AutoTest.doAutoTest(AutoTest.java:35) ~[classes/:na]
+	at xs.spider.main.Start.main(Start.java:32) [classes/:na]
+Caused by: java.net.URISyntaxException: Illegal character in query at index 77: http://118.31.75.61/cbWeb/auth/doLogin?username=xiongshun&password=hKE5*WQta4^KS41!
+	at java.net.URI$Parser.fail(URI.java:2848) ~[na:1.8.0_181]
+	at java.net.URI$Parser.checkChars(URI.java:3021) ~[na:1.8.0_181]
+	at java.net.URI$Parser.parseHierarchical(URI.java:3111) ~[na:1.8.0_181]
+	at java.net.URI$Parser.parse(URI.java:3053) ~[na:1.8.0_181]
+	at java.net.URI.<init>(URI.java:588) ~[na:1.8.0_181]
+	at java.net.URI.create(URI.java:850) ~[na:1.8.0_181]
+	... 5 common frames omitted
+2018-10-23 22:13:52.010 [main] INFO  xs.spider.main.Start - SpringContextContainer begin starting.....
+2018-10-23 22:13:52.017 [main] INFO  xs.spider.base.config.ConfigProvider - init FundamentalConfigProvider.prop.
+2018-10-23 22:13:52.017 [main] INFO  xs.spider.base.config.ConfigProvider - can't load config from:System.getProperty(Constants.CONFIG_PATH)
+2018-10-23 22:13:52.017 [main] INFO  xs.spider.base.config.ConfigProvider - can't load config from:System.getenv(Constants.CONFIG_PATH)
+2018-10-23 22:13:52.017 [main] INFO  xs.spider.base.config.ConfigProvider - config.path is null，now we use default config.if the environment is not dev,please check you startup param: -Dconfig.path=xxx
+2018-10-23 22:13:52.017 [main] INFO  xs.spider.base.config.ConfigProvider - config.path:classpath:/config/config.properties
+2018-10-23 22:13:52.022 [main] INFO  xs.spider.base.config.ConfigProvider - FundamentalConfigProvider.size:44
+2018-10-23 22:13:52.077 [main] INFO  org.springframework.context.support.ClassPathXmlApplicationContext - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7cd62f43: startup date [Tue Oct 23 22:13:52 CST 2018]; root of context hierarchy
+2018-10-23 22:13:52.099 [main] INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from file [D:\Workspaces\IdeaProject\java-main\target\classes\config\applicationContext.xml]
+2018-10-23 22:13:52.951 [main] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2018-10-23 22:13:53.055 [main] INFO  xs.spider.main.Start - SpringContextContainer is starting.....
+2018-10-23 22:13:53.409 [main] INFO  xs.spider.base.util.http.HttpClientUtil - httpRequest url:http://118.31.75.61/cbWeb/auth/doLogin;param:{"password":"hKE5*WQta4^KS41!","username":"xiongshun"}
+2018-10-23 22:13:53.568 [main] INFO  xs.spider.main.AutoTest - 登陆:请求url=http://118.31.75.61/cbWeb/auth/doLogin,返回值={"code":1,"cookies":[{"domain":"118.31.75.61","name":"JSESSIONID","path":"/cbWeb","persistent":false,"secure":false,"value":"09C38FF53C80D54A5E6667F9BF709538","version":0}],"headers":[{"buffer":{"empty":false,"full":false},"elements":[{"name":"openresty/1.13.6.2","parameterCount":0,"parameters":[]}],"name":"Server","value":"openresty/1.13.6.2","valuePos":7},{"buffer":{"empty":false,"full":false},"elements":[{"name":"Tue","parameterCount":0,"parameters":[]},{"name":"23 Oct 2018 14:13:53 GMT","parameterCount":0,"parameters":[]}],"name":"Date","value":"Tue, 23 Oct 2018 14:13:53 GMT","valuePos":5},{"buffer":{"empty":false,"full":false},"elements":[{"name":"application/json","parameterCount":1,"parameters":[{"name":"charset","value":"UTF-8"}]}],"name":"Content-Type","value":"application/json;charset=UTF-8","valuePos":13},{"buffer":{"empty":false,"full":false},"elements":[{"name":"30","parameterCount":0,"parameters":[]}],"name":"Content-Length","value":"30","valuePos":15},{"buffer":{"empty":false,"full":false},"elements":[{"name":"keep-alive","parameterCount":0,"parameters":[]}],"name":"Connection","value":"keep-alive","valuePos":11},{"buffer":{"empty":false,"full":false},"elements":[{"name":"JSESSIONID","parameterCount":2,"parameters":[{"name":"Path","value":"/cbWeb"},{"name":"HttpOnly"}],"value":"09C38FF53C80D54A5E6667F9BF709538"}],"name":"Set-Cookie","value":"JSESSIONID=09C38FF53C80D54A5E6667F9BF709538; Path=/cbWeb; HttpOnly","valuePos":11},{"buffer":{"empty":false,"full":false},"elements":[{"name":"rememberMe","parameterCount":3,"parameters":[{"name":"Path","value":"/cbWeb"},{"name":"Max-Age","value":"0"},{"name":"Expires","value":"Mon"}],"value":"deleteMe"},{"name":"22-Oct-2018 14:13:53 GMT","parameterCount":0,"parameters":[]}],"name":"Set-Cookie","value":"rememberMe=deleteMe; Path=/cbWeb; Max-Age=0; Expires=Mon, 22-Oct-2018 14:13:53 GMT","valuePos":11}],"message":"success:200","responseBody":"{\"code\":1,\"message\":\"success\"}"}
+2018-10-23 22:34:13.670 [main] INFO  xs.spider.main.Start - SpringContextContainer begin starting.....
+2018-10-23 22:34:13.678 [main] INFO  xs.spider.base.config.ConfigProvider - init FundamentalConfigProvider.prop.
+2018-10-23 22:34:13.678 [main] INFO  xs.spider.base.config.ConfigProvider - can't load config from:System.getProperty(Constants.CONFIG_PATH)
+2018-10-23 22:34:13.678 [main] INFO  xs.spider.base.config.ConfigProvider - can't load config from:System.getenv(Constants.CONFIG_PATH)
+2018-10-23 22:34:13.678 [main] INFO  xs.spider.base.config.ConfigProvider - config.path is null，now we use default config.if the environment is not dev,please check you startup param: -Dconfig.path=xxx
+2018-10-23 22:34:13.679 [main] INFO  xs.spider.base.config.ConfigProvider - config.path:classpath:/config/config.properties
+2018-10-23 22:34:13.682 [main] INFO  xs.spider.base.config.ConfigProvider - FundamentalConfigProvider.size:44
+2018-10-23 22:34:13.758 [main] INFO  org.springframework.context.support.ClassPathXmlApplicationContext - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7cd62f43: startup date [Tue Oct 23 22:34:13 CST 2018]; root of context hierarchy
+2018-10-23 22:34:13.788 [main] INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from file [D:\Workspaces\IdeaProject\java-main\target\classes\config\applicationContext.xml]
+2018-10-23 22:34:14.724 [main] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2018-10-23 22:34:14.856 [main] INFO  xs.spider.main.Start - SpringContextContainer is starting.....
+2018-10-23 22:34:15.221 [main] INFO  xs.spider.base.util.http.HttpClientUtil - httpRequest url:http://118.31.75.61/cbWeb/auth/doLogin;param:{"password":"hKE5*WQta4^KS41!","username":"xiongshun"}
+2018-10-23 22:34:15.376 [main] INFO  xs.spider.main.AutoTest - 登陆:请求url=http://118.31.75.61/cbWeb/auth/doLogin,返回值={"code":1,"cookies":[{"domain":"118.31.75.61","name":"JSESSIONID","path":"/cbWeb","persistent":false,"secure":false,"value":"985C5423A901DEC73D7869C5DA305EEA","version":0}],"headers":[{"buffer":{"empty":false,"full":false},"elements":[{"name":"openresty/1.13.6.2","parameterCount":0,"parameters":[]}],"name":"Server","value":"openresty/1.13.6.2","valuePos":7},{"buffer":{"empty":false,"full":false},"elements":[{"name":"Tue","parameterCount":0,"parameters":[]},{"name":"23 Oct 2018 14:34:14 GMT","parameterCount":0,"parameters":[]}],"name":"Date","value":"Tue, 23 Oct 2018 14:34:14 GMT","valuePos":5},{"buffer":{"empty":false,"full":false},"elements":[{"name":"application/json","parameterCount":1,"parameters":[{"name":"charset","value":"UTF-8"}]}],"name":"Content-Type","value":"application/json;charset=UTF-8","valuePos":13},{"buffer":{"empty":false,"full":false},"elements":[{"name":"30","parameterCount":0,"parameters":[]}],"name":"Content-Length","value":"30","valuePos":15},{"buffer":{"empty":false,"full":false},"elements":[{"name":"keep-alive","parameterCount":0,"parameters":[]}],"name":"Connection","value":"keep-alive","valuePos":11},{"buffer":{"empty":false,"full":false},"elements":[{"name":"JSESSIONID","parameterCount":2,"parameters":[{"name":"Path","value":"/cbWeb"},{"name":"HttpOnly"}],"value":"985C5423A901DEC73D7869C5DA305EEA"}],"name":"Set-Cookie","value":"JSESSIONID=985C5423A901DEC73D7869C5DA305EEA; Path=/cbWeb; HttpOnly","valuePos":11},{"buffer":{"empty":false,"full":false},"elements":[{"name":"rememberMe","parameterCount":3,"parameters":[{"name":"Path","value":"/cbWeb"},{"name":"Max-Age","value":"0"},{"name":"Expires","value":"Mon"}],"value":"deleteMe"},{"name":"22-Oct-2018 14:34:14 GMT","parameterCount":0,"parameters":[]}],"name":"Set-Cookie","value":"rememberMe=deleteMe; Path=/cbWeb; Max-Age=0; Expires=Mon, 22-Oct-2018 14:34:14 GMT","valuePos":11}],"message":"success:200","responseBody":"{\"code\":1,\"message\":\"success\"}"}
+2018-10-23 22:34:15.378 [main] INFO  xs.spider.base.util.http.HttpClientUtil - httpRequest url:http://118.31.75.61/cbWeb/modelAll/add;param:{"modelNo":"ttt111222"}
+2018-10-23 22:34:15.429 [main] INFO  xs.spider.main.AutoTest - singleRequestEnd!!!url=http://118.31.75.61/cbWeb/modelAll/add,in={"modelNo":"ttt111222"},resultcode=1out=success:200,hast=51ms

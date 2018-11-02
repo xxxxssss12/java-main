@@ -6,10 +6,13 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import xs.spider.base.bean.ResultInfo;
 import xs.spider.base.util.ExceptionWrite;
 import xs.spider.base.util.LogUtil;
 import xs.spider.base.util.Util;
+import xs.spider.work.service.AccessStatisticServiceImpl;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +25,11 @@ import java.util.Set;
 /**
  * Created by xs on 2017/10/12
  */
+@Component
 public class PermissionFilter implements Filter {
     private static Logger log = LogUtil.getLogger(PermissionFilter.class, "permission");
-
+    @Autowired
+    private AccessStatisticServiceImpl accessStatisticService;
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -35,6 +40,10 @@ public class PermissionFilter implements Filter {
         OutputStream out = servletResponse.getOutputStream();
         try {
             HttpServletRequest request = (HttpServletRequest) servletRequest;
+            if (accessStatisticService != null) {
+                log.info("save access info");
+                accessStatisticService.save(request);
+            }
             if (!Util.isBlank(AuthUtil.isOpen) && AuthUtil.isOpen.equals("true")) {
                 log.info("权限isopen=true，全部放行");
                 chain.doFilter(servletRequest,servletResponse);
