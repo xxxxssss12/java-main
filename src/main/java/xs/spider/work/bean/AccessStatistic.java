@@ -11,7 +11,7 @@ import java.util.Date;
 @Table("bi.access_statistic")
 public class AccessStatistic extends BaseEntity {
 
-    private Long id;
+    private Integer id;
     private String username;
     private String clientIp;
     private String host;
@@ -68,11 +68,11 @@ public class AccessStatistic extends BaseEntity {
         this.username = username;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }
