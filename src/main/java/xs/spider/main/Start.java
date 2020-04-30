@@ -23,7 +23,7 @@ public class Start {
         );
         context.start();
         logger.info("SpringContextContainer is starting.....");
-        testImport();
+//        testImport();
     }
 
     private static void testImport() {
