@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.5.0</jackson.version>
-        <spring.version>5.2.2.RELEASE</spring.version>
+        <spring.version>5.3.18</spring.version>
         <hibernate.version>4.3.8.Final</hibernate.version>
         <druid.version>1.0.26</druid.version>
     </properties>
