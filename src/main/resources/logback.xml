@@ -30,21 +30,21 @@ debug:当此属性设置为true时，将打印出logback内部日志信息，实
     </appender>
 
     <!-- 文件输出：file -->
-    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!--<file>${log.root}/logback.log</file>-->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--日志文件输出的文件名-->
-            <FileNamePattern>${log.root}/cbWeb.%d{yyyyMMdd}.log</FileNamePattern>
-        </rollingPolicy>
-        <encoder>
-            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>
-        </encoder>
-        <!--日志文件最大的大小-->
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-          <MaxFileSize>10MB</MaxFileSize>
-        </triggeringPolicy>
-    </appender>
+<!--    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        &lt;!&ndash;<file>${log.root}/logback.log</file>&ndash;&gt;-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            &lt;!&ndash;日志文件输出的文件名&ndash;&gt;-->
+<!--            <FileNamePattern>${log.root}/cbWeb.%d{yyyyMMdd}.log</FileNamePattern>-->
+<!--        </rollingPolicy>-->
+<!--        <encoder>-->
+<!--            &lt;!&ndash;格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符&ndash;&gt;-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--        &lt;!&ndash;日志文件最大的大小&ndash;&gt;-->
+<!--        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+<!--          <MaxFileSize>10MB</MaxFileSize>-->
+<!--        </triggeringPolicy>-->
+<!--    </appender>-->
 
     <!-- ******************** appender：日志目的地 end ******************** -->
 
@@ -58,7 +58,7 @@ debug:当此属性设置为true时，将打印出logback内部日志信息，实
     <!--logback.LogbackDemo：类的全路径 -->
     <logger name="logback.LogbackDemo" level="info" additivity="false">
         <appender-ref ref="console"/>
-        <appender-ref ref="file"/>
+<!--        <appender-ref ref="file"/>-->
     </logger>
 
     <!-- ******************** logger：精确配置package或class日志的level、appender end ******************** -->
@@ -70,7 +70,7 @@ debug:当此属性设置为true时，将打印出logback内部日志信息，实
     <!--TRACE < DEBUG < INFO <  WARN < ERROR-->
     <root level="INFO">
         <!-- 定义了INFO及以上级别的日志，分别在文件和控制台输出 -->
-        <appender-ref ref="file" />
+<!--        <appender-ref ref="file" />-->
         <appender-ref ref="console" />
     </root>
 
